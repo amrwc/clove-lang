@@ -1,0 +1,13 @@
+java -classpath ./ Sili < test01.sil
+java -classpath ./ Sili < test02.sil
+java -classpath ./ Sili < test03.sil
+java -classpath ./ Sili < test04.sil
+java -classpath ./ Sili < test05.sil
+java -classpath ./ Sili < test06.sil
+java -classpath ./ Sili < test07.sil
+java -classpath ./ Sili < test08.sil
+java -classpath ./ Sili < test09.sil
+java -classpath ./ Sili < test10.sil
+java -classpath ./ Sili < test11.sil
+java -classpath ./ Sili < test12.sil
+java -classpath ./ Sili < test13.sil

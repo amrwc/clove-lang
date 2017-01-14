@@ -1,0 +1,11 @@
+#!/bin/sh
+java Silc < test01.sil
+java Silc < test02.sil
+java Silc < test03.sil
+java Silc < test04.sil
+java Silc < test05.sil
+java Silc < test06.sil
+java Silc < test07.sil
+java Silc < test08.sil
+java Silc < test09.sil
+java Silc < test10.sil

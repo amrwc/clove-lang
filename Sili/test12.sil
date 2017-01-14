@@ -1,0 +1,6 @@
+for (i=0; i<20; i=i+1) {
+	fn blah(p) {
+		write p
+	}
+	blah(i)
+}

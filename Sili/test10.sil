@@ -1,0 +1,23 @@
+p1 = 1
+
+fn f0(x, y) {
+	write x
+	write y
+}
+
+fn f1(p2, p3) {
+	write p1
+	write p2
+	write p3
+	fn f2(p4, p5) {
+		write p1
+		write p2
+		write p3
+		write p4
+		write p5
+	}
+	f2(4, 5)
+	f0(p1, p2)
+}
+
+f1(2, 3)

@@ -1,0 +1,14 @@
+#!/bin/sh
+java Sili < test01.sil
+java Sili < test02.sil
+java Sili < test03.sil
+java Sili < test04.sil
+java Sili < test05.sil
+java Sili < test06.sil
+java Sili < test07.sil
+java Sili < test08.sil
+java Sili < test09.sil
+java Sili < test10.sil
+java Sili < test11.sil
+java Sili < test12.sil
+java Sili < test13.sil

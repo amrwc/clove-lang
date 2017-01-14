@@ -1,0 +1,16 @@
+p = 3
+
+fn blah(start, fin) {
+
+	fn zot(x, y) {
+		return x * y
+	}
+
+	for (i=start; i<=fin; i=i+1) {
+		write zot(i, p)
+	}
+
+	write p * 1000
+}
+
+blah(5, 10)
