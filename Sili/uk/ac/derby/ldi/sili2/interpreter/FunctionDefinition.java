@@ -13,13 +13,13 @@ import java.io.Serializable;
  *
  */
 class FunctionDefinition implements Comparable<Object>, Serializable {
+	private static final long serialVersionUID = 0;
 
 	private String name;
 	private String parmSignature = "";
 	private Vector<String> parameters = new Vector<String>();
 	private HashMap<String, Integer> slots = new HashMap<String, Integer>();
 	private HashMap<String, FunctionDefinition> functions = new HashMap<String, FunctionDefinition>();
-	private static final long serialVersionUID = 0;
 	private SimpleNode ASTFunctionBody = null;
 	private SimpleNode ASTFunctionReturnExpression = null;
 	private int depth;
