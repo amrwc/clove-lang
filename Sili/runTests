@@ -11,4 +11,4 @@ java Sili < test09.sil
 java Sili < test10.sil
 java Sili < test11.sil
 java Sili < test12.sil
-java Sili < test13.sil
+time java Sili < test13.sil

@@ -9,3 +9,4 @@ java Silc < test07.sil
 java Silc < test08.sil
 java Silc < test09.sil
 java Silc < test10.sil
+time java Silc < test13.sil
