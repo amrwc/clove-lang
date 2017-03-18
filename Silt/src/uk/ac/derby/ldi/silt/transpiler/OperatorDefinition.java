@@ -75,7 +75,7 @@ public class OperatorDefinition {
 	}
 	
 	public String findReference(String refname) {
-		String outRef = "vars." + refname;
+		String outRef = refname;
 		OperatorDefinition opDef = this;
 		do {
 			Slot slot = opDef.slots.get(refname);
@@ -83,9 +83,9 @@ public class OperatorDefinition {
 				return outRef;
 			}
 			opDef = opDef.parent;
-			if (outRef.startsWith("vars."))
+			if (outRef.startsWith("closure."))
 				outRef = refname;
-			outRef = "p_vars." + outRef;
+			outRef = "closure." + outRef;
 		} while (opDef != null);
 		return null;
 	}
@@ -98,7 +98,7 @@ public class OperatorDefinition {
 		operators.put(signature, definition);
 	}
 	
-	/** Return an operator. */
+	/** Return an operator in this or an outer operator definition. Null if we can't find it. */
 	OperatorDefinition getOperator(String signature) {
 		OperatorDefinition opDef = this;
 		do {
@@ -115,11 +115,11 @@ public class OperatorDefinition {
 	}
 
 	private String getParmDecls() {
-		String parmlist = (parent != null) ? parent.getSignature() + "_vars p_vars" : "";
+		String parmlist = (parent != null) ? parent.getSignature() + "_closure closure" : "";
 		for (Parameter parm: parameters) {
 			if (!parmlist.isEmpty())
 				parmlist += ", ";
-			parmlist += "Value p_" + parm.getName();
+			parmlist += "Value " + parm.getName();
 		}
 		return "(" + parmlist + ")";
 	}
@@ -131,29 +131,49 @@ public class OperatorDefinition {
 		return out;
 	}
 	
-	private String getVarClassName() {
-		return name + "_vars";
+	public String getClosureClassName() {
+		return name + "_closure";
 	}
 	
-	private String getVarClassDef() {
+	private String getClosureDef() {
 		String vardefs = "";
-		for (Slot slot: slots.values())
+		String ctorBody = "";
+		String ctorParmDef = "";
+		for (Slot slot: slots.values()) {
 			vardefs += "\tpublic Value " + slot.getName() + ";\n";
-		String varClassName = getVarClassName();
-		return "public static class " + varClassName + " {\n" + vardefs + "}\n";
+			ctorBody += "\tthis." + slot.getName() + " = " + slot.getName() + ";\n";
+			if (ctorParmDef.length() > 0)
+				ctorParmDef += ", ";
+			ctorParmDef += "Value " + slot.getName();
+		}
+		String closureClassName = getClosureClassName();
+		return "public static class " + closureClassName + " {\n" + 
+				vardefs + 
+				In.dent("public " + closureClassName + "(" + ctorParmDef + ")\n{\n" + ctorBody + "}\n") +
+				"}\n";
+	}
+
+	public String getClosureConstruction() {
+		String slotNames = "";
+		for (Slot slot: slots.values()) {
+			if (slotNames.length() > 0)
+				slotNames += ", ";
+			slotNames += slot.getName();
+		}
+		return "new " + getClosureClassName() + "(" + slotNames + ")";
 	}
 	
 	private String getVarDefs() {
-		String varClassName = getVarClassName();
-		String parmToVars = "";
-		for (Parameter parm: parameters)
-			parmToVars += "vars." + parm.getName() + " = p_" + parm.getName() + ";\n";
-		return varClassName + " vars = new " + varClassName + "();\n" + parmToVars;
+		String vardefs = "";
+		for (Slot slot: slots.values())
+			if (slot instanceof Variable)
+				vardefs += "Value " + slot.getName() + ";\n";
+		return vardefs;
 	}
 	
 	public String getSource() {
 		return getNestedOperatorSource() + 
-				getVarClassDef() +
+				getClosureDef() +
 				"public static " + ((hasReturn) ? "Value " : "void ") + name + getParmDecls() + 
 				" {\n" + 
 				In.dent(getVarDefs() + bodySource) + 

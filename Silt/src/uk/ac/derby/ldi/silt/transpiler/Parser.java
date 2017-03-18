@@ -131,7 +131,7 @@ public class Parser implements SiltVisitor {
 		// Child 1 - arglist
 		@SuppressWarnings("unchecked")
 		Vector<String> arglist = (Vector<String>)compileChild(node, 1, null);
-		String arglistText = "vars";
+		String arglistText = currentOperatorDefinition.getClosureConstruction();		
 		for (String argSource: arglist) {
 			if (arglistText.length() > 0)
 				arglistText += ", ";
