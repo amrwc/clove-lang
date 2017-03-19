@@ -68,7 +68,7 @@ public class Parser implements SiltVisitor {
 			"import uk.ac.derby.ldi.sili.values.*;\n" + 
 			"public class " + generatedCodeClassName + " {\n" + 
 			In.dent(mainOperatorDefinition.getSource()) + 
-			"}";
+			"}\n";
 	}
 	
 	// Compile a statement
