@@ -65,7 +65,7 @@ public class Parser implements SiltVisitor {
 		currentOperatorDefinition.addSource(compileChildren(node, data).toString());
 		endOperatorDefinition();
 		return 
-			"import uk.ac.derby.ldi.sili.values.*;\n" + 
+			"import uk.ac.derby.ldi.sili.values.*;\n\n" + 
 			"public class " + generatedCodeClassName + " {\n" + 
 			In.dent(mainOperatorDefinition.getSource()) + 
 			"}\n";
