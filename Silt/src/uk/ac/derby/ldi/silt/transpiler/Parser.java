@@ -286,12 +286,12 @@ public class Parser implements SiltVisitor {
 
 	// true literal
 	public Object visit(ASTTrue node, Object data) {
-		return "ValueBoolean.getFalse()";
+		return "ValueBoolean.getTrue()";
 	}
 
 	// false literal
 	public Object visit(ASTFalse node, Object data) {
-		return "ValueBoolean.getTrue()";
+		return "ValueBoolean.getFalse()";
 	}
 
 }
