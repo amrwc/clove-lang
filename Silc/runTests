@@ -1,12 +1,23 @@
 #!/bin/sh
+echo "=== Test01.sil ==="
 java Silc < test01.sil
+echo "=== Test02.sil ==="
 java Silc < test02.sil
+echo "=== Test03.sil ==="
 java Silc < test03.sil
+echo "=== Test04.sil ==="
 java Silc < test04.sil
+echo "=== Test05.sil ==="
 java Silc < test05.sil
+echo "=== Test06.sil ==="
 java Silc < test06.sil
+echo "=== Test07.sil ==="
 java Silc < test07.sil
+echo "=== Test08.sil ==="
 java Silc < test08.sil
+echo "=== Test09.sil ==="
 java Silc < test09.sil
+echo "=== Test10.sil ==="
 java Silc < test10.sil
+echo "=== Test13.sil ==="
 time java Silc < test13.sil
