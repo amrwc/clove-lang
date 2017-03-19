@@ -83,9 +83,7 @@ public class OperatorDefinition {
 				return outRef;
 			}
 			opDef = opDef.parent;
-			if (outRef.startsWith("closure."))
-				outRef = refname;
-			outRef = "closure." + outRef;
+			outRef = "__closure." + outRef;
 		} while (opDef != null);
 		return null;
 	}
@@ -115,7 +113,7 @@ public class OperatorDefinition {
 	}
 
 	private String getParmDecls() {
-		String parmlist = (parent != null) ? parent.getSignature() + "_closure closure" : "";
+		String parmlist = (parent != null) ? parent.getSignature() + "_closure __closure" : "";
 		for (Parameter parm: parameters) {
 			if (!parmlist.isEmpty())
 				parmlist += ", ";
@@ -139,6 +137,11 @@ public class OperatorDefinition {
 		String vardefs = "";
 		String ctorBody = "";
 		String ctorParmDef = "";
+		if (parent != null) {
+			vardefs += "\tpublic " + parent.getSignature() + "_closure __closure;\n";
+			ctorBody += "\tthis.__closure = __closure;\n";
+			ctorParmDef += parent.getSignature() + "_closure __closure";
+		}
 		for (Slot slot: slots.values()) {
 			vardefs += "\tpublic Value " + slot.getName() + ";\n";
 			ctorBody += "\tthis." + slot.getName() + " = " + slot.getName() + ";\n";
@@ -155,6 +158,8 @@ public class OperatorDefinition {
 
 	public String getClosureConstruction() {
 		String slotNames = "";
+		if (parent != null)
+			slotNames += "__closure";
 		for (Slot slot: slots.values()) {
 			if (slotNames.length() > 0)
 				slotNames += ", ";
@@ -171,10 +176,24 @@ public class OperatorDefinition {
 		return vardefs;
 	}
 	
+	private String getComment() {
+		String content = "";
+		OperatorDefinition opDef = this;
+		do {
+			if (content.length() > 0)
+				content += " in ";
+			content += opDef.getSignature();
+			opDef = opDef.getParentOperatorDefinition();
+		} while (opDef != null);
+		return "/** " + content + " */\n\n";
+	}
+
 	public String getSource() {
-		return getNestedOperatorSource() + 
+		return	getNestedOperatorSource() + 
+				"\n" +
+			 	getComment() +
 				getClosureDef() +
-				"public static " + ((hasReturn) ? "Value " : "void ") + name + getParmDecls() + 
+			 	"\npublic static " + ((hasReturn) ? "Value " : "void ") + name + getParmDecls() + 
 				" {\n" + 
 				In.dent(getVarDefs() + bodySource) + 
 				"}\n";
