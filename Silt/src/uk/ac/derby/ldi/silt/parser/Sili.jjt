@@ -1,5 +1,5 @@
 /*
- * A simple expression parser and evaluator
+ * A simple language transpiler.
  *
  */
 
