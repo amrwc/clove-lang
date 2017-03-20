@@ -8,3 +8,4 @@ java -classpath ./ Silc < test07.sil
 java -classpath ./ Silc < test08.sil
 java -classpath ./ Silc < test09.sil
 java -classpath ./ Silc < test10.sil
+java -classpath ./ Silc < test13.sil

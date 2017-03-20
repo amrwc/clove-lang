@@ -1,23 +1,20 @@
-p1 = 1
+p = 3
 
-fn f0(x, y) {
-	write x
-	write y
-}
+fn blah(start, fin) {
 
-fn f1(p2, p3) {
-	write p1
-	write p2
-	write p3
-	fn f2(p4, p5) {
-		write p1
-		write p2
-		write p3
-		write p4
-		write p5
+	fn zot(x, y) {
+	   	fn zaz(r) {
+		   return p + x * r
+		}
+
+		return x * y + zaz(y)
 	}
-	f2(4, 5)
-	f0(p1, p2)
+
+	for (i=start; i<=fin; i=i+1) {
+		write zot(i, p)
+	}
+
+	write p * 1000
 }
 
-f1(2, 3)
+blah(5, 10)

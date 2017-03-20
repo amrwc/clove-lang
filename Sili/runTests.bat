@@ -8,6 +8,4 @@ java -classpath ./ Sili < test07.sil
 java -classpath ./ Sili < test08.sil
 java -classpath ./ Sili < test09.sil
 java -classpath ./ Sili < test10.sil
-java -classpath ./ Sili < test11.sil
-java -classpath ./ Sili < test12.sil
 java -classpath ./ Sili < test13.sil
