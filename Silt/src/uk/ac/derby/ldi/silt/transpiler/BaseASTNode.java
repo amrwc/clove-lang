@@ -8,9 +8,6 @@ import uk.ac.derby.ldi.silt.parser.ast.Token;
  * 
  * ifHasElse is set at parse-time to indicate to the compiler whether or not an IF clause has an ELSE.
  * 
- * fnHasReturn is set at parse-time to indicate to the compiler whether or not a function definition 
- * has a RETURN.
- * 
  * @author dave
  *
  */
