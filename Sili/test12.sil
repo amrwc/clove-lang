@@ -1,10 +1,13 @@
+z = 2
+
 fn zaz(a) {
    return a
 }
 
 fn blah(p) {
+   q = 3
    fn zot(r) {
-      return zaz(r + p)
+      return zaz(r + p + q + z)
    }
 
    fn zog(n) {
@@ -14,4 +17,6 @@ fn blah(p) {
    return zot(p) * zog(p)
 }
 
-write blah(3)
+v = 3
+
+write blah(v)
