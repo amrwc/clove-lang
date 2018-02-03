@@ -157,7 +157,7 @@ public class OperatorDefinition {
 		String closureClassName = getClosureClassName();
 		return "static class " + closureClassName + " {\n" + 
 				vardefs + 
-				In.dent("public " + closureClassName + "(" + ctorParmDef + ")\n{\n" + ctorBody + "}\n") +
+				In.dent("public " + closureClassName + "(" + ctorParmDef + ") {\n" + ctorBody + "}\n") +
 				"}\n";
 	}
 
