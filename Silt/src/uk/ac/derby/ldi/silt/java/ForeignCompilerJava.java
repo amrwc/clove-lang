@@ -33,18 +33,36 @@ public class ForeignCompilerJava {
     public void compileForeignCode(PrintStream stream, String className, String src) {
     	ByteArrayOutputStream messageStream = new ByteArrayOutputStream();
     	ByteArrayOutputStream warningStream = new ByteArrayOutputStream();
-    	String warningSetting = new String("allDeprecation,"
-    			+ "assertIdentifier," + "charConcat,"
-    			+ "conditionAssign," + "constructorName," + "deprecation,"
-    			+ "emptyBlock," + "fieldHiding," + "finalBound,"
-    			+ "finally," + "indirectStatic," + "intfNonInherited,"
-    		 	+ "localHiding," + "maskedCatchBlocks,"
-    			+ "noEffectAssign," + "pkgDefaultMethod," + "serial,"
-    			+ "semicolon," + "specialParamHiding," + "staticReceiver,"
-    			+ "syntheticAccess," + "unqualifiedField,"
-    			+ "unnecessaryElse," + "uselessTypeCheck," + "unsafe,"
-				+ "unusedImport," + "unusedLocal,"
-    			+ "unusedPrivate," + "unusedThrown");
+    	String warningSetting = new String(
+    			"allDeprecation,"
+    			+ "assertIdentifier," 
+    			+ "charConcat,"
+    			+ "conditionAssign," 
+    			+ "constructorName," 
+    			+ "deprecation,"
+    			+ "emptyBlock," 
+    			+ "fieldHiding," 
+    			+ "finalBound,"
+    			+ "finally," 
+    			+ "indirectStatic," 
+    			+ "intfNonInherited,"
+    			+ "maskedCatchBlocks,"
+    			+ "noEffectAssign," 
+    			+ "pkgDefaultMethod," 
+    			+ "serial,"
+    			+ "semicolon," 
+    			+ "specialParamHiding," 
+    			+ "staticReceiver,"
+    			+ "syntheticAccess," 
+    			+ "unqualifiedField,"
+    			+ "unnecessaryElse," 
+    			+ "uselessTypeCheck," 
+    			+ "unsafe,"
+			+ "unusedImport," 
+    			+ "unusedLocal,"
+    			+ "unusedPrivate," 
+    			+ "unusedThrown"
+    		);
 
         // If resource directory doesn't exist, create it.
         File resourceDir = new File(dataDir); 
