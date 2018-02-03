@@ -3,6 +3,8 @@ package uk.ac.derby.ldi.silt.transpiler;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
 import uk.ac.derby.ldi.silt.parser.ast.Node;
@@ -79,9 +81,8 @@ public class OperatorDefinition {
 		OperatorDefinition opDef = this;
 		do {
 			Slot slot = opDef.slots.get(refname);
-			if (slot != null) {
+			if (slot != null)
 				return outRef;
-			}
 			opDef = opDef.parent;
 			outRef = "__closure." + outRef;
 		} while (opDef != null);
@@ -112,21 +113,25 @@ public class OperatorDefinition {
 		bodySource += source;
 	}
 
+	String getFirstParameterType() {
+		return (parent != null) ? parent.getSignature() + "_closure" : null;
+	}
+	
 	private String getParmDecls() {
-		String parmlist = (parent != null) ? parent.getSignature() + "_closure __closure" : "";
-		for (Parameter parm: parameters) {
-			if (!parmlist.isEmpty())
-				parmlist += ", ";
-			parmlist += "Value " + parm.getName();
-		}
+		String firstParameterType = getFirstParameterType();
+		String firstParameter = (firstParameterType == null) ? "" : firstParameterType + " __closure";		
+		String parmlist = 
+				Stream.concat(
+						Stream.of(firstParameter), 
+						parameters.stream().map(parm -> "Value " + parm.getName()))
+				.collect(Collectors.joining(", "));
 		return "(" + parmlist + ")";
 	}
 	
 	private String getNestedOperatorSource() {
-		String out = "";
-		for (OperatorDefinition op: operators.values())
-			out += op.getSource();
-		return out;
+		return operators.values().stream()
+				.map(operator -> operator.getSource())
+				.collect(Collectors.joining());
 	}
 	
 	public String getClosureClassName() {
@@ -138,42 +143,38 @@ public class OperatorDefinition {
 		String ctorBody = "";
 		String ctorParmDef = "";
 		if (parent != null) {
-			vardefs += "\tpublic " + parent.getSignature() + "_closure __closure;\n";
+			vardefs += "\t" + parent.getSignature() + "_closure __closure;\n";
 			ctorBody += "\tthis.__closure = __closure;\n";
 			ctorParmDef += parent.getSignature() + "_closure __closure";
 		}
 		for (Slot slot: slots.values()) {
-			vardefs += "\tpublic Value " + slot.getName() + ";\n";
+			vardefs += "\tValue " + slot.getName() + ";\n";
 			ctorBody += "\tthis." + slot.getName() + " = " + slot.getName() + ";\n";
 			if (ctorParmDef.length() > 0)
 				ctorParmDef += ", ";
 			ctorParmDef += "Value " + slot.getName();
 		}
 		String closureClassName = getClosureClassName();
-		return "public static class " + closureClassName + " {\n" + 
+		return "static class " + closureClassName + " {\n" + 
 				vardefs + 
 				In.dent("public " + closureClassName + "(" + ctorParmDef + ")\n{\n" + ctorBody + "}\n") +
 				"}\n";
 	}
 
 	public String getClosureConstruction() {
-		String slotNames = "";
-		if (parent != null)
-			slotNames += "__closure";
-		for (Slot slot: slots.values()) {
-			if (slotNames.length() > 0)
-				slotNames += ", ";
-			slotNames += slot.getName();
-		}
+		String slotNames = 
+				Stream.concat(
+						Stream.of("__closure").filter(p -> parent != null), 
+						slots.values().stream().map(slot -> slot.getName()))
+				.collect(Collectors.joining(", "));
 		return "new " + getClosureClassName() + "(" + slotNames + ")";
 	}
 	
 	private String getVarDefs() {
-		String vardefs = "";
-		for (Slot slot: slots.values())
-			if (slot instanceof Variable)
-				vardefs += "Value " + slot.getName() + ";\n";
-		return vardefs;
+		return slots.values().stream()
+				.filter(slot -> slot instanceof Variable)
+				.map(slot -> "Value " + slot.getName() + ";\n")
+				.collect(Collectors.joining());
 	}
 	
 	private String getComment() {
@@ -193,8 +194,7 @@ public class OperatorDefinition {
 				"\n" +
 			 	getComment() +
 				getClosureDef() +
-			 	"\npublic static " + ((hasReturn) ? "Value " : "void ") + name + getParmDecls() + 
-				" {\n" + 
+			 	"\npublic static " + ((hasReturn) ? "Value " : "void ") + name + getParmDecls() + " {\n" + 
 				In.dent(getVarDefs() + bodySource) + 
 				"}\n";
 	}

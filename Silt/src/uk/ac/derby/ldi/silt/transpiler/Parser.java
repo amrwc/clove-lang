@@ -1,6 +1,8 @@
 package uk.ac.derby.ldi.silt.transpiler;
 
 import java.util.Vector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
 import uk.ac.derby.ldi.silt.parser.ast.*;
@@ -128,15 +130,18 @@ public class Parser implements SiltVisitor {
 	private String fnInvoke(SimpleNode node) {
 		// Child 0 - identifier (fn name)
 		String fnname = getTokenOfChild(node, 0);
+		OperatorDefinition foundOperator = currentOperatorDefinition.getOperator(fnname);
+		if (foundOperator == null)
+			throw new ExceptionSemantic("Can't find operator " + fnname);
 		// Child 1 - arglist
 		@SuppressWarnings("unchecked")
 		Vector<String> arglist = (Vector<String>)compileChild(node, 1, null);
-		String arglistText = currentOperatorDefinition.getClosureConstruction();		
-		for (String argSource: arglist) {
-			if (arglistText.length() > 0)
-				arglistText += ", ";
-			arglistText += argSource;
-		}
+		String firstArg = foundOperator.getFirstParameterType().equals(currentOperatorDefinition.getFirstParameterType()) 
+				? "__closure" : currentOperatorDefinition.getClosureConstruction();
+		String arglistText = Stream.concat(
+				Stream.of(firstArg),
+				arglist.stream())
+					.collect(Collectors.joining(", "));
 		return fnname + "(" + arglistText + ")";
 	}
 	
