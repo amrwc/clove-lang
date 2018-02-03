@@ -8,4 +8,6 @@ java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test07.sil
 java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test08.sil
 java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test09.sil
 java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test10.sil
+java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test11.sil
+java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test12.sil
 java -classpath ./bin:./lib/ecj-4.6.1.jar Silt < test13.sil
