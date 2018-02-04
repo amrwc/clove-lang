@@ -102,9 +102,9 @@ class OperatorDefinition {
 	}
 
 	/** Ctor for operator definition. */
-	OperatorDefinition(String operatorName, OperatorDefinition parent) {
+	OperatorDefinition(String name, OperatorDefinition parent) {
+		this.name = name;
 		this.parent = parent;
-		name = operatorName;
 	}
 	
 	/** Add a nested operator to this operator. */
