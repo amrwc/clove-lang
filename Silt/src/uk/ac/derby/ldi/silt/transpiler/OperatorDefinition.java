@@ -8,8 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import uk.ac.derby.ldi.sili.exceptions.ExceptionFatal;
-import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
-import uk.ac.derby.ldi.silt.parser.ast.Node;
 
 /** This class captures information about the operator currently being defined, including its generated code.
  * 
@@ -102,21 +100,19 @@ class OperatorDefinition {
 		if (isSlotDefined(refname))
 			throw new ExceptionFatal("ERROR: " + refname + " is already defined in " + getSignature());
 	}
-	
-	/** Add a nested operator to this operator. */
-	private void addOperator(OperatorDefinition definition, Node node) {
-		String signature = definition.getSignature();
-		if (isOperatorDefined(signature))
-			throw new ExceptionSemantic("Operator " + signature + " is already defined.", node);
-		operators.put(signature, definition);
-	}
 
 	/** Ctor for operator definition. */
-	OperatorDefinition(String operatorName, OperatorDefinition parent, Node node) {
+	OperatorDefinition(String operatorName, OperatorDefinition parent) {
 		this.parent = parent;
 		name = operatorName;
-		if (parent != null)
-			parent.addOperator(this, node);
+	}
+	
+	/** Add a nested operator to this operator. */
+	void addOperator(OperatorDefinition definition) {
+		String signature = definition.getSignature();
+		if (isOperatorDefined(signature))
+			throw new ExceptionFatal("ERROR: Operator " + signature + " is already defined.");
+		operators.put(signature, definition);
 	}
 	
 	/** Return true if an operator exists within this operator. */

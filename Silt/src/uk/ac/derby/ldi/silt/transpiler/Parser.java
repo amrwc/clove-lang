@@ -12,14 +12,20 @@ public class Parser implements SiltVisitor {
 	// Reference to current operator definition.
 	private OperatorDefinition currentOperatorDefinition = null;
 
-	private void checkDefined(String name, Node node) {
+	private void checkSlotDefined(String name, Node node) {
 		if (currentOperatorDefinition.isSlotDefined(name))
 			throw new ExceptionSemantic(name + " is already defined in operator " + currentOperatorDefinition.getSignature(), node);		
 	}
 	
 	private void beginOperatorDefinition(String fnname, Node node) {
 		// Begin operator definition nested inside currentOperatorDefinition.
-		currentOperatorDefinition = new OperatorDefinition(fnname, currentOperatorDefinition, node);
+		OperatorDefinition parent = currentOperatorDefinition;
+		currentOperatorDefinition = new OperatorDefinition(fnname, currentOperatorDefinition);
+		if (parent != null) {
+			if (parent.isOperatorDefined(currentOperatorDefinition.getSignature()))
+				throw new ExceptionSemantic(fnname + " is already defined in operator " + parent.getSignature(), node);
+			parent.addOperator(currentOperatorDefinition);
+		}
 	}
 	
 	public void endOperatorDefinition() {
@@ -32,12 +38,12 @@ public class Parser implements SiltVisitor {
 		return node.jjtGetNumChildren();
 	}
 	
-	// Compile a given child of the given node and return the resulting source.
+	// Compile a given child of the given node and return the resulting Java source.
 	private Object compileChild(SimpleNode node, int childIndex, Object data) {
 		return node.jjtGetChild(childIndex).jjtAccept(this, data);
 	}
 	
-	// Compile all children of the given node, and return the resulting source.
+	// Compile all children of the given node, and return the resulting Java source.
 	private Object compileChildren(SimpleNode node, Object data) {
 		String out = "";
 		for (int i = 0; i < getChildCount(node); i++) {
@@ -108,7 +114,7 @@ public class Parser implements SiltVisitor {
 	public Object visit(ASTParmlist node, Object data) {
 		for (int i=0; i<getChildCount(node); i++) {
 			String parameterName = getTokenOfChild(node, i);
-			checkDefined(parameterName, node);
+			checkSlotDefined(parameterName, node);
 			currentOperatorDefinition.addParameter(parameterName);
 		}
 		return data;
