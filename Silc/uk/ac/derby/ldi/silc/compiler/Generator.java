@@ -30,7 +30,7 @@ public class Generator {
 	}
 	
 	public void compileInstructionAt(Instruction instruction, int address) {
-			currentOperatorDefinition.compileAt(instruction, address);
+		currentOperatorDefinition.compileAt(instruction, address);
 	}
 	
 	public void compileVariableInitialise(Slot slot) {
