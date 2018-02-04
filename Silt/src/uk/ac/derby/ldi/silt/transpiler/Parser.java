@@ -13,7 +13,7 @@ public class Parser implements SiltVisitor {
 	private OperatorDefinition currentOperatorDefinition = null;
 
 	private void checkDefined(String name, Node node) {
-		if (currentOperatorDefinition.isDefined(name))
+		if (currentOperatorDefinition.isSlotDefined(name))
 			throw new ExceptionSemantic(name + " is already defined in operator " + currentOperatorDefinition.getSignature(), node);		
 	}
 	

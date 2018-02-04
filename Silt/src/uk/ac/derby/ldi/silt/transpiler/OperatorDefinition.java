@@ -98,8 +98,8 @@ class OperatorDefinition {
 		return "/** " + content + " */\n\n";
 	}
 	
-	private void checkDefined(String refname) {
-		if (isDefined(refname))
+	private void checkSlotDefined(String refname) {
+		if (isSlotDefined(refname))
 			throw new ExceptionFatal("ERROR: " + refname + " is already defined in " + getSignature());
 	}
 	
@@ -130,7 +130,7 @@ class OperatorDefinition {
 	}
 	
 	/** Return true if a variable, parameter, or slot exists. */
-	boolean isDefined(String name) {
+	boolean isSlotDefined(String name) {
 		return slots.containsKey(name);
 	}
 
@@ -145,7 +145,7 @@ class OperatorDefinition {
 
 	/** Create a variable. */
 	Slot createVariable(String refname) {
-		checkDefined(refname);
+		checkSlotDefined(refname);
 		Variable variable = new Variable(refname);
 		slots.put(refname, variable);
 		return variable;
@@ -153,7 +153,7 @@ class OperatorDefinition {
 
 	/** Add a parameter */
 	Slot addParameter(String refname) {
-		checkDefined(refname);
+		checkSlotDefined(refname);
 		Parameter parameter = new Parameter(refname);
 		slots.put(refname, parameter);
 		parameters.add(parameter);
