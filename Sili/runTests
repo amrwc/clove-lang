@@ -24,4 +24,4 @@ java Sili < test11.sil
 echo "=== Test12.sil ==="
 java Sili < test12.sil
 echo "=== Test13.sil ==="
-time java Sili < test13.sil
+java Sili < test13.sil
