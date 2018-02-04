@@ -21,6 +21,7 @@ public class OperatorDefinition {
 	private HashMap<String, OperatorDefinition> operators = new HashMap<String, OperatorDefinition>();
 	private HashMap<String, Slot> slots = new HashMap<String, Slot>();
 	private boolean definedReturnValue = false;
+	private boolean isUsedInExpression = false;
 
 	/** Ctor for operator definition. */
 	public OperatorDefinition(String operatorName, OperatorDefinition parentDefinition) {
@@ -150,8 +151,7 @@ public class OperatorDefinition {
 	
 	public void compileEvaluate(Generator generator) {
 		generator.compileInstruction(new OpCallInvoke(getOperator()));
-		if (!hasDefinedReturnValue())
-			throw new ExceptionSemantic("Attempt to evaluate " + getSignature() + " which does not have a return value.");
+		isUsedInExpression = true;
 	}
 	
 	public void compileCall(Generator generator) {
@@ -160,5 +160,8 @@ public class OperatorDefinition {
 			generator.compilePop();
 	}
 	
+	public boolean isUsedInExpression() {
+		return isUsedInExpression;
+	}
 	
 }

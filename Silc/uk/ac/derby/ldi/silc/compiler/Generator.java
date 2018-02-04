@@ -90,8 +90,11 @@ public class Generator {
 		if (currentOperatorDefinition.hasDefinedReturnValue()) {
 			compilePush(new ValueInteger(0));
 			compileInstruction(new OpReturnValue());
-		} else
+		} else {
 			compileInstruction(new OpReturn());
+			if (currentOperatorDefinition.isUsedInExpression())
+				throw new ExceptionSemantic(currentOperatorDefinition.getSignature() + " was used in an expression but never returns a value.");
+		}
 		// Done.  Restore previous definition context.
 		currentOperatorDefinition = currentOperatorDefinition.getParentOperatorDefinition();
 	}
