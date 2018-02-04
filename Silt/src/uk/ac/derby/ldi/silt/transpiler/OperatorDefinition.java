@@ -1,11 +1,13 @@
 package uk.ac.derby.ldi.silt.transpiler;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import uk.ac.derby.ldi.sili.exceptions.ExceptionFatal;
 import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
 import uk.ac.derby.ldi.silt.parser.ast.Node;
 
@@ -14,7 +16,7 @@ import uk.ac.derby.ldi.silt.parser.ast.Node;
  * @author dave
  *
  */
-public class OperatorDefinition {
+class OperatorDefinition {
 	
 	private OperatorDefinition parent;	
 	private String name;
@@ -23,102 +25,9 @@ public class OperatorDefinition {
 	private Vector<Parameter> parameters = new Vector<Parameter>();
 	private boolean hasReturn = false;
 	private String bodySource = "";
-
-	/** Ctor for operator definition. */
-	public OperatorDefinition(String operatorName, OperatorDefinition parent, Node node) {
-		this.parent = parent;
-		name = operatorName;
-		if (parent != null)
-			parent.addOperator(this, node);
-	}
-	
-	/** Get the signature of this operator. */
-	public String getSignature() {
-		return name;
-	}
-
-	public void setHasReturn(boolean hasReturn) {
-		this.hasReturn = hasReturn;
-	}
-	
-	/** Get parent operator definition.  Null if this is the root operator. */
-	OperatorDefinition getParentOperatorDefinition() {
-		return parent;
-	}
-	
-	/** Return true if a variable, parameter, or slot exists. */
-	boolean isDefined(String name) {
-		return slots.containsKey(name);
-	}
-
-	private void checkDefined(String name, Node node) {
-		if (isDefined(name))
-			throw new ExceptionSemantic(name + " is already defined in operator " + getSignature(), node);		
-	}
-	
-	/** Return true if an operator exists. */
-	private boolean isOperatorDefined(String signature) {
-		return (operators.containsKey(signature));
-	}
-
-	public Slot createVariable(String refname, Node node) {
-		checkDefined(refname, node);
-		Variable variable = new Variable(refname);
-		slots.put(refname, variable);
-		return variable;
-	}
-	
-	public Slot addParameter(String refname, Node node) {
-		checkDefined(refname, node);
-		Parameter parameter = new Parameter(refname);
-		slots.put(refname, parameter);
-		parameters.add(parameter);
-		return parameter;
-	}
-	
-	public String findReference(String refname) {
-		String outRef = refname;
-		OperatorDefinition opDef = this;
-		do {
-			Slot slot = opDef.slots.get(refname);
-			if (slot != null)
-				return outRef;
-			opDef = opDef.parent;
-			outRef = "__closure." + outRef;
-		} while (opDef != null);
-		return null;
-	}
-	
-	/** Add a nested operator to this operator. */
-	private void addOperator(OperatorDefinition definition, Node node) {
-		String signature = definition.getSignature();
-		if (isOperatorDefined(signature))
-			throw new ExceptionSemantic("Operator " + signature + " is already defined.", node);
-		operators.put(signature, definition);
-	}
-	
-	/** Return an operator in this or an outer operator definition. Null if we can't find it. */
-	OperatorDefinition getOperator(String signature) {
-		OperatorDefinition opDef = this;
-		do {
-			OperatorDefinition operator = opDef.operators.get(signature);
-			if (operator != null)
-				return operator;
-			opDef = opDef.getParentOperatorDefinition();
-		} while (opDef != null);
-		return null;		
-	}
-
-	public void addSource(String source) {
-		bodySource += source;
-	}
-
-	String getFirstParameterType() {
-		return (parent != null) ? parent.getSignature() + "_closure" : null;
-	}
 	
 	private String getParmDecls() {
-		String firstParameterType = getFirstParameterType();
+		String firstParameterType = (parent != null) ? parent.getSignature() + "_closure" : null;
 		String firstParameter = (firstParameterType == null) ? "" : firstParameterType + " __closure";		
 		String parmlist = 
 				Stream.concat(
@@ -134,7 +43,7 @@ public class OperatorDefinition {
 				.collect(Collectors.joining());
 	}
 	
-	public String getClosureClassName() {
+	private String getClosureClassName() {
 		return name + "_closure";
 	}
 	
@@ -161,7 +70,7 @@ public class OperatorDefinition {
 				"}\n";
 	}
 
-	public String getClosureConstruction() {
+	private String getClosureConstruction() {
 		String slotNames = 
 				Stream.concat(
 						Stream.of("__closure").filter(p -> parent != null), 
@@ -188,8 +97,114 @@ public class OperatorDefinition {
 		} while (opDef != null);
 		return "/** " + content + " */\n\n";
 	}
+	
+	private void checkDefined(String refname) {
+		if (isDefined(refname))
+			throw new ExceptionFatal("ERROR: " + refname + " is already defined in " + getSignature());
+	}
+	
+	/** Add a nested operator to this operator. */
+	private void addOperator(OperatorDefinition definition, Node node) {
+		String signature = definition.getSignature();
+		if (isOperatorDefined(signature))
+			throw new ExceptionSemantic("Operator " + signature + " is already defined.", node);
+		operators.put(signature, definition);
+	}
 
-	public String getSource() {
+	/** Ctor for operator definition. */
+	OperatorDefinition(String operatorName, OperatorDefinition parent, Node node) {
+		this.parent = parent;
+		name = operatorName;
+		if (parent != null)
+			parent.addOperator(this, node);
+	}
+	
+	/** Return true if an operator exists within this operator. */
+	public boolean isOperatorDefined(String signature) {
+		return (operators.containsKey(signature));
+	}
+	
+	/** Get the signature of this operator. */
+	String getSignature() {
+		return name;
+	}
+	
+	/** Return true if a variable, parameter, or slot exists. */
+	boolean isDefined(String name) {
+		return slots.containsKey(name);
+	}
+
+	void setHasReturn(boolean hasReturn) {
+		this.hasReturn = hasReturn;
+	}
+	
+	/** Get parent operator definition.  Null if this is the root operator. */
+	OperatorDefinition getParentOperatorDefinition() {
+		return parent;
+	}
+
+	/** Create a variable. */
+	Slot createVariable(String refname) {
+		checkDefined(refname);
+		Variable variable = new Variable(refname);
+		slots.put(refname, variable);
+		return variable;
+	}
+
+	/** Add a parameter */
+	Slot addParameter(String refname) {
+		checkDefined(refname);
+		Parameter parameter = new Parameter(refname);
+		slots.put(refname, parameter);
+		parameters.add(parameter);
+		return parameter;
+	}
+	
+	/** Get variable/parameter dereference Java code given name. */
+	String findReference(String refname) {
+		String outRef = refname;
+		OperatorDefinition opDef = this;
+		do {
+			Slot slot = opDef.slots.get(refname);
+			if (slot != null)
+				return outRef;
+			opDef = opDef.parent;
+			outRef = "__closure." + outRef;
+		} while (opDef != null);
+		return null;
+	}
+	
+	/** Get function invocation Java code given function name and argument list. */
+	String findInvocation(String fnname, Vector<String> arglist) {
+		OperatorDefinition foundOperator = null;
+		OperatorDefinition opDef = this;
+		int nesting = 0;
+		do {
+			foundOperator = opDef.operators.get(fnname);
+			if (foundOperator != null)
+				break;
+			opDef = opDef.getParentOperatorDefinition();
+			nesting++;
+		} while (opDef != null);
+		if (foundOperator == null)
+			return null;		
+		String firstArg = nesting > 0 
+				? Collections.nCopies(nesting, "__closure").stream().collect(Collectors.joining(".")) 
+				: getClosureConstruction();
+		String arglistText = Stream.concat(
+				Stream.of(firstArg),
+				arglist.stream())
+					.collect(Collectors.joining(", "));
+		return fnname + "(" + arglistText + ")";		
+	}
+	
+	/** Add source code to this definition. */
+	void addSource(String source) {
+		bodySource += source;
+	}
+
+	/** Get the source code for this definition. */
+	String getSource() {
 		return	getNestedOperatorSource() + 
 				"\n" +
 			 	getComment() +

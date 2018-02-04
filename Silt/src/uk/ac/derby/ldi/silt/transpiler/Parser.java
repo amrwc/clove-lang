@@ -1,8 +1,6 @@
 package uk.ac.derby.ldi.silt.transpiler;
 
 import java.util.Vector;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
 import uk.ac.derby.ldi.silt.parser.ast.*;
@@ -13,6 +11,11 @@ public class Parser implements SiltVisitor {
 
 	// Reference to current operator definition.
 	private OperatorDefinition currentOperatorDefinition = null;
+
+	private void checkDefined(String name, Node node) {
+		if (currentOperatorDefinition.isDefined(name))
+			throw new ExceptionSemantic(name + " is already defined in operator " + currentOperatorDefinition.getSignature(), node);		
+	}
 	
 	private void beginOperatorDefinition(String fnname, Node node) {
 		// Begin operator definition nested inside currentOperatorDefinition.
@@ -103,8 +106,11 @@ public class Parser implements SiltVisitor {
 	
 	// Function definition parameter list.
 	public Object visit(ASTParmlist node, Object data) {
-		for (int i=0; i<getChildCount(node); i++)
-			currentOperatorDefinition.addParameter(getTokenOfChild(node, i), node);
+		for (int i=0; i<getChildCount(node); i++) {
+			String parameterName = getTokenOfChild(node, i);
+			checkDefined(parameterName, node);
+			currentOperatorDefinition.addParameter(parameterName);
+		}
 		return data;
 	}
 	
@@ -130,19 +136,13 @@ public class Parser implements SiltVisitor {
 	private String fnInvoke(SimpleNode node) {
 		// Child 0 - identifier (fn name)
 		String fnname = getTokenOfChild(node, 0);
-		OperatorDefinition foundOperator = currentOperatorDefinition.getOperator(fnname);
-		if (foundOperator == null)
-			throw new ExceptionSemantic("Can't find operator " + fnname);
 		// Child 1 - arglist
 		@SuppressWarnings("unchecked")
 		Vector<String> arglist = (Vector<String>)compileChild(node, 1, null);
-		String firstArg = foundOperator.getFirstParameterType().equals(currentOperatorDefinition.getFirstParameterType()) 
-				? "__closure" : currentOperatorDefinition.getClosureConstruction();
-		String arglistText = Stream.concat(
-				Stream.of(firstArg),
-				arglist.stream())
-					.collect(Collectors.joining(", "));
-		return fnname + "(" + arglistText + ")";
+		String opInvoke = currentOperatorDefinition.findInvocation(fnname, arglist);
+		if (opInvoke == null)
+			throw new ExceptionSemantic("Can't find operator " + fnname, node);	
+		return opInvoke;
 	}
 	
 	// Function call
@@ -199,7 +199,7 @@ public class Parser implements SiltVisitor {
 		boolean emitSemicolon = !(data != null && data instanceof Boolean && (Boolean)data);
 		String refname = getTokenOfChild(node, 0);
 		if (currentOperatorDefinition.findReference(refname) == null)
-			currentOperatorDefinition.createVariable(refname, node);
+			currentOperatorDefinition.createVariable(refname);
 		String deref = currentOperatorDefinition.findReference(refname);		
 		return deref + " = " + compileChild(node, 1, data) + ((emitSemicolon) ? ";\n" : "");
 	}

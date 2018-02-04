@@ -15,9 +15,5 @@ public class ExceptionSemantic extends Error {
 				((BaseASTNode)node).first_token.beginLine + " column " + 
 				((BaseASTNode)node).first_token.beginColumn + " near " + ((BaseASTNode)node).tokenValue);
 	}
-
-	public ExceptionSemantic(String message) {
-		super(message);
-	}
 	
 }

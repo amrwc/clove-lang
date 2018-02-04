@@ -13,7 +13,6 @@ import java.io.PrintWriter;
 import org.eclipse.jdt.core.compiler.CompilationProgress;
 
 import uk.ac.derby.ldi.sili.exceptions.ExceptionFatal;
-import uk.ac.derby.ldi.sili.exceptions.ExceptionSemantic;
 
 /**
  * @author Dave
@@ -144,7 +143,7 @@ public class ForeignCompilerJava {
 		}
 
 		if (!compiled)
-			throw new ExceptionSemantic("Compilation failed due to errors: \n" + compilerMessages + "\n");
+			throw new ExceptionFatal("Compilation failed due to errors: \n" + compilerMessages + "\n");
 	}
 
 	/**
