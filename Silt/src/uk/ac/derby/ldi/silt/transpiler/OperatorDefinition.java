@@ -120,7 +120,7 @@ class OperatorDefinition {
 	}
 	
 	/** Return true if an operator exists within this operator. */
-	public boolean isOperatorDefined(String signature) {
+	boolean isOperatorDefined(String signature) {
 		return (operators.containsKey(signature));
 	}
 	
