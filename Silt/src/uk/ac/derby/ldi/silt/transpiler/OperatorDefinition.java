@@ -130,6 +130,7 @@ class OperatorDefinition {
 		return slots.containsKey(name);
 	}
 
+	/** Identify whether this operator returns a value or not. */
 	void setHasReturn(boolean hasReturn) {
 		this.hasReturn = hasReturn;
 	}
@@ -194,12 +195,12 @@ class OperatorDefinition {
 		return fnname + "(" + arglistText + ")";		
 	}
 	
-	/** Add source code to this definition. */
+	/** Add Java source code to this definition. */
 	void addSource(String source) {
 		bodySource += source;
 	}
 
-	/** Get the source code for this definition. */
+	/** Get the Java source code for this definition. */
 	String getSource() {
 		return	getNestedOperatorSource() + 
 				"\n" +
