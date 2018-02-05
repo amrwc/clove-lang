@@ -6,7 +6,7 @@ import junit.framework.TestSuite;
 public class AllTests extends TestCase {
 
 	public static TestSuite suite() {
-		TestSuite suite = new TestSuite("Test for ca.mb.armchair.setp.tests");
+		TestSuite suite = new TestSuite("Tests");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(TestValues.class);
 		suite.addTestSuite(TestEngine.class);
