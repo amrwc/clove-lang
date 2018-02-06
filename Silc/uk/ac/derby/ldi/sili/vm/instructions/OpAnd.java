@@ -6,6 +6,6 @@ import uk.ac.derby.ldi.sili.vm.Instruction;
 public class OpAnd extends Instruction {
 	private final static long serialVersionUID = 0;
 	public final void execute(Context context) {
-		context.and();
+		context.push(context.pop().and(context.pop()));
 	}
 }

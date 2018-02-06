@@ -1,8 +1,6 @@
 package uk.ac.derby.ldi.sili.vm;
 
-import uk.ac.derby.ldi.sili.exceptions.ExceptionFatal;
 import uk.ac.derby.ldi.sili.values.*;
-import uk.ac.derby.ldi.sili.vm.instructions.OpNop;
 
 /**
  * Run-time context for operator execution. Allows access to relevant parameters
@@ -47,28 +45,30 @@ public class Context {
 		stackPointer = 0;
 	}
 
-	/** Create a context for an operator invocation. */
-	Context(Context caller, Operator operator) {
+	/**
+	 * Create a context for an operator invocation, where the variables and parms
+	 * referenced are in a specified context
+	 */
+	private Context(Context caller, Operator operator, Context varparms) {
 		this.vm = caller.vm;
 		this.caller = caller;
 		depth = operator.getDepth();
 		// Set up scope display
-		contextDisplay = new Context[Math.max(depth + 1, caller.contextDisplay.length)];
-		System.out.println("Context: copy display from " + caller + " to " + this);
-		System.arraycopy(caller.contextDisplay, 0, contextDisplay, 0, caller.contextDisplay.length);
+		contextDisplay = new Context[Math.max(depth + 1, varparms.contextDisplay.length)];
+		System.arraycopy(varparms.contextDisplay, 0, contextDisplay, 0, varparms.contextDisplay.length);
 		// Add this context to the scope display
 		contextDisplay[depth] = this;
 		// Allocate space for variables.
 		if (operator.getVariableCount() > 0)
 			variables = new Cell[operator.getVariableCount()];
 		// Adjust the caller context's stack pointer to remove the arguments from its stack
-		// and move them to this context. This ensures continuations will
+		// and move them to this context. This ensures continuations (such as
+		// TupleIteratorS) will
 		// work, because we no longer need to refer to the caller's operand stack.
 		int parmCount = operator.getParameterCount();
 		if (parmCount > 0) {
 			arguments = new Value[parmCount];
 			caller.stackPointer -= parmCount;
-			System.out.println("Context: copy stack from " + caller + " to " + this);
 			System.arraycopy(caller.operandStack, caller.stackPointer, arguments, 0, parmCount);
 		}
 		// Allocate an operand stack.
@@ -78,6 +78,11 @@ public class Context {
 		// Initialise the instruction and stack pointers.
 		instructionPointer = 0;
 		stackPointer = 0;
+	}
+
+	/** Create a context for an operator invocation. */
+	Context(Context caller, Operator operator) {
+		this(caller, operator, caller);
 	}
 
 	private void dumpstack() {
@@ -121,31 +126,25 @@ public class Context {
 		System.out.println("--------------------");
 	}
 
-	/** Get the currently-executing instruction. */
-	public final Instruction getCurrentInstruction() {
-		if (code == null)
-			return new OpNop();
-		return code[instructionPointer - 1];
-	}
-
 	/** Get the virtual machine upon which this Context is running. */
 	public final VirtualMachine getVirtualMachine() {
 		return vm;
 	}
 
 	private final void execute() {
-		vm.setCurrentContext(this);
-		while (instructionPointer < code.length) {
-			Instruction i = code[instructionPointer++];
-			// System.out.println("About to execute " + i.toString());
-			i.execute(this);
-		}
-		vm.setCurrentContext(caller);
+		while (instructionPointer < code.length)
+			code[instructionPointer++].execute(this);
 	}
 
 	// Invoke user-defined operator in its own context, i.e., call it.
 	public final void call(Operator operator) {
 		(new Context(this, operator)).execute();
+	}
+
+	// Invoke user-defined operator in its own context, using a specified parent
+	// context for variable/parm scope.
+	public final void call(Operator operator, Context varparmContext) {
+		(new Context(this, operator, varparmContext)).execute();
 	}
 
 	public final void doReturn() {
@@ -163,8 +162,15 @@ public class Context {
 	}
 
 	/** Return Value on top of the stack */
-	private final Value peek() {
+	public final Value peek() {
 		return operandStack[stackPointer - 1];
+	}
+
+	/** Return n values on top of the stack */
+	public Value[] peek(int n) {
+		Value[] values = new Value[n];
+		System.arraycopy(operandStack, stackPointer - n, values, 0, n);
+		return values;
 	}
 
 	final Context getCaller() {
@@ -205,11 +211,7 @@ public class Context {
 	 * Operator to set value of a local variable. RT: POP - value
 	 */
 	public final void varSet(int depth, int offset) {
-		Value v = pop();
-		Cell cell = contextDisplay[depth].variables[offset];
-		if (cell == null)
-			(new ExceptionFatal("Context: varSet: cell in " + this + " at depth " + depth + " and offset " + offset + " is null")).printStackTrace();
-		cell.setValue(v);
+		contextDisplay[depth].variables[offset].setValue(pop());
 	}
 
 	/**
@@ -224,7 +226,6 @@ public class Context {
 	 * 
 	 */
 	public final void varSetCell(int depth, int offset, Cell cell) {
-		System.out.println("Context: varSetCell: cell in " + this + " at depth " + depth + " and offset " + offset + " is " + cell);
 		contextDisplay[depth].variables[offset] = cell;
 	}
 
@@ -264,18 +265,6 @@ public class Context {
 		push(literal);
 	}
 
-	// Push true literal to stack
-	// PUSH - ValueBoolean - true
-	public final void pushTrue() {
-		push(ValueBoolean.getTrue());
-	}
-
-	// Push false literal to stack
-	// PUSH - ValueBoolean - false
-	public final void pushFalse() {
-		push(ValueBoolean.getFalse());
-	}
-
 	// Duplicate value on top of stack
 	public final void duplicate() {
 		push(peek());
@@ -296,160 +285,4 @@ public class Context {
 		push(v2);
 	}
 
-	// MAX - return larger of two values
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void max() {
-		Value p1 = pop();
-		Value p2 = pop();
-		if (p1.gt(p2).booleanValue())
-			push(p1);
-		else
-			push(p2);
-	}
-
-	// MIN - return smaller of two values
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void min() {
-		Value p1 = pop();
-		Value p2 = pop();
-		if (p1.lt(p2).booleanValue())
-			push(p1);
-		else
-			push(p2);
-	}
-
-	// Logical XOR
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void xor() {
-		push(pop().xor(pop()));
-	}
-
-	// Logical OR
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void or() {
-		push(pop().or(pop()));
-	}
-
-	// Logical AND
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void and() {
-		push(pop().and(pop()));
-	}
-
-	// =
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void eq() {
-		push(pop().eq(pop()));
-	}
-
-	// !=
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void neq() {
-		push(pop().neq(pop()));
-	}
-
-	// >=
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void gte() {
-		Value v2 = pop();
-		push(pop().gte(v2));
-	}
-
-	// <=
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void lte() {
-		Value v2 = pop();
-		push(pop().lte(v2));
-	}
-
-	// >
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void gt() {
-		Value v2 = pop();
-		push(pop().gt(v2));
-	}
-
-	// <
-	// POP - Value
-	// POP - Value
-	// PUSH - ValueBoolean
-	public final void lt() {
-		Value v2 = pop();
-		push(pop().lt(v2));
-	}
-
-	// +
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void add() {
-		push(pop().add(pop()));
-	}
-
-	// -
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void subtract() {
-		Value v2 = pop();
-		push(pop().subtract(v2));
-	}
-
-	// *
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void mult() {
-		push(pop().mult(pop()));
-	}
-
-	// /
-	// POP - Value
-	// POP - Value
-	// PUSH - Value
-	public final void div() {
-		Value v2 = pop();
-		push(pop().div(v2));
-	}
-
-	// Logical NOT
-	// POP - Value
-	// PUSH - Value
-	public final void not() {
-		push(pop().not());
-	}
-
-	// Unary +
-	// POP - Value
-	// PUSH - Value
-	public final void unary_plus() {
-		push(pop().unary_plus());
-	}
-
-	// Unary -
-	// POP - Value
-	// PUSH - Value
-	public final void unary_minus() {
-		push(pop().unary_minus());
-	}
 }

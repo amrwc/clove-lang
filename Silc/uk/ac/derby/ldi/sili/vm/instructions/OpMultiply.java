@@ -6,6 +6,6 @@ import uk.ac.derby.ldi.sili.vm.Instruction;
 public class OpMultiply extends Instruction {
 	private final static long serialVersionUID = 0;
 	public final void execute(Context context) {
-		context.mult();
+		context.push(context.pop().mult(context.pop()));
 	}
 }

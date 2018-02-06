@@ -201,21 +201,6 @@ public class Generator {
 	public void compileSet(String refname) {
 		compileSet(findReference(refname));
 	}
-
-	// MAX
-	public void compileMax() {
-		compileInstruction(new OpMax());
-	}
-	
-	// MIN
-	public void compileMin() {
-		compileInstruction(new OpMin());
-	}
-	
-	// XOR
-	public void compileXor() {
-		compileInstruction(new OpXor());
-	}
 	
 	// OR
 	public void compileOr() {

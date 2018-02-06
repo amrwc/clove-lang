@@ -6,6 +6,6 @@ import uk.ac.derby.ldi.sili.vm.Instruction;
 public class OpEq extends Instruction {
 	private final static long serialVersionUID = 0;
 	public final void execute(Context context) {
-		context.eq();
+		context.push(context.pop().eq(context.pop()));
 	}
 }
