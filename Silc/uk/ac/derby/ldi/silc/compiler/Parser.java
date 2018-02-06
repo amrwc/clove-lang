@@ -1,6 +1,6 @@
 package uk.ac.derby.ldi.silc.compiler;
 
-import uk.ac.derby.ldi.silc.parser.*;
+import uk.ac.derby.ldi.silc.parser.ast.*;
 
 public class Parser implements SilcVisitor {
 

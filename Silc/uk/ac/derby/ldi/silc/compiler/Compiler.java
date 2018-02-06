@@ -1,6 +1,8 @@
 package uk.ac.derby.ldi.silc.compiler;
 
-import uk.ac.derby.ldi.silc.parser.*;
+import uk.ac.derby.ldi.silc.parser.ast.ASTCode;
+import uk.ac.derby.ldi.silc.parser.ast.Silc;
+import uk.ac.derby.ldi.silc.parser.ast.SilcVisitor;
 import uk.ac.derby.ldi.sili.vm.*;
 
 import java.io.*;

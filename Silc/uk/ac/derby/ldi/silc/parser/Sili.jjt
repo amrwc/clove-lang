@@ -24,12 +24,14 @@ options {
   MULTI = true;
   VISITOR = true;
   NODE_DEFAULT_VOID = true;
-  NODE_EXTENDS = "uk.ac.derby.ldi.silc.compiler.BaseASTNode";
   JDK_VERSION = "1.8";
+  NODE_EXTENDS = "uk.ac.derby.ldi.silc.compiler.BaseASTNode";
+  NODE_PACKAGE = "uk.ac.derby.ldi.silc.parser.ast";
+  JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
 PARSER_BEGIN(Silc)
-package uk.ac.derby.ldi.silc.parser;
+package uk.ac.derby.ldi.silc.parser.ast;
 public class Silc {}
 PARSER_END(Silc)
 
