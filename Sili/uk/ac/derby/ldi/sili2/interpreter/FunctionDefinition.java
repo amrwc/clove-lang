@@ -2,7 +2,7 @@ package uk.ac.derby.ldi.sili2.interpreter;
 
 import java.util.Vector;
 
-import uk.ac.derby.ldi.sili2.parser.*;
+import uk.ac.derby.ldi.sili2.parser.ast.SimpleNode;
 
 import java.util.HashMap;
 import java.io.Serializable;

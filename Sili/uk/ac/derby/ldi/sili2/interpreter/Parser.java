@@ -1,6 +1,6 @@
 package uk.ac.derby.ldi.sili2.interpreter;
 
-import uk.ac.derby.ldi.sili2.parser.*;
+import uk.ac.derby.ldi.sili2.parser.ast.*;
 import uk.ac.derby.ldi.sili2.values.*;
 
 public class Parser implements SiliVisitor {
