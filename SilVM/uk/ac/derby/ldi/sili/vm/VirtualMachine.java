@@ -13,9 +13,6 @@ import uk.ac.derby.ldi.sili.values.*;
 
 public class VirtualMachine {
 	
-	// currently executing Context
-	private Context currentContext;
-	
 	// root execution Context.
 	private Context rootContext;
 	
@@ -36,15 +33,6 @@ public class VirtualMachine {
 	/** Reset the VM. */
 	public void resetVM() {
 		rootContext = new Context(this);
-	}
-	
-	/** Get the currently-executing Instruction. */
-	public Instruction getCurrentInstruction() {
-		return currentContext.getCurrentInstruction();
-	}
-	
-	final void setCurrentContext(Context context) {
-		currentContext = context;
 	}
 
 	/** Execute the given ValueOperator in the root Context. */

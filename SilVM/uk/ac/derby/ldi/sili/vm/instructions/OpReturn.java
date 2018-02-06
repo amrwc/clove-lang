@@ -4,6 +4,7 @@ import uk.ac.derby.ldi.sili.vm.Context;
 import uk.ac.derby.ldi.sili.vm.Instruction;
 
 public class OpReturn extends Instruction {
+	private final static long serialVersionUID = 0;
 	public final void execute(Context context) {
 		context.doReturn();
 	}

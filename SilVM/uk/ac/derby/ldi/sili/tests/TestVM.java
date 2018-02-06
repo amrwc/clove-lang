@@ -18,7 +18,7 @@ public class TestVM {
 		code.compile(new OpPushLiteral(new ValueInteger(60)));		// PUSH 60
 		code.compile(new OpPushLiteral(new ValueInteger(45)));		// PUSH 45
 		code.compile(new OpAdd());									// +
-		code.compile(new OpWriteRaw());								// WRITE
+		code.compile(new OpWrite());									// WRITE
 		code.compile(new OpReturn());								// RETURN
 		(new Dumper()).dumpMachineCode(code);
 		machine.execute(code);
@@ -29,22 +29,22 @@ public class TestVM {
 		machine.resetVM();
 		Operator code = new Operator("Test", 0, 1);
 		code.compile(new OpPushLiteral(new ValueInteger(200)));			// PUSH 200
-		code.compile(new OpVariableInitialise(0, 0, cellGenerator));	// assign to COUNTER
-		code.compile(new OpPushLiteral(new ValueInteger(3)));		// <HERE> PUSH 3
-		code.compile(new OpPushLiteral(new ValueInteger(4)));		// PUSH 4
-		code.compile(new OpAdd());									// +
-		code.compile(new OpWriteRaw());								// WRITE
-		code.compile(new OpVariableGet(0, 0));						// COUNTER
-		code.compile(new OpWriteRaw());								// WRITE
-		code.compile(new OpVariableGet(0, 0));						// COUNTER
-		code.compile(new OpPushLiteral(new ValueInteger(1)));		// PUSH 1
-		code.compile(new OpSubtract());								// -
-		code.compile(new OpVariableSet(0, 0));						// assign to COUNTER
-		code.compile(new OpVariableGet(0, 0));						// COUNTER
-		code.compile(new OpPushLiteral(new ValueInteger(1)));		// PUSH 1
-		code.compile(new OpGte());									// >=
-		code.compile(new OpBranchIfTrue(2));						// Jump if true to <HERE>
-		code.compile(new OpReturn());								// RETURN
+		code.compile(new OpVariableInitialise(0, 0, cellGenerator));		// assign to COUNTER
+		code.compile(new OpPushLiteral(new ValueInteger(3)));				// <HERE> PUSH 3
+		code.compile(new OpPushLiteral(new ValueInteger(4)));				// PUSH 4
+		code.compile(new OpAdd());										// +
+		code.compile(new OpWrite());										// WRITE
+		code.compile(new OpVariableGet(0, 0));							// COUNTER
+		code.compile(new OpWrite());										// WRITE
+		code.compile(new OpVariableGet(0, 0));							// COUNTER
+		code.compile(new OpPushLiteral(new ValueInteger(1)));				// PUSH 1
+		code.compile(new OpSubtract());									// -
+		code.compile(new OpVariableSet(0, 0));							// assign to COUNTER
+		code.compile(new OpVariableGet(0, 0));							// COUNTER
+		code.compile(new OpPushLiteral(new ValueInteger(1)));				// PUSH 1
+		code.compile(new OpGte());										// >=
+		code.compile(new OpBranchIfTrue(2));								// Jump if true to <HERE>
+		code.compile(new OpReturn());									// RETURN
 		(new Dumper()).dumpMachineCode(code);
 		machine.execute(code);
 	}
@@ -57,7 +57,7 @@ public class TestVM {
 		Operator writeInt = new Operator("writeInt", 1);
 		writeInt.setParameterCount(1);
 		writeInt.compile(new OpParameterGet(1, 0));					// PUSH x
-		writeInt.compile(new OpWriteRaw());							// write X
+		writeInt.compile(new OpWrite());								// write X
 		writeInt.compile(new OpReturn());							// RETURN
 		
 		// main
