@@ -5,8 +5,6 @@ import uk.ac.derby.ldi.sili.vm.Instruction;
 import uk.ac.derby.ldi.sili.vm.Operator;
 
 public class OpCallInvoke extends Instruction {
-	private final static long serialVersionUID = 0;
-
 	private Operator operator;
 	
 	/* For serialization support */
