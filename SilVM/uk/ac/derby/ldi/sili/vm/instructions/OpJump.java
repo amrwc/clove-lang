@@ -4,6 +4,8 @@ import uk.ac.derby.ldi.sili.vm.Context;
 import uk.ac.derby.ldi.sili.vm.Instruction;
 
 public class OpJump extends Instruction {
+	private final static long serialVersionUID = 0;
+
 	private int address;
 	
 	/* For serialization support */

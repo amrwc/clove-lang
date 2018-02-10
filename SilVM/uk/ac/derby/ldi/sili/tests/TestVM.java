@@ -9,7 +9,6 @@ import uk.ac.derby.ldi.sili.vm.instructions.*;
 public class TestVM {
 
 	private static VirtualMachine machine = new VirtualMachine(System.out);
-	private CellMutableFactory cellGenerator = new CellMutableFactory();
 	
 	@Test
 	public void testVMSimple() {
@@ -29,7 +28,7 @@ public class TestVM {
 		machine.resetVM();
 		Operator code = new Operator("Test", 0, 1);
 		code.compile(new OpPushLiteral(new ValueInteger(200)));			// PUSH 200
-		code.compile(new OpVariableInitialise(0, 0, cellGenerator));		// assign to COUNTER
+		code.compile(new OpVariableSet(0, 0));							// assign to COUNTER
 		code.compile(new OpPushLiteral(new ValueInteger(3)));				// <HERE> PUSH 3
 		code.compile(new OpPushLiteral(new ValueInteger(4)));				// PUSH 4
 		code.compile(new OpAdd());										// +
@@ -62,19 +61,19 @@ public class TestVM {
 		
 		// main
 		Operator main = new Operator("Test", 0, 1);
-		main.compile(new OpPushLiteral(new ValueInteger(200)));			// PUSH 200
-		main.compile(new OpVariableInitialise(0, 0, cellGenerator));	// assign to COUNTER
+		main.compile(new OpPushLiteral(new ValueInteger(200)));		// PUSH 200
+		main.compile(new OpVariableSet(0, 0));						// assign to COUNTER
 																	// <HERE> writeInt(
 		main.compile(new OpVariableGet(0, 0));						// COUNTER
 		main.compile(new OpCallInvoke(writeInt));					// );
 		main.compile(new OpVariableGet(0, 0));						// COUNTER
-		main.compile(new OpPushLiteral(new ValueInteger(1)));		// PUSH 1
+		main.compile(new OpPushLiteral(new ValueInteger(1)));			// PUSH 1
 		main.compile(new OpSubtract());								// -
 		main.compile(new OpVariableSet(0, 0));						// assign to COUNTER
 		main.compile(new OpVariableGet(0, 0));						// COUNTER
-		main.compile(new OpPushLiteral(new ValueInteger(1)));		// PUSH 1
+		main.compile(new OpPushLiteral(new ValueInteger(1)));			// PUSH 1
 		main.compile(new OpGte());									// >=
-		main.compile(new OpBranchIfTrue(2));						// Jump if true to <HERE>
+		main.compile(new OpBranchIfTrue(2));							// Jump if true to <HERE>
 		main.compile(new OpReturn());								// RETURN
 		(new Dumper()).dumpMachineCode(main);
 		machine.execute(main);		

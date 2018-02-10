@@ -1,9 +1,13 @@
 package uk.ac.derby.ldi.sili.vm;
 
+import java.io.Serializable;
+
 /** Base class for VM operators. */
-public abstract class Instruction {
+public abstract class Instruction implements Serializable {
 	
-    /** Get this instruction's name. */
+	private static final long serialVersionUID = 1L;
+
+	/** Get this instruction's name. */
     public final String getName() {
         return getClass().getSimpleName();
     }
