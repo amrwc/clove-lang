@@ -26,7 +26,4 @@ public abstract class Slot {
 	
 	/** Compile getter, which is invoked by identifier dereference.  Value will be pushed onto stack. */
 	public abstract void compileGet(Generator generator);
-
-	/** Compile variable initialisation. */
-	public abstract void compileInitialise(Generator generator);
 }

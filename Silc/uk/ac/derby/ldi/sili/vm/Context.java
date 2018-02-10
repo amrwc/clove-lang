@@ -16,7 +16,7 @@ public class Context {
 
 	private Context[] contextDisplay; // this context's view of static scope
 
-	private Cell[] variables; // variables
+	private Value[] variables; // variables
 	private Value[] arguments; // arguments
 
 	private Value[] operandStack; // operand stack
@@ -60,7 +60,7 @@ public class Context {
 		contextDisplay[depth] = this;
 		// Allocate space for variables.
 		if (operator.getVariableCount() > 0)
-			variables = new Cell[operator.getVariableCount()];
+			variables = new Value[operator.getVariableCount()];
 		// Adjust the caller context's stack pointer to remove the arguments from its stack
 		// and move them to this context. This ensures continuations (such as
 		// TupleIteratorS) will
@@ -211,30 +211,14 @@ public class Context {
 	 * Operator to set value of a local variable. RT: POP - value
 	 */
 	public final void varSet(int depth, int offset) {
-		contextDisplay[depth].variables[offset].setValue(pop());
+		contextDisplay[depth].variables[offset] = pop();
 	}
 
 	/**
 	 * Operator to get value of a local variable. RT: PUSH - value
 	 */
 	public final void varGet(int depth, int offset) {
-		push(contextDisplay[depth].variables[offset].getValue());
-	}
-
-	/**
-	 * Operator to define a Cell. RT:
-	 * 
-	 */
-	public final void varSetCell(int depth, int offset, Cell cell) {
-		contextDisplay[depth].variables[offset] = cell;
-	}
-
-	/**
-	 * Operator to obtain the Cell at a given slot. RT:
-	 * 
-	 */
-	public final Cell varGetCell(int depth, int offset) {
-		return contextDisplay[depth].variables[offset];
+		push(contextDisplay[depth].variables[offset]);
 	}
 
 	/**

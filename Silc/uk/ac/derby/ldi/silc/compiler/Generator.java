@@ -33,19 +33,6 @@ public class Generator {
 		currentOperatorDefinition.compileAt(instruction, address);
 	}
 	
-	public void compileVariableInitialise(Slot slot) {
-		slot.compileInitialise(this);
-	}
-	
-	public void compileVariableInitialise(String refname) {
-		compileVariableInitialise(findReference(refname));
-	}
-	
-	public void defineVariable(String varname) {
-		currentOperatorDefinition.defineVariable(varname);
-		compileVariableInitialise(varname);
-	}
-	
 	private void defineOperator(String fnname) {
 		currentOperatorDefinition = new OperatorDefinition(fnname, currentOperatorDefinition);
 	}
