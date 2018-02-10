@@ -11,3 +11,4 @@ java -classpath ./ Sili < test10.sil
 java -classpath ./ Sili < test11.sil
 java -classpath ./ Sili < test12.sil
 java -classpath ./ Sili < test13.sil
+java -classpath ./ Sili < test14.sil

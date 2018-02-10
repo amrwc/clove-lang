@@ -25,3 +25,5 @@ echo "=== Test12.sil ==="
 java Silc < test12.sil
 echo "=== Test13.sil ==="
 java Silc < test13.sil
+echo "=== Test14.sil ==="
+java Silc < test14.sil

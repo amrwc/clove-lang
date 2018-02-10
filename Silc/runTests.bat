@@ -11,3 +11,4 @@ java -classpath ./ Silc < test10.sil
 java -classpath ./ Silc < test11.sil
 java -classpath ./ Silc < test12.sil
 java -classpath ./ Silc < test13.sil
+java -classpath ./ Silc < test14.sil
