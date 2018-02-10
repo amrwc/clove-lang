@@ -62,8 +62,7 @@ public class Context {
 		if (operator.getVariableCount() > 0)
 			variables = new Value[operator.getVariableCount()];
 		// Adjust the caller context's stack pointer to remove the arguments from its stack
-		// and move them to this context. This ensures continuations (such as
-		// TupleIteratorS) will
+		// and move them to this context. This ensures continuations will
 		// work, because we no longer need to refer to the caller's operand stack.
 		int parmCount = operator.getParameterCount();
 		if (parmCount > 0) {
