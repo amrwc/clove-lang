@@ -1,6 +1,6 @@
 package uk.ac.derby.ldi.calcast.calculator;
 
-import uk.ac.derby.ldi.calcast.parser.*;
+import uk.ac.derby.ldi.calcast.parser.ast.*;
 
 /** A new AST-based calculator. */
 public class Parser implements CalcVisitor {

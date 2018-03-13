@@ -1,6 +1,6 @@
 package uk.ac.derby.ldi.calcast.calculator;
 
-import uk.ac.derby.ldi.calcast.parser.*;
+import uk.ac.derby.ldi.calcast.parser.ast.Calc;
 
 public class Calculator {
 	

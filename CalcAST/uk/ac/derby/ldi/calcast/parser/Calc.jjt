@@ -25,10 +25,12 @@ options {
   VISITOR = true;
   NODE_DEFAULT_VOID = true;
   NODE_EXTENDS = "uk.ac.derby.ldi.calcast.calculator.BaseASTNode";
+  NODE_PACKAGE = "uk.ac.derby.ldi.calcast.parser.ast";
+  JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
 PARSER_BEGIN(Calc)
-package uk.ac.derby.ldi.calcast.parser;
+package uk.ac.derby.ldi.calcast.parser.ast;
 public class Calc {}
 PARSER_END(Calc)
 
