@@ -118,7 +118,7 @@ class FunctionDefinition implements Comparable<Object>, Serializable {
 		if (slot != null)
 			return slot.intValue();
 		int slotNumber = slots.size();
-		slots.put(name, new Integer(slotNumber));
+		slots.put(name, Integer.valueOf(slotNumber));
 		return slotNumber;
 	}	
 	

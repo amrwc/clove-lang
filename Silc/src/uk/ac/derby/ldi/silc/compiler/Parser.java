@@ -95,7 +95,7 @@ public class Parser implements SilcVisitor {
 		for (int i=0; i < node.jjtGetNumChildren(); i++)
 			compileChild(node, i, data);
 		// Return the number of arguments
-		return new Integer(node.jjtGetNumChildren());
+		return Integer.valueOf(node.jjtGetNumChildren());
 	}
 	
 	// Function call
