@@ -1,2 +1,2 @@
 #!/bin/bash
-java -classpath ./ Calc
+java -classpath ./bin Calc
