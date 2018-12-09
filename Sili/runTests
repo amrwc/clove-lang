@@ -1,29 +1,29 @@
 #!/bin/sh
 echo "=== Test01.sil ==="
-java Sili < test01.sil
+java -classpath ./bin Sili < test01.sil
 echo "=== Test02.sil ==="
-java Sili < test02.sil
+java -classpath ./bin Sili < test02.sil
 echo "=== Test03.sil ==="
-java Sili < test03.sil
+java -classpath ./bin Sili < test03.sil
 echo "=== Test04.sil ==="
-java Sili < test04.sil
+java -classpath ./bin Sili < test04.sil
 echo "=== Test05.sil ==="
-java Sili < test05.sil
+java -classpath ./bin Sili < test05.sil
 echo "=== Test06.sil ==="
-java Sili < test06.sil
+java -classpath ./bin Sili < test06.sil
 echo "=== Test07.sil ==="
-java Sili < test07.sil
+java -classpath ./bin Sili < test07.sil
 echo "=== Test08.sil ==="
-java Sili < test08.sil
+java -classpath ./bin Sili < test08.sil
 echo "=== Test09.sil ==="
-java Sili < test09.sil
+java -classpath ./bin Sili < test09.sil
 echo "=== Test10.sil ==="
-java Sili < test10.sil
+java -classpath ./bin Sili < test10.sil
 echo "=== Test11.sil ==="
-java Sili < test11.sil
+java -classpath ./bin Sili < test11.sil
 echo "=== Test12.sil ==="
-java Sili < test12.sil
+java -classpath ./bin Sili < test12.sil
 echo "=== Test13.sil ==="
-java Sili < test13.sil
+java -classpath ./bin Sili < test13.sil
 echo "=== Test14.sil ==="
-java Sili < test14.sil
+java -classpath ./bin Sili < test14.sil
