@@ -58,8 +58,8 @@ SPECIAL_TOKEN : /* COMMENTS */
 
 TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 {
-  <AND: "AND">
-| <OR: "OR">
+  <OR: "OR">
+| <AND: "AND">
 | <NOT: "NOT">
 | <TRUE: "TRUE">
 | <FALSE: "FALSE">
