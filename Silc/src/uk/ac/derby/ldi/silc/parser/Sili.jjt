@@ -61,16 +61,15 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 {
   < IF: "IF" >
 | < ELSE: "ELSE" >
-| < TO: "WHILE" >
 | < FOR: "FOR" >
 | < WRITE: "WRITE" >
+| < FN: "FN" >
+| < RETURN: "RETURN" >
 | < OR: "OR" >
 | < AND: "AND" >
 | < NOT: "NOT" >
 | < TRUE: "TRUE" >
 | < FALSE: "FALSE" >
-| < FN: "FN" >
-| < RETURN: "RETURN" >
 }
 
 TOKEN : /* LITERALS */

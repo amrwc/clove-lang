@@ -64,11 +64,7 @@ SPECIAL_TOKEN : /* COMMENTS */
 
 TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 {
-  < IF: "IF" >
-| < OF: "ELSE" >
-| < TO: "WHILE" >
-| < FOR: "FOR" >
-| < OR: "OR" >
+  < OR: "OR" >
 | < AND: "AND" >
 | < NOT: "NOT" >
 | < TRUE: "TRUE" >
