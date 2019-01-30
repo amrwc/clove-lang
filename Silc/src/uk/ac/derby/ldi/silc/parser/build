@@ -1,3 +1,0 @@
-#!/bin/sh
-jjtree Sili.jjt
-javacc Sili.jj

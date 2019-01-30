@@ -1,3 +1,0 @@
-#!/bin/sh
-jjtree Calc.jjt
-javacc Calc.jj
