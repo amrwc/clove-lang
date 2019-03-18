@@ -1,0 +1,8 @@
+// Test quit token/statement
+for (i=1; i<10; i=i+1) {
+  write i
+ 
+  if (i == 5) {
+  	quit
+  }
+}
