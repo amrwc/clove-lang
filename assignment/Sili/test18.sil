@@ -1,0 +1,11 @@
+// Test object
+obj = {
+	bob: 1,
+	jon: 2
+}
+
+write("bob: ")
+write(obj.bob)
+
+write("jon: ")
+write(obj.jon)

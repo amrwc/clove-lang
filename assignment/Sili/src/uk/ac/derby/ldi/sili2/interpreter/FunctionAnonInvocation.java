@@ -5,10 +5,13 @@ import java.util.Vector;
 import uk.ac.derby.ldi.sili2.values.Value;
 import uk.ac.derby.ldi.sili2.values.ValueFn;
 
-/** Function invocation context. */
-class FunctionInvocation {
-
-	private FunctionDefinition function;
+/**
+ * Anonymous function invocation context.
+ * 
+ * @author amrwc
+ */
+class FunctionAnonInvocation {
+	private ValueFn function;
 	private int argumentCount = 0;
 	private Vector<Value> slots;
 	
@@ -19,7 +22,7 @@ class FunctionInvocation {
 	}
 	
 	/** Ctor for user-defined function. */
-	FunctionInvocation(FunctionDefinition fndef) {
+	FunctionAnonInvocation(ValueFn fndef) {
 		function = fndef;
 		slots = new Vector<Value>(function.getLocalCount());
 	}
@@ -70,11 +73,6 @@ class FunctionInvocation {
 	int defineVariable(String name) {
 		return function.defineVariable(name);
 	}
-	
-	/** Add a function definition. */
-	void addFunction(FunctionDefinition definition) {
-		function.addFunction(definition);
-	}
 
 	/**
 	 * Add an anonymous function definition.
@@ -82,12 +80,6 @@ class FunctionInvocation {
 	 * @author amrwc
 	 */
 	public void addFunctionAnon(ValueFn definition) {
-		function.addFunctionAnon(definition);
+		function.addFunction(definition);
 	}
-
-	/** Find a function definition.  Return null if it doesn't exist. */
-	FunctionDefinition findFunction(String name) {
-		return function.findFunction(name);
-	}
-	
 }

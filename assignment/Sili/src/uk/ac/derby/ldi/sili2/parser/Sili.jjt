@@ -254,6 +254,16 @@ void fndef() #FnDef :
 					"}"
 }
 
+// NOTE: Anonymous function grammar.
+void fnval() #FnVal :
+{Token t;}
+{
+  t = <FN> parmlist() "{"
+	    fnbody()
+	    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+	  "}"
+}
+
 void returnexpr() #ReturnExpression :
 {}
 {
@@ -431,13 +441,4 @@ void bool() :
 { 
 			      <TRUE> #True
                 | <FALSE> #False
-}
-
-void fnval() #FnVal :
-{Token t;}
-{
-  t = <FN> parmlist() "{" 
-	    fnbody()
-	    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ] 
-	  "}"
 }

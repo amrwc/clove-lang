@@ -1,15 +1,18 @@
 package uk.ac.derby.ldi.sili2.values;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Vector;
 
 import uk.ac.derby.ldi.sili2.interpreter.ExceptionSemantic;
 import uk.ac.derby.ldi.sili2.parser.ast.SimpleNode;
 
-public class ValueFn extends ValueAbstract {
-//	private static final long serialVersionUID = 0;
+public class ValueFn extends ValueAbstract implements Comparable<Object>, Serializable {
+	// NOTE: What is this for?
+	// NOTE: OK, it's for Comparable<Object>.
+	private static final long serialVersionUID = 0;
 
-	private String name;
+//	private String name; // NOTE: Came from Function Definition.
 	private String parmSignature = "";
 	private Vector<String> parameters = new Vector<String>();
 	private HashMap<String, Integer> slots = new HashMap<String, Integer>();
@@ -17,17 +20,18 @@ public class ValueFn extends ValueAbstract {
 	private SimpleNode ASTFunctionBody = null;
 	private SimpleNode ASTFunctionReturnExpression = null;
 	private int depth;
-	
+
 	/** Ctor for function definition. */
-	ValueFn(String functionName, int level) {
-		name = functionName;
+//	ValueFn(String functionName, int level) { // NOTE: Came from Function Definition.
+//		name = functionName;
+	public ValueFn(int level) {
 		depth = level;
 	}
-	
-	public ValueFn(String tokenValue) {
-		// TODO Auto-generated constructor stub
-		//TODO: Parser.java line 366????
-	}
+
+//	public ValueFn(String tokenValue) {
+//		// TODO Auto-generated constructor stub
+//		//TODO: Parser.java line 366????
+//	}
 
 	/** Get the depth of this definition.
 	 * 0 - root or main scope
@@ -35,17 +39,17 @@ public class ValueFn extends ValueAbstract {
 	 * 2 - definition inside 1
 	 * n - etc.
 	 */
-	int getLevel() {
+	public int getLevel() {
 		return depth;
 	}
-	
-	/** Get the name of this function. */
+
+	/** Required by ValueAbstract. */
 	public String getName() {
-		return name;
+		return null;
 	}
-	
+
+	/** Required by ValueAbstract. */
 	public int compare(Value v) {
-		// Auto-generated method stub
 		return 0;
 	}
 
@@ -55,7 +59,7 @@ public class ValueFn extends ValueAbstract {
 	}
 	
 	/** Get the function body of this function. */
-	SimpleNode getFunctionBody() {
+	public SimpleNode getFunctionBody() {
 		return ASTFunctionBody;
 	}
 	
@@ -65,27 +69,31 @@ public class ValueFn extends ValueAbstract {
 	}
 	
 	/** Get the return expression of this function. */
-	SimpleNode getFunctionReturnExpression() {
+	public SimpleNode getFunctionReturnExpression() {
 		return ASTFunctionReturnExpression;
 	}
 	
 	/** Get the signature of this function. */
-	String getSignature() {
+	public String getSignature() {
 		return (hasReturn() ? "value " : "") + getName() + "(" + parmSignature + ")";
 	}
 	
 	/** True if this function has a return value. */
-	boolean hasReturn() {
+	public boolean hasReturn() {
 		return (ASTFunctionReturnExpression != null);
 	}
 	
-	/** Comparison operator.  Functions of the same name are the same. */
+	// NOTE: It's for Comparable<Object>.
+//	/** Comparison operator.  Functions of the same name are the same. */
+//	public int compareTo(Object o) {
+//		return name.compareTo(((ValueFn)o).name);
+//	}
 	public int compareTo(Object o) {
-		return name.compareTo(((ValueFn)o).name);
+		return 0;
 	}
 	
 	/** Get count of parameters. */
-	int getParameterCount() {
+	public int getParameterCount() {
 		return parameters.size();
 	}
 	
@@ -104,12 +112,12 @@ public class ValueFn extends ValueAbstract {
 	}
 	
 	/** Get count of local variables and parameters. */
-	int getLocalCount() {
+	public int getLocalCount() {
 		return slots.size();
 	}
 	
 	/** Get the storage slot number of a given variable or parm.  Return -1 if it doesn't exist. */
-	int getLocalSlotNumber(String name) {
+	public int getLocalSlotNumber(String name) {
 		Integer slot = slots.get(name);
 		if (slot == null)
 			return -1;
@@ -117,7 +125,7 @@ public class ValueFn extends ValueAbstract {
 	}
 	
 	/** Define a variable.  Return its slot number. */
-	int defineVariable(String name) {
+	public int defineVariable(String name) {
 		Integer slot = slots.get(name);
 		if (slot != null)
 			return slot.intValue();
@@ -127,7 +135,7 @@ public class ValueFn extends ValueAbstract {
 	}	
 	
 	/** Add an inner function definition. */
-	void addFunction(ValueFn definition) {
+	public void addFunction(ValueFn definition) {
 		functions.put(definition.getName(), definition);
 	}
 	

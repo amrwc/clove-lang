@@ -55,6 +55,72 @@ public class Parser implements SiliVisitor {
 		return doChildren(node, data);	
 	}
 
+	/**
+	 * Anonymous function declaration.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTFnVal node, Object data) {
+		// Already defined?
+		if (node.optimised != null)
+			return data;
+
+		// NOTE: This came from public Object visit(ASTFnDef node, Object data) below.
+		// Child 0 - identifier (fn name)
+//		String fnname = getTokenOfChild(node, 0);
+//		if (scope.findFunctionInCurrentLevel(fnname) != null)
+//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
+
+		ValueFn currentFunctionDefinition = new ValueFn(scope.getLevel() + 1);
+
+		// Child 0 - function definition parameter list
+		doChild(node, 0, currentFunctionDefinition);
+
+		// Add to available functions
+		scope.addFunctionAnon(currentFunctionDefinition);
+
+		// Child 2 - function body
+		currentFunctionDefinition.setFunctionBody(getChild(node, 2));
+
+		// Child 3 - optional return expression
+		if (node.fnHasReturn)
+			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 3));
+
+		// Preserve this definition for future reference, and so we don't define
+		// it every time this node is processed.
+		node.optimised = currentFunctionDefinition;
+
+		return data;
+
+		// Child 0 - identifier (fn name)
+//		String fnname = getTokenOfChild(node, 0);
+//		if (scope.findFunctionInCurrentLevel(fnname) != null)
+//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
+//		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
+		
+		// TODO:
+//		ValueFn currentFunctionDefinition = new ValueFn();
+//		
+//		// Child 0 - function definition parameter list
+//		doChild(node, 0, currentFunctionDefinition);
+//		
+//		// Add to available functions
+////		scope.addFunction(currentFunctionDefinition);
+//		
+//		// Child 1 - function body
+//		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
+//		
+//		// Child 2 - optional return expression
+//		if (node.fnHasReturn)
+//			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
+//		
+//		// Preserve this definition for future reference, and so we don't define
+//		// it every time this node is processed.
+//		node.optimised = currentFunctionDefinition;
+//		
+//		return data;
+	}
+
 	// Function definition
 	public Object visit(ASTFnDef node, Object data) {
 		// Already defined?
@@ -180,6 +246,29 @@ public class Parser implements SiliVisitor {
 			doChild(node, 2);
 		}
 		return data;
+	}
+	
+	/**
+	 * Execute while loop.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTWhileLoop node, Object data) {
+		while (true) {
+			// evaluate loop test
+			Value hopefullyValueBoolean = doChild(node, 0);
+
+			if (!(hopefullyValueBoolean instanceof ValueBoolean))
+				throw new ExceptionSemantic("The test expression of a while loop must be boolean.");
+			if (!((ValueBoolean)hopefullyValueBoolean).booleanValue())
+				break;
+
+			// do loop statement
+			doChild(node, 1);
+		}
+
+//		return data;
+		return null;
 	}
 	
 	// Process an identifier
@@ -333,89 +422,13 @@ public class Parser implements SiliVisitor {
 		return node.optimised;
 	}
 
-	//*******************************************************************************************************
-	// Assignment:
-
+	/**
+	 * Quit expression.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTQuit node, Object data) {
 		System.exit(0);
 		return null;
 	}
-
-	// Execute a WHILE loop
-	public Object visit(ASTWhileLoop node, Object data) {
-		while (true) {
-			// evaluate loop test
-			Value hopefullyValueBoolean = doChild(node, 0);
-
-			if (!(hopefullyValueBoolean instanceof ValueBoolean))
-				throw new ExceptionSemantic("The test expression of a while loop must be boolean.");
-			if (!((ValueBoolean)hopefullyValueBoolean).booleanValue())
-				break;
-
-			// do loop statement
-			doChild(node, 1);
-		}
-
-//		return data;
-		return null;
-	}
-
-	public Object visit(ASTFnVal node, Object data) {
-		// Already defined?
-		if (node.optimised != null)
-			node.optimised = new ValueFn(node.tokenValue); //TODO: Constructor??
-		
-		// Child 0 - identifier (fn name)
-//		String fnname = getTokenOfChild(node, 0);
-//		if (scope.findFunctionInCurrentLevel(fnname) != null)
-//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-//		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
-		
-		// TODO:
-		ValueFn currentFunctionDefinition = new ValueFn();
-		
-		// Child 0 - function definition parameter list
-		doChild(node, 0, currentFunctionDefinition);
-		
-		// Add to available functions
-//		scope.addFunction(currentFunctionDefinition);
-		
-		// Child 1 - function body
-		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
-		
-		// Child 2 - optional return expression
-		if (node.fnHasReturn)
-			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
-		
-		// Preserve this definition for future reference, and so we don't define
-		// it every time this node is processed.
-		node.optimised = currentFunctionDefinition;
-		
-		return data;
-	}
-	
-	// Function definition
-//	public Object visit(ASTFnDef node, Object data) {
-//		// Already defined?
-//		if (node.optimised != null)
-//			return data;
-//		// Child 0 - identifier (fn name)
-//		String fnname = getTokenOfChild(node, 0);
-//		if (scope.findFunctionInCurrentLevel(fnname) != null)
-//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-//		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
-//		// Child 1 - function definition parameter list
-//		doChild(node, 1, currentFunctionDefinition);
-//		// Add to available functions
-//		scope.addFunction(currentFunctionDefinition);
-//		// Child 2 - function body
-//		currentFunctionDefinition.setFunctionBody(getChild(node, 2));
-//		// Child 3 - optional return expression
-//		if (node.fnHasReturn)
-//			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 3));
-//		// Preserve this definition for future reference, and so we don't define
-//		// it every time this node is processed.
-//		node.optimised = currentFunctionDefinition;
-//		return data;
-//	}
 }
