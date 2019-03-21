@@ -3,6 +3,7 @@ package uk.ac.derby.ldi.sili2.interpreter;
 import java.util.Vector;
 
 import uk.ac.derby.ldi.sili2.parser.ast.SimpleNode;
+import uk.ac.derby.ldi.sili2.values.ValueFn;
 
 import java.util.HashMap;
 import java.io.Serializable;
@@ -29,7 +30,12 @@ class FunctionDefinition implements Comparable<Object>, Serializable {
 		name = functionName;
 		depth = level;
 	}
-	
+
+//	/** Anonymous function definition. */
+//	FunctionDefinition(int level) {
+//		depth = level;
+//	}
+
 	/** Get the depth of this definition.
 	 * 0 - root or main scope
 	 * 1 - definition inside root or main scope
@@ -124,6 +130,15 @@ class FunctionDefinition implements Comparable<Object>, Serializable {
 	
 	/** Add an inner function definition. */
 	void addFunction(FunctionDefinition definition) {
+		functions.put(definition.getName(), definition);
+	}
+
+	/**
+	 * Add an anonymous function to the current level.
+	 * 
+	 * @author amrwc
+	 */
+	public void addFunctionAnon(ValueFn definition) {
 		functions.put(definition.getName(), definition);
 	}
 	

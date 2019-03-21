@@ -1,1 +1,4 @@
 /bin/
+/.metadata/
+/.recommenders/
+/src/.metadata/

@@ -1,3 +1,5 @@
 // Test anonymous functions
 myop = fn(x, y) {return x + y}
+
+write "function output: "
 write myop(2, 3)
