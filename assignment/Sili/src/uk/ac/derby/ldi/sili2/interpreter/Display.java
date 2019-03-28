@@ -1,16 +1,13 @@
 package uk.ac.derby.ldi.sili2.interpreter;
 
 import uk.ac.derby.ldi.sili2.values.Value;
-import uk.ac.derby.ldi.sili2.values.ValueFn;
 
 /** A display manages run-time access to variable and parameter scope where
  * functions may be nested.
  */ 
 class Display {
-
 	private final int maximumFunctionNesting = 64;
 	private FunctionInvocation[] display = new FunctionInvocation[maximumFunctionNesting];
-	private FunctionAnonInvocation[] displayAnon = new FunctionAnonInvocation[maximumFunctionNesting];
 	private int currentLevel;
 
 	/** Reference to a slot. */
@@ -97,14 +94,5 @@ class Display {
 	/** Add a function to the current level. */
 	void addFunction(FunctionDefinition definition) {
 		display[currentLevel].addFunction(definition);
-	}
-	
-	/**
-	 * Add an anonymous function to the current level.
-	 * 
-	 * @author amrwc
-	 */
-	void addFunctionAnon(ValueFn definition) {
-		display[currentLevel].addFunctionAnon(definition);
 	}
 }

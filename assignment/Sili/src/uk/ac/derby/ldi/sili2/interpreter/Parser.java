@@ -54,7 +54,7 @@ public class Parser implements SiliVisitor {
 	public Object visit(ASTBlock node, Object data) {
 		return doChildren(node, data);	
 	}
-
+	
 	/**
 	 * Anonymous function declaration.
 	 * 
@@ -65,60 +65,37 @@ public class Parser implements SiliVisitor {
 		if (node.optimised != null)
 			return data;
 
-		// NOTE: This came from public Object visit(ASTFnDef node, Object data) below.
-		// Child 0 - identifier (fn name)
-//		String fnname = getTokenOfChild(node, 0);
-//		if (scope.findFunctionInCurrentLevel(fnname) != null)
-//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-
-		ValueFn currentFunctionDefinition = new ValueFn(scope.getLevel() + 1);
-
-		// Child 0 - function definition parameter list
+		// Assign the variable name as the function name.
+//		System.out.println(getTokenOfChild((SimpleNode)node.jjtGetParent(), 0));
+//		System.out.println(get);
+		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+		if (scope.findFunctionInCurrentLevel(fnname) != null)
+			throw new ExceptionSemantic("Function " + fnname + " already exists.");
+		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
+		
+		// Child 0 -- function definition parameter list
 		doChild(node, 0, currentFunctionDefinition);
+		
+//		System.out.println(doChild(node, 0, currentFunctionDefinition));
+
+//		System.out.println(getChild(node, 0));
+//		System.out.println(currentFunctionDefinition.getParameterCount());
+//		System.out.println(currentFunctionDefinition.);
 
 		// Add to available functions
-		scope.addFunctionAnon(currentFunctionDefinition);
+		scope.addFunction(currentFunctionDefinition);
 
-		// Child 2 - function body
-		currentFunctionDefinition.setFunctionBody(getChild(node, 2));
+		// Child 1 -- function body
+		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
 
-		// Child 3 - optional return expression
+		// Child 2 -- optional return expression
 		if (node.fnHasReturn)
-			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 3));
-
+			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
+		
 		// Preserve this definition for future reference, and so we don't define
 		// it every time this node is processed.
 		node.optimised = currentFunctionDefinition;
-
 		return data;
-
-		// Child 0 - identifier (fn name)
-//		String fnname = getTokenOfChild(node, 0);
-//		if (scope.findFunctionInCurrentLevel(fnname) != null)
-//			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-//		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
-		
-		// TODO:
-//		ValueFn currentFunctionDefinition = new ValueFn();
-//		
-//		// Child 0 - function definition parameter list
-//		doChild(node, 0, currentFunctionDefinition);
-//		
-//		// Add to available functions
-////		scope.addFunction(currentFunctionDefinition);
-//		
-//		// Child 1 - function body
-//		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
-//		
-//		// Child 2 - optional return expression
-//		if (node.fnHasReturn)
-//			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
-//		
-//		// Preserve this definition for future reference, and so we don't define
-//		// it every time this node is processed.
-//		node.optimised = currentFunctionDefinition;
-//		
-//		return data;
 	}
 
 	// Function definition
@@ -191,9 +168,41 @@ public class Parser implements SiliVisitor {
 		if (node.optimised == null) { 
 			// Child 0 - identifier (fn name)
 			String fnname = getTokenOfChild(node, 0);
+//			System.out.println(fnname);
 			fndef = scope.findFunction(fnname);
+			
+//			System.out.println(fndef);
+			// NOTE: If the invoked function is not found in the scope, try adding it
+			// immediately. If it's still null, then throw the exception.
+			if (fndef == null) {
+				FunctionDefinition tryFndef = new FunctionDefinition(fnname, scope.getLevel());
+				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 0));
+				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 1));
+				scope.addFunction(tryFndef);
+				fndef = scope.findFunction(fnname);
+			}
+//			System.out.println(fndef);
+			
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
+			
+			// NOTE: This solution works with an anonymous function passed as a parameter,
+			// but assigns the functions name to be null. Please fix.
+//			if (fndef == null) {
+//				String fnnameOuter = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+//				FunctionDefinition fndefOuter = scope.findFunction(fnnameOuter);
+//
+//				if (fndefOuter == null)
+//					throw new ExceptionSemantic("Function " + fnname + " is undefined.");
+//				
+////				fnname = fndefOuter.getParameterName(0);
+////				System.out.println(fndefOuter.getParameterName(0));
+////				fndefOuter.getParameterCount()
+//				
+//				fndef = fndefOuter;
+//			}
+//			System.out.println(fndef.getParameterName(0));
+			
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
 			// Save it for next time

@@ -254,14 +254,18 @@ void fndef() #FnDef :
 					"}"
 }
 
-// NOTE: Anonymous function grammar.
+/**
+ * Anonymous function grammar.
+ * 
+ * @author amrwc
+ */
 void fnval() #FnVal :
 {Token t;}
 {
   t = <FN> parmlist() "{"
-	    fnbody()
-	    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-	  "}"
+    fnbody()
+    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+  "}"
 }
 
 void returnexpr() #ReturnExpression :
@@ -313,6 +317,11 @@ void arglist() #ArgList :
 					"(" [ expression() ] ( "," expression() )* ")"
 }
 
+/**
+ * Quit instruction.
+ * 
+ * @author amrwc
+ */
 void quit() :
 {}
 {
@@ -403,7 +412,7 @@ void literal() :
                             | character()							  	
 							| rational()
 							| bool()
-							| fnval()
+				| fnval()
 }
 
 void identifier() #Identifier :

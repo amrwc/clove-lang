@@ -8,11 +8,8 @@ import uk.ac.derby.ldi.sili2.interpreter.ExceptionSemantic;
 import uk.ac.derby.ldi.sili2.parser.ast.SimpleNode;
 
 public class ValueFn extends ValueAbstract implements Comparable<Object>, Serializable {
-	// NOTE: What is this for?
-	// NOTE: OK, it's for Comparable<Object>.
 	private static final long serialVersionUID = 0;
 
-//	private String name; // NOTE: Came from Function Definition.
 	private String parmSignature = "";
 	private Vector<String> parameters = new Vector<String>();
 	private HashMap<String, Integer> slots = new HashMap<String, Integer>();
@@ -22,16 +19,9 @@ public class ValueFn extends ValueAbstract implements Comparable<Object>, Serial
 	private int depth;
 
 	/** Ctor for function definition. */
-//	ValueFn(String functionName, int level) { // NOTE: Came from Function Definition.
-//		name = functionName;
 	public ValueFn(int level) {
 		depth = level;
 	}
-
-//	public ValueFn(String tokenValue) {
-//		// TODO Auto-generated constructor stub
-//		//TODO: Parser.java line 366????
-//	}
 
 	/** Get the depth of this definition.
 	 * 0 - root or main scope
@@ -83,11 +73,6 @@ public class ValueFn extends ValueAbstract implements Comparable<Object>, Serial
 		return (ASTFunctionReturnExpression != null);
 	}
 	
-	// NOTE: It's for Comparable<Object>.
-//	/** Comparison operator.  Functions of the same name are the same. */
-//	public int compareTo(Object o) {
-//		return name.compareTo(((ValueFn)o).name);
-//	}
 	public int compareTo(Object o) {
 		return 0;
 	}

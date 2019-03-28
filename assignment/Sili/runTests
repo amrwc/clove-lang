@@ -27,3 +27,11 @@ echo "=== Test13.sil ==="
 java -classpath ./bin Sili < test13.sil
 echo "=== Test14.sil ==="
 java -classpath ./bin Sili < test14.sil
+echo "=== Test15.sil ==="
+java -classpath ./bin Sili < test15.sil
+echo "=== Test16.sil ==="
+java -classpath ./bin Sili < test16.sil
+echo "=== Test17.sil ==="
+java -classpath ./bin Sili < test17.sil
+echo "=== Test18.sil ==="
+java -classpath ./bin Sili < test18.sil
