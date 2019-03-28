@@ -3,7 +3,6 @@ package uk.ac.derby.ldi.sili2.interpreter;
 import java.util.Vector;
 
 import uk.ac.derby.ldi.sili2.values.Value;
-import uk.ac.derby.ldi.sili2.values.ValueFn;
 
 /** Function invocation context. */
 class FunctionInvocation {
@@ -74,15 +73,6 @@ class FunctionInvocation {
 	/** Add a function definition. */
 	void addFunction(FunctionDefinition definition) {
 		function.addFunction(definition);
-	}
-
-	/**
-	 * Add an anonymous function definition.
-	 * 
-	 * @author amrwc
-	 */
-	public void addFunctionAnon(ValueFn definition) {
-		function.addFunctionAnon(definition);
 	}
 
 	/** Find a function definition.  Return null if it doesn't exist. */

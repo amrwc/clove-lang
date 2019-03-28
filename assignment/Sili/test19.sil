@@ -1,0 +1,29 @@
+/**
+ * TODO:
+ *  - Get ArgList and check whether there's a function included. Then, add it to the scope.
+ */ 
+write "The Dave's second challenge:"
+write ""
+
+myop2 = fn(x, y) {
+	write "Debug 1: myop2 executed"
+	return x(22) + y
+}
+
+write ""
+write "Debug 2: myop2 declared"
+write ""
+write myop2(
+	fn(p) {
+		write "Debug 3: lol"
+		return p * 4
+	},
+	3
+)
+
+
+
+
+
+
+

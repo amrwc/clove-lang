@@ -1,5 +1,50 @@
 // Test anonymous functions
-myop = fn(x, y) {return x + y}
+write "Anonymous functions:"
+write ""
 
-write "function output: "
+
+write "Dave's first challenge:"
+myop = fn(x, y) {
+	return x + y
+}
 write myop(2, 3)
+
+
+write ""
+
+
+write "Nested anonymous function:"
+anon = fn(x, y) {
+	anonNested = fn(a, b) {
+		return a + b
+	}
+	
+	return x + y + anonNested(3, 4)
+}
+write anon(1, 2)
+
+
+write ""
+
+
+/**
+ * TODO:
+ *  - Get ArgList and check whether there's a function included. Then, add it to the scope.
+ */
+write "The Dave's second challenge:"
+myop2 = fn(x, y) {
+	return x(22) + y
+}
+write myop2(
+	fn(p) {
+		return p * 4
+	},
+	3
+)
+
+
+
+
+
+
+

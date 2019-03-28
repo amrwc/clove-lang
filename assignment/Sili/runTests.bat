@@ -12,3 +12,7 @@ java -classpath ./bin Sili < test11.sil
 java -classpath ./bin Sili < test12.sil
 java -classpath ./bin Sili < test13.sil
 java -classpath ./bin Sili < test14.sil
+java -classpath ./bin Sili < test15.sil
+java -classpath ./bin Sili < test16.sil
+java -classpath ./bin Sili < test17.sil
+java -classpath ./bin Sili < test18.sil
