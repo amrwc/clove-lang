@@ -54,6 +54,38 @@ public class Parser implements SiliVisitor {
 	public Object visit(ASTBlock node, Object data) {
 		return doChildren(node, data);	
 	}
+
+	/**
+	 * Anonymous object declaration/assignment.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTValueObject node, Object data) {
+		// Already defined?
+		if (node.optimised != null)
+			return data;
+		
+		// TODO: Just an anchor.
+		
+		ValueObject obj = new ValueObject();
+		
+		// Go through all the children of the object.
+		int numChildren = node.jjtGetNumChildren();
+		SimpleNode currentChild;
+		String currentChildName;
+		Value currentChildValue;
+		for (int i = 0; i < numChildren; i++) {
+			currentChild = (SimpleNode) node.jjtGetChild(i);
+			currentChildName = getTokenOfChild(currentChild, 0);
+			currentChildValue = doChild(currentChild, 1);
+//			System.out.println(currentChildName + " " + currentChildValue); // DEBUG:
+			
+			obj.add(currentChildName, currentChildValue);
+		}
+		
+		node.optimised = obj;
+		return node.optimised; // DOUBLE CHECK
+	}
 	
 	/**
 	 * Anonymous function declaration.
@@ -66,8 +98,6 @@ public class Parser implements SiliVisitor {
 			return data;
 
 		// Assign the variable name as the function name.
-//		System.out.println(getTokenOfChild((SimpleNode)node.jjtGetParent(), 0));
-//		System.out.println(get);
 		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
 		if (scope.findFunctionInCurrentLevel(fnname) != null)
 			throw new ExceptionSemantic("Function " + fnname + " already exists.");
@@ -75,12 +105,6 @@ public class Parser implements SiliVisitor {
 		
 		// Child 0 -- function definition parameter list
 		doChild(node, 0, currentFunctionDefinition);
-		
-//		System.out.println(doChild(node, 0, currentFunctionDefinition));
-
-//		System.out.println(getChild(node, 0));
-//		System.out.println(currentFunctionDefinition.getParameterCount());
-//		System.out.println(currentFunctionDefinition.);
 
 		// Add to available functions
 		scope.addFunction(currentFunctionDefinition);
@@ -168,40 +192,66 @@ public class Parser implements SiliVisitor {
 		if (node.optimised == null) { 
 			// Child 0 - identifier (fn name)
 			String fnname = getTokenOfChild(node, 0);
-//			System.out.println(fnname);
+//			System.out.print(fnname); System.out.print(": "); // REMOVE
 			fndef = scope.findFunction(fnname);
+//			System.out.println(fndef); // REMOVE
 			
-//			System.out.println(fndef);
-			// NOTE: If the invoked function is not found in the scope, try adding it
-			// immediately. If it's still null, then throw the exception.
+			
+			// NOTE: This solution works with an anonymous function passed as a parameter,
+			// but assigns the function's name to be null. Please fix.
+			// UPDATE: It doesn't assign "null" as the function's name here, it's being
+			// defined implicitly, and since there is no assignment on the invocation,
+			// it assigns null as the zero'th parameter (anonymous function's identifier).
+			// Maybe I could assign a random name to it while parsing the parameters?
 			if (fndef == null) {
-				FunctionDefinition tryFndef = new FunctionDefinition(fnname, scope.getLevel());
-				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 0));
-				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 1));
-				scope.addFunction(tryFndef);
-				fndef = scope.findFunction(fnname);
+				String fnParamName = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+				FunctionDefinition fnParamDefinition = scope.findFunction(fnParamName);
+				
+				fndef = fnParamDefinition;
 			}
-//			System.out.println(fndef);
+			
+			
+			// NOTE: If the invoked function is not found in the scope, try adding it
+			// immediately. If it's still null, then throw the exception. TODO: It's just an anchor to quickly scroll here.
+//			if (fndef == null) { // Try to define the anonymous function on the go.
+//				FunctionDefinition tryFndef = new FunctionDefinition(fnname, scope.getLevel());
+//
+//				// Child 0 -- function definition parameter list
+//				doChild(node, 0, tryFndef); // Copy-pasted
+////				doChild((SimpleNode)node.jjtGetParent(), 0, tryFndef); // Trying differently
+//				
+//				// Add to available functions
+//				scope.addFunction(tryFndef);
+//				
+//				// Child 1 -- function body
+//				tryFndef.setFunctionBody(getChild(node, 1)); // Copy-pasted
+////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1)); // Trying differently
+//				
+//				// Child 2 -- optional return expression
+//				if (node.fnHasReturn) {
+//					System.out.println("IT DOES INDEED HAVE RETURN");
+////					tryFndef.setFunctionReturnExpression(getChild(node, 2)); // Copy-pasted
+//					tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2)); // Trying differently
+//				}
+//				
+//				
+//				
+////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 0));
+////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 1));
+//				
+////				tryFndef.getParameterCount(getChild((SimpleNode)node.jjtGetParent(), 0));
+////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1));
+////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2));
+////				System.out.println(tryFndef.getFunctionBody());
+//				
+//				scope.addFunction(tryFndef);
+//				fndef = scope.findFunction(fnname);
+//			}
+//			System.out.print(fnname); System.out.print(": "); // REMOVE
+//			System.out.println(fndef); // REMOVE
 			
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
-			
-			// NOTE: This solution works with an anonymous function passed as a parameter,
-			// but assigns the functions name to be null. Please fix.
-//			if (fndef == null) {
-//				String fnnameOuter = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
-//				FunctionDefinition fndefOuter = scope.findFunction(fnnameOuter);
-//
-//				if (fndefOuter == null)
-//					throw new ExceptionSemantic("Function " + fnname + " is undefined.");
-//				
-////				fnname = fndefOuter.getParameterName(0);
-////				System.out.println(fndefOuter.getParameterName(0));
-////				fndefOuter.getParameterCount()
-//				
-//				fndef = fndefOuter;
-//			}
-//			System.out.println(fndef.getParameterName(0));
 			
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
@@ -306,6 +356,7 @@ public class Parser implements SiliVisitor {
 		return reference.getValue();
 	}
 	
+	// TODO: It's just an anchor, remove later.
 	// Execute an assignment statement.
 	public Object visit(ASTAssignment node, Object data) {
 		Display.Reference reference;

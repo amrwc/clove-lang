@@ -1,11 +1,13 @@
 // Test object
-obj = {
-	bob: 1,
-	jon: 2
+obj = new {
+	bob = 999,
+	jon = 777
 }
 
-write("bob: ")
-write(obj.bob)
+write "111111111111"
 
-write("jon: ")
-write(obj.jon)
+//write("bob: ")
+//write(obj.bob)
+
+//write("jon: ")
+//write(obj.jon)
