@@ -264,4 +264,10 @@ public class ParserDebugger implements SiliVisitor {
 		return null;
 	}
 
+	@Override
+	public Object visit(ASTValueObject node, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

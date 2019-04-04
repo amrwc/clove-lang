@@ -72,6 +72,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < TRUE: "TRUE" >
 | < FALSE: "FALSE" >
 | < QUIT: "QUIT" >
+| < NEW: "NEW" >
 }
 
 TOKEN : /* LITERALS */
@@ -413,6 +414,7 @@ void literal() :
 							| rational()
 							| bool()
 				| fnval()
+				| valueObject()
 }
 
 void identifier() #Identifier :
@@ -450,4 +452,10 @@ void bool() :
 { 
 			      <TRUE> #True
                 | <FALSE> #False
+}
+
+void valueObject() #ValueObject :
+{Token t;}
+{
+	t = <NEW> "{" assignment() ( "," assignment() )* "}" {jjtThis.tokenValue = t.image;}
 }
