@@ -1,13 +1,51 @@
 // Test object
-obj = new {
-	bob = 999,
-	jon = 777
+write "Anonymous object initialisation and accessing:"
+write ""
+
+obj = {
+	num = 999,
+	str = "Hi"
 }
 
-write "111111111111"
+write "obj.num: "
+write obj.num
+write ""
 
-//write("bob: ")
-//write(obj.bob)
+write "obj.str: "
+write obj.str
+write ""
 
-//write("jon: ")
-//write(obj.jon)
+write "----------------------------"
+
+
+write "Key-value pairs reassignment:"
+write ""
+
+write "obj.num = 33"
+obj.num = 33
+write obj.num
+write ""
+
+write "----------------------------"
+
+
+write "Nested objects:"
+write ""
+
+obj2 = {
+	nested = {
+		//num2 = 111,
+		num2 = {
+			omg = 9999999
+		},
+		str2 = "Hello"
+	},
+	test = "test"
+}
+
+//write "obj2.nested.str2: "
+//write obj2.nested.num2
+//write ""
+
+//write "obj2.test: "
+//write obj2.test

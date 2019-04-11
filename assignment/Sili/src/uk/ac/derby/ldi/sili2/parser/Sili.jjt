@@ -72,7 +72,6 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < TRUE: "TRUE" >
 | < FALSE: "FALSE" >
 | < QUIT: "QUIT" >
-| < NEW: "NEW" >
 }
 
 TOKEN : /* LITERALS */
@@ -278,7 +277,7 @@ void returnexpr() #ReturnExpression :
 void assignment() :
 {}
 {
-					identifier() "=" expression() #Assignment(2)
+					identifier() ( <DOT> identifier() )* "=" expression() #Assignment(2)
 }
 
 void ifstatement() #IfStatement :
@@ -294,6 +293,11 @@ void forloop() #ForLoop :
   					<FOR> "(" assignment() ";" expression() ";" assignment() ")" statement()
 }
 
+/**
+ * While loop grammar.
+ * 
+ * @author amrwc
+ */
 void whileloop() #WhileLoop :
 {}
 {
@@ -305,6 +309,18 @@ void write() :
 {
 					<WRITE> expression() #Write(1)
 }
+
+/**
+ * An attempt at implementing write() with multiple arguments,
+ * similarly to JavaScript's console.log(param1, param2, ...).
+ * 
+ * @author amrwc
+ */
+//void write() #Write :
+//{}
+//{
+//					<WRITE> expression() ( "," expression() )* <SEMICOLON>
+//}
 
 void call() #Call :
 {}
@@ -415,6 +431,7 @@ void literal() :
 							| bool()
 				| fnval()
 				| valueObject()
+//				| valueObjectAccess()
 }
 
 void identifier() #Identifier :
@@ -423,10 +440,25 @@ void identifier() #Identifier :
 	t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
 }
 
-void dereference() #Dereference :
+/**
+ * Dereference:
+ *  - anonymous object accessor, or
+ *	- normal dereference of a literal,
+ *		followed by:
+ *		 - any number of anonymous object accessors. 
+ * 
+ * @author amrwc
+ */
+
+// How can I pass multiple children this way? -- use the Dereference method and delegate tasks to other methods.
+void dereference() :
 {Token t;}
 {
-	t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+  	t = <IDENTIFIER> (
+	      <DOT> identifier() {jjtThis.tokenValue = t.image;} #ValueObjectAccess(1)
+		| {jjtThis.tokenValue = t.image;} #Dereference
+	)
+	( <DOT> identifier() {jjtThis.tokenValue = t.image;} #ValueObjectAccess(1) )*
 }
 
 void character() #Character :
@@ -454,8 +486,25 @@ void bool() :
                 | <FALSE> #False
 }
 
+/**
+ * Anonymous object declaration/assignment.
+ * 
+ * @author amrwc
+ */
 void valueObject() #ValueObject :
-{Token t;}
+{}
 {
-	t = <NEW> "{" assignment() ( "," assignment() )* "}" {jjtThis.tokenValue = t.image;}
+  	"{" assignment() ( "," assignment() )* "}"
 }
+
+/**
+ * Anonymous object accessor.
+ * NOTE: It causes problems in test10 -- it messes up the dereference somehow.
+ * 
+ * @author amrwc
+ */
+//void valueObjectAccess() #ValueObjectAccess :
+//{Token t;}
+//{
+//	t = <IDENTIFIER> <DOT> identifier() {jjtThis.tokenValue = t.image;}
+//}

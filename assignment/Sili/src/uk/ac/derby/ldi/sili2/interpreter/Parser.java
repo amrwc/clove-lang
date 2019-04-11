@@ -64,29 +64,63 @@ public class Parser implements SiliVisitor {
 		// Already defined?
 		if (node.optimised != null)
 			return data;
-		
-		// TODO: Just an anchor.
-		
-		ValueObject obj = new ValueObject();
-		
-		// Go through all the children of the object.
-		int numChildren = node.jjtGetNumChildren();
-		SimpleNode currentChild;
-		String currentChildName;
-		Value currentChildValue;
-		for (int i = 0; i < numChildren; i++) {
-			currentChild = (SimpleNode) node.jjtGetChild(i);
-			currentChildName = getTokenOfChild(currentChild, 0);
-			currentChildValue = doChild(currentChild, 1);
-//			System.out.println(currentChildName + " " + currentChildValue); // DEBUG:
-			
-			obj.add(currentChildName, currentChildValue);
+
+		ValueObject valueObject = new ValueObject();
+
+		// Add all the key-value pairs to the anonymous object.
+		int keyCount = node.jjtGetNumChildren();
+		SimpleNode currentKey;
+		String keyName;
+		Value value;
+		for (int i = 0; i < keyCount; i++) {
+			currentKey = (SimpleNode) node.jjtGetChild(i);
+			keyName = getTokenOfChild(currentKey, 0);
+			value = doChild(currentKey, 1);
+			valueObject.add(keyName, value);
 		}
-		
-		node.optimised = obj;
-		return node.optimised; // DOUBLE CHECK
+
+		node.optimised = valueObject;
+		return node.optimised;
 	}
-	
+
+	/**
+	 * TODO: Just an anchor, remove later.
+	 * Anonymous object accessor.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTValueObjectAccess node, Object data) {
+		Display.Reference reference;
+
+//		System.out.println(node.tokenValue);
+
+		if (node.optimised == null) {
+			String name = node.tokenValue;
+			reference = scope.findReference(name);
+			if (reference == null)
+				throw new ExceptionSemantic("Object " + name + " is undefined.");
+			node.optimised = reference;
+		} else {
+			reference = (Display.Reference) node.optimised;
+		}
+
+		ValueObject valueObject = (ValueObject) reference.getValue();
+		String keyName = getTokenOfChild(node, 0);
+
+//		System.out.println(keyName);
+//		System.out.println(keyName + ": " + valueObject.get(keyName));
+//		System.out.println(valueObject.toString());
+		
+//		Value value = valueObject.get(keyName);
+		
+//		if (!(valueObject.get(keyName) instanceof Value)) {
+//			valueObject.get(keyName)
+//		}
+
+		return valueObject.get(keyName);
+//		return value;
+	}
+
 	/**
 	 * Anonymous function declaration.
 	 * 
@@ -338,10 +372,16 @@ public class Parser implements SiliVisitor {
 	
 	// Execute the WRITE statement
 	public Object visit(ASTWrite node, Object data) {
+//		int num = node.jjtGetNumChildren();
+//		System.out.println(num);
+//		for (int i = 0; i < num; num++) {
+//			System.out.println(doChild(node, i));
+//		}
 		System.out.println(doChild(node, 0));
 		return data;
 	}
-	
+
+	// TODO: It's just an anchor, remove later.
 	// Dereference a variable or parameter, and return its value.
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
@@ -355,9 +395,45 @@ public class Parser implements SiliVisitor {
 			reference = (Display.Reference)node.optimised;
 		return reference.getValue();
 	}
-	
-	// TODO: It's just an anchor, remove later.
-	// Execute an assignment statement.
+
+//	NOTE: Previous implementation for accessing value objects by reusing the #Dereference method in the grammar.
+//	public Object visit(ASTDereference node, Object data) {
+//		Display.Reference reference;
+//		
+//		if (node.jjtGetNumChildren() > 0) {
+//			System.out.println("HELLO THERE"); // DEBUG:
+//
+//			if (node.optimised == null) {
+//				String name = node.tokenValue;
+//				System.out.println(name); // DEBUG:
+//				reference = scope.findReference(name);
+//				if (reference == null)
+//					throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
+//				node.optimised = reference;
+//			} else {
+//				reference = (Display.Reference)node.optimised;
+//			}
+//		} else {
+//			if (node.optimised == null) {
+//				String name = node.tokenValue;
+//				reference = scope.findReference(name);
+//				if (reference == null)
+//					throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
+//				node.optimised = reference;
+//			} else {
+//				reference = (Display.Reference)node.optimised;
+//			}
+//		}
+//		
+//		return reference.getValue();
+//	}
+
+	/**
+	 * Execute an assignment statement.
+	 * TODO: Enable key-value pair reassignment.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTAssignment node, Object data) {
 		Display.Reference reference;
 		if (node.optimised == null) {
