@@ -14,29 +14,24 @@ public class ValueObject extends ValueAbstract {
 
 	public int compare(Value v) {
 		// TODO Auto-generated method stub
+//		return internalValue.compareTo(v);
 		return 0;
 	}
 	
 	public void add(String name, Value v) {
+//		System.out.print("DEBUG, ValueObject.add: "); // DEBUG:
+//		System.out.println(internalValue.get(name)); // DEBUG:
 		internalValue.put(name, v);
-		System.out.println(internalValue.get(name));
 	}
 	
-	/** Convert this to a String. */
-//	public String stringValue() {
-//		return internalValue;		
-//	}
-
-//	public int compare(Value v) {
-//		return internalValue.compareTo(v.stringValue());
-//	}
+	public Value get(String name) {
+//		System.out.print("DEBUG, ValueObject.get: "); // DEBUG:
+//		System.out.println(internalValue.get(name)); // DEBUG:
+//		if (internalValue.)
+		return internalValue.get(name);
+	}
 	
-	/** Add performs string concatenation. */
-//	public Value add(Value v) {
-//		return new ValueObject(internalValue + v.stringValue());
-//	}
-	
-//	public String toString() {
-//		return internalValue;
-//	}
+	public String toString() {
+		return internalValue.toString();
+	}
 }
