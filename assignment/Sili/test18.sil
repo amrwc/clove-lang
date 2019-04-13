@@ -34,18 +34,17 @@ write ""
 
 obj2 = {
 	nested = {
-		//num2 = 111,
 		num2 = {
-			omg = 9999999
+			nines = 9999999
 		},
 		str2 = "Hello"
 	},
 	test = "test"
 }
 
-//write "obj2.nested.str2: "
-//write obj2.nested.num2
-//write ""
+write "obj2.nested.str2: "
+write obj2.nested.str2
+write ""
 
-//write "obj2.test: "
-//write obj2.test
+write "obj2.nested.num2.nines: "
+write obj2.nested.num2.nines

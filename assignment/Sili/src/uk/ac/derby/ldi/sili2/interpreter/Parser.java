@@ -93,19 +93,38 @@ public class Parser implements SiliVisitor {
 		Display.Reference reference;
 
 //		System.out.println(node.tokenValue);
-
+		System.out.println("numChildren: " + node.jjtGetNumChildren());
+		int n = node.jjtGetNumChildren();
+		for (int i = 0; i < n; i++) {
+			String t = getTokenOfChild(node, i);
+			System.out.println(t);
+		}
+		
+		// Dereference copy-pasted:
+//		Display.Reference reference;
 		if (node.optimised == null) {
 			String name = node.tokenValue;
 			reference = scope.findReference(name);
 			if (reference == null)
-				throw new ExceptionSemantic("Object " + name + " is undefined.");
+				throw new ExceptionSemantic("ValueObjectAccess: Variable or parameter " + name + " is undefined.");
 			node.optimised = reference;
-		} else {
-			reference = (Display.Reference) node.optimised;
-		}
+		} else
+			reference = (Display.Reference)node.optimised;
+		return reference.getValue();
 
-		ValueObject valueObject = (ValueObject) reference.getValue();
-		String keyName = getTokenOfChild(node, 0);
+		// MY OWN:
+//		if (node.optimised == null) {
+//			String name = node.tokenValue;
+//			reference = scope.findReference(name);
+//			if (reference == null)
+//				throw new ExceptionSemantic("Object " + name + " is undefined.");
+//			node.optimised = reference;
+//		} else {
+//			reference = (Display.Reference) node.optimised;
+//		}
+
+//		ValueObject valueObject = (ValueObject) reference.getValue();
+//		String keyName = getTokenOfChild(node, 0);
 
 //		System.out.println(keyName);
 //		System.out.println(keyName + ": " + valueObject.get(keyName));
@@ -113,11 +132,16 @@ public class Parser implements SiliVisitor {
 		
 //		Value value = valueObject.get(keyName);
 		
-//		if (!(valueObject.get(keyName) instanceof Value)) {
-//			valueObject.get(keyName)
+		// Since nested is being casted, then maybe the if statements is redundant?
+		// The returned value from ValueObject.get is always a Value.
+		// Therefore, how can I check whether it's a ValueObject???
+//		if (!(valueObject.get(keyName) instanceof ValueObject)) {
+//			return valueObject.get(keyName);
+//		} else {
+//			ValueObject nested = valueObject.get(keyName);
 //		}
 
-		return valueObject.get(keyName);
+//		return valueObject.get(keyName);
 //		return value;
 	}
 
@@ -385,6 +409,8 @@ public class Parser implements SiliVisitor {
 	// Dereference a variable or parameter, and return its value.
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
+		int numChildren = node.jjtGetNumChildren();
+
 		if (node.optimised == null) {
 			String name = node.tokenValue;
 			reference = scope.findReference(name);
@@ -393,40 +419,23 @@ public class Parser implements SiliVisitor {
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference)node.optimised;
+
+		// If it's not a normal dereference of a variable.
+		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
+		if (numChildren > 0) {
+			ValueObject valueObject = (ValueObject) reference.getValue();
+			String keyName = getTokenOfChild(node, 0);
+
+			for (int i = 1; i < numChildren; i++) {
+				valueObject = (ValueObject) valueObject.get(keyName);
+				keyName = getTokenOfChild(node, i);
+			}
+
+			return valueObject.get(keyName);
+		}
+
 		return reference.getValue();
 	}
-
-//	NOTE: Previous implementation for accessing value objects by reusing the #Dereference method in the grammar.
-//	public Object visit(ASTDereference node, Object data) {
-//		Display.Reference reference;
-//		
-//		if (node.jjtGetNumChildren() > 0) {
-//			System.out.println("HELLO THERE"); // DEBUG:
-//
-//			if (node.optimised == null) {
-//				String name = node.tokenValue;
-//				System.out.println(name); // DEBUG:
-//				reference = scope.findReference(name);
-//				if (reference == null)
-//					throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
-//				node.optimised = reference;
-//			} else {
-//				reference = (Display.Reference)node.optimised;
-//			}
-//		} else {
-//			if (node.optimised == null) {
-//				String name = node.tokenValue;
-//				reference = scope.findReference(name);
-//				if (reference == null)
-//					throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
-//				node.optimised = reference;
-//			} else {
-//				reference = (Display.Reference)node.optimised;
-//			}
-//		}
-//		
-//		return reference.getValue();
-//	}
 
 	/**
 	 * Execute an assignment statement.
