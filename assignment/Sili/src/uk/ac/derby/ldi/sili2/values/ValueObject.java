@@ -31,6 +31,12 @@ public class ValueObject extends ValueAbstract {
 		return internalValue.get(name);
 	}
 	
+	public void set(String name, Value v) {
+//		System.out.print("DEBUG, ValueObject.set: "); // DEBUG:
+//		System.out.println("oldValue: " + internalValue.put(name, v)); // DEBUG:
+		internalValue.put(name, v);
+	}
+
 	public String toString() {
 		return internalValue.toString();
 	}
