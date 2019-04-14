@@ -56,7 +56,7 @@ public class Parser implements SiliVisitor {
 	}
 
 	/**
-	 * Anonymous object declaration/assignment.
+	 * Anonymous object declaration.
 	 * 
 	 * @author amrwc
 	 */
@@ -84,7 +84,7 @@ public class Parser implements SiliVisitor {
 	}
 
 	/**
-	 * TODO: Just an anchor, remove later.
+	 * TODO: LEFT HERE FOR REFERENCE OF PREVIOUS ATTEMPTS. DELETE THIS METHOD WHEN FINISHED
 	 * Anonymous object accessor.
 	 * 
 	 * @author amrwc
@@ -384,7 +384,7 @@ public class Parser implements SiliVisitor {
 			doChild(node, 1);
 		}
 
-//		return data;
+//		return data; // What is the difference?
 		return null;
 	}
 	
@@ -439,12 +439,13 @@ public class Parser implements SiliVisitor {
 
 	/**
 	 * Execute an assignment statement.
-	 * TODO: Enable key-value pair reassignment.
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTAssignment node, Object data) {
+	public Object visit(ASTAssignment node, Object data) {		
 		Display.Reference reference;
+		int numChildren = node.jjtGetNumChildren();
+		
 		if (node.optimised == null) {
 			String name = getTokenOfChild(node, 0);
 			reference = scope.findReference(name);
@@ -453,6 +454,24 @@ public class Parser implements SiliVisitor {
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference)node.optimised;
+		
+		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
+		if (numChildren > 2) {
+			ValueObject valueObject = (ValueObject) reference.getValue();
+			String keyName = getTokenOfChild(node, 1);
+
+			// Traversing the nested anonymous objects.
+			// 'numChildren - 2' because '-1' is the value. 
+			for (int i = 1; i < numChildren - 2; i++) {
+				valueObject = (ValueObject) valueObject.get(keyName);
+				keyName = getTokenOfChild(node, i + 1);
+			}
+
+			valueObject.set(keyName, doChild(node, numChildren - 1));
+
+			return data;
+		}
+
 		reference.setValue(doChild(node, 1));
 		return data;
 	}

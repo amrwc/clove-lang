@@ -1,4 +1,5 @@
-// Test object
+// Test anonymous objects
+
 write "Anonymous object initialisation and accessing:"
 write ""
 
@@ -13,17 +14,6 @@ write ""
 
 write "obj.str: "
 write obj.str
-write ""
-
-write "----------------------------"
-
-
-write "Key-value pairs reassignment:"
-write ""
-
-write "obj.num = 33"
-obj.num = 33
-write obj.num
 write ""
 
 write "----------------------------"
@@ -48,3 +38,37 @@ write ""
 
 write "obj2.nested.num2.nines: "
 write obj2.nested.num2.nines
+write ""
+
+write "----------------------------"
+
+
+write "Key-value pairs reassignment:"
+write ""
+
+write "obj.num = 33"
+obj.num = 33
+write "obj.num:"
+write obj.num
+write ""
+
+write "obj2.nested.str2 = Very nice!"
+obj2.nested.str2 = "Very nice!"
+write "obj2.nested.str2:"
+write obj2.nested.str2
+
+write "----------------------------"
+
+
+write "Functions in objects:"
+write ""
+
+obj3 = {
+	fn1 = fn(a) {
+		return a + 1
+	}
+}
+
+write "obj3.fn1(5): "
+write "TODO:"
+//write obj3.fn1(5) // TODO: This blows up, because of the invocation parentheses.
