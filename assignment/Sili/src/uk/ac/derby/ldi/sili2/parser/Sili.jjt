@@ -434,6 +434,13 @@ void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
+
+//							NOTE: An attempt at invoking a value function declared inside of a ValueObject.
+//							This breaks write with the message:
+//							Encountered " "WRITE" "write "" at line 13, column 1.
+//							Was expecting:
+//									"(" ...
+//							[identifier() <DOT>] identifier() arglist()
 }
 
 void literal() :
@@ -463,10 +470,27 @@ void identifier() #Identifier :
  * @author amrwc
  */
 void dereference() #Dereference :
+//void dereference() :
 {Token t;}
 {
 //	NOTE: This works, but only with objects, no functions.
 	t = <IDENTIFIER> ( <DOT> identifier() )* {jjtThis.tokenValue = t.image;}
+
+// NOTE: There's a difference between caling the implementation inline and the default next to the dereference().
+//	t = <IDENTIFIER> (
+//	  		( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
+//		| 	( <DOT> identifier() )* arglist()  {jjtThis.tokenValue = t.image;} #FnInvoke
+//	)
+// Even this won't work:
+// t = <IDENTIFIER> ( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
+
+// NOTE: This one doesn't blow up instantly by encountering the invocation parentheses.
+// It does however require all dot-accessors to have parentheses at the end. Maybe swap their order?
+//	t = <IDENTIFIER> ( <DOT> identifier() arglist() | ( <DOT> identifier() )* ) {jjtThis.tokenValue = t.image;}
+//	t = <IDENTIFIER> ( ( <DOT> identifier() )* | ( <DOT> fn_invoke() ) ) {jjtThis.tokenValue = t.image;}
+
+//	NOTE: An attempt at invoking a function declared inside of an anonymous object.
+//	t = <IDENTIFIER> ( <DOT> identifier() | LOOKAHEAD(2) fn_invoke() )* {jjtThis.tokenValue = t.image;}
 
 //	NOTE: An attempt at invoking a function nested inside an object.
 //	t = <IDENTIFIER> (
