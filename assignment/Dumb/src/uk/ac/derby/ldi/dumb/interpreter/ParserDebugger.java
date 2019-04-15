@@ -1,8 +1,8 @@
-package uk.ac.derby.ldi.sili2.interpreter;
+package uk.ac.derby.ldi.dumb.interpreter;
 
-import uk.ac.derby.ldi.sili2.parser.ast.*;
+import uk.ac.derby.ldi.dumb.parser.ast.*;
 
-public class ParserDebugger implements SiliVisitor {
+public class ParserDebugger implements DumbVisitor {
 	
 	private int indent = 0;
 	

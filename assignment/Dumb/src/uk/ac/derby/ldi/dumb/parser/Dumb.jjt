@@ -25,15 +25,15 @@ options {
   VISITOR = true;
   JDK_VERSION = "1.8";
   NODE_DEFAULT_VOID = true;
-  NODE_EXTENDS = "uk.ac.derby.ldi.sili2.interpreter.BaseASTNode";
-  NODE_PACKAGE = "uk.ac.derby.ldi.sili2.parser.ast";
+  NODE_EXTENDS = "uk.ac.derby.ldi.dumb.interpreter.BaseASTNode";
+  NODE_PACKAGE = "uk.ac.derby.ldi.dumb.parser.ast";
   JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
-PARSER_BEGIN(Sili)
-package uk.ac.derby.ldi.sili2.parser.ast;
-public class Sili {}
-PARSER_END(Sili)
+PARSER_BEGIN(Dumb)
+package uk.ac.derby.ldi.dumb.parser.ast;
+public class Dumb {}
+PARSER_END(Dumb)
 
 /*
  *

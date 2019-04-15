@@ -1,8 +1,8 @@
-package uk.ac.derby.ldi.sili2.interpreter;
+package uk.ac.derby.ldi.dumb.interpreter;
 
-import uk.ac.derby.ldi.sili2.parser.ast.ASTCode;
-import uk.ac.derby.ldi.sili2.parser.ast.Sili;
-import uk.ac.derby.ldi.sili2.parser.ast.SiliVisitor;
+import uk.ac.derby.ldi.dumb.parser.ast.ASTCode;
+import uk.ac.derby.ldi.dumb.parser.ast.Dumb;
+import uk.ac.derby.ldi.dumb.parser.ast.DumbVisitor;
 
 public class Interpreter {
 	
@@ -21,10 +21,10 @@ public class Interpreter {
 				return;
 			}
 		}
-		Sili language = new Sili(System.in);
+		Dumb language = new Dumb(System.in);
 		try {
 			ASTCode parser = language.code();
-			SiliVisitor nodeVisitor;
+			DumbVisitor nodeVisitor;
 			if (debugAST)
 				nodeVisitor = new ParserDebugger();
 			else
