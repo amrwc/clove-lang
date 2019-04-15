@@ -1,15 +1,20 @@
-package uk.ac.derby.ldi.dumb.values;
+package values;
 
-public class ValueRational extends ValueAbstract {
+public class ValueInteger extends ValueAbstract {
 
-	private double internalValue;
+	private long internalValue;
 	
-	public ValueRational(double b) {
+	public ValueInteger(long b) {
 		internalValue = b;
 	}
 	
 	public String getName() {
-		return "rational";
+		return "integer";
+	}
+	
+	/** Convert this to a primitive long. */
+	public long longValue() {
+		return internalValue;
 	}
 	
 	/** Convert this to a primitive double. */
@@ -23,36 +28,36 @@ public class ValueRational extends ValueAbstract {
 	}
 
 	public int compare(Value v) {
-		if (internalValue == v.doubleValue())
+		if (internalValue == v.longValue())
 			return 0;
-		else if (internalValue > v.doubleValue())
+		else if (internalValue > v.longValue())
 			return 1;
 		else
 			return -1;
 	}
 	
 	public Value add(Value v) {
-		return new ValueRational(internalValue + v.doubleValue());
+		return new ValueInteger(internalValue + v.longValue());
 	}
 
 	public Value subtract(Value v) {
-		return new ValueRational(internalValue - v.doubleValue());
+		return new ValueInteger(internalValue - v.longValue());
 	}
 
 	public Value mult(Value v) {
-		return new ValueRational(internalValue * v.doubleValue());
+		return new ValueInteger(internalValue * v.longValue());
 	}
 
 	public Value div(Value v) {
-		return new ValueRational(internalValue / v.doubleValue());
+		return new ValueInteger(internalValue / v.longValue());
 	}
 
 	public Value unary_plus() {
-		return new ValueRational(internalValue);
+		return new ValueInteger(internalValue);
 	}
 
 	public Value unary_minus() {
-		return new ValueRational(-internalValue);
+		return new ValueInteger(-internalValue);
 	}
 	
 	public String toString() {

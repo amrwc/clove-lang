@@ -1,8 +1,8 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
 import java.util.Vector;
 
-import uk.ac.derby.ldi.dumb.values.Value;
+import values.Value;
 
 /** Function invocation context. */
 class FunctionInvocation {

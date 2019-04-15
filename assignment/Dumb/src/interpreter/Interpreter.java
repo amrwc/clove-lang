@@ -1,8 +1,8 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
-import uk.ac.derby.ldi.dumb.parser.ast.ASTCode;
-import uk.ac.derby.ldi.dumb.parser.ast.Dumb;
-import uk.ac.derby.ldi.dumb.parser.ast.DumbVisitor;
+import parser.ast.ASTCode;
+import parser.ast.Dumb;
+import parser.ast.DumbVisitor;
 
 public class Interpreter {
 	

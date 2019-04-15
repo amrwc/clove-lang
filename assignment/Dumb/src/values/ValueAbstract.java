@@ -1,6 +1,6 @@
-package uk.ac.derby.ldi.dumb.values;
+package values;
 
-import uk.ac.derby.ldi.dumb.interpreter.ExceptionSemantic;
+import interpreter.ExceptionSemantic;
 
 public abstract class ValueAbstract implements Value {
 

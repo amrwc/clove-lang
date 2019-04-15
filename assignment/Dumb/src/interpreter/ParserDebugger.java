@@ -1,6 +1,6 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
-import uk.ac.derby.ldi.dumb.parser.ast.*;
+import parser.ast.*;
 
 public class ParserDebugger implements DumbVisitor {
 	

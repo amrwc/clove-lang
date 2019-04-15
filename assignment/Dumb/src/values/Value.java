@@ -1,4 +1,4 @@
-package uk.ac.derby.ldi.dumb.values;
+package values;
 
 /** An abstract Value, that defines all possible operations on abstract ValueS.
  * 
