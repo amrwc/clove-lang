@@ -1,0 +1,37 @@
+#!/bin/sh
+echo "=== Test01.dumb ==="
+java -classpath ./bin Dumb < test01.dumb
+echo "=== Test02.dumb ==="
+java -classpath ./bin Dumb < test02.dumb
+echo "=== Test03.dumb ==="
+java -classpath ./bin Dumb < test03.dumb
+echo "=== Test04.dumb ==="
+java -classpath ./bin Dumb < test04.dumb
+echo "=== Test05.dumb ==="
+java -classpath ./bin Dumb < test05.dumb
+echo "=== Test06.dumb ==="
+java -classpath ./bin Dumb < test06.dumb
+echo "=== Test07.dumb ==="
+java -classpath ./bin Dumb < test07.dumb
+echo "=== Test08.dumb ==="
+java -classpath ./bin Dumb < test08.dumb
+echo "=== Test09.dumb ==="
+java -classpath ./bin Dumb < test09.dumb
+echo "=== Test10.dumb ==="
+java -classpath ./bin Dumb < test10.dumb
+echo "=== Test11.dumb ==="
+java -classpath ./bin Dumb < test11.dumb
+echo "=== Test12.dumb ==="
+java -classpath ./bin Dumb < test12.dumb
+echo "=== Test13.dumb ==="
+java -classpath ./bin Dumb < test13.dumb
+echo "=== Test14.dumb ==="
+java -classpath ./bin Dumb < test14.dumb
+echo "=== Test15.dumb ==="
+java -classpath ./bin Dumb < test15.dumb
+echo "=== Test16.dumb ==="
+java -classpath ./bin Dumb < test16.dumb
+echo "=== Test17.dumb ==="
+java -classpath ./bin Dumb < test17.dumb
+echo "=== Test18.dumb ==="
+java -classpath ./bin Dumb < test18.dumb

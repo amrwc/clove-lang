@@ -1,6 +1,6 @@
-package uk.ac.derby.ldi.sili2.values;
+package uk.ac.derby.ldi.dumb.values;
 
-import uk.ac.derby.ldi.sili2.interpreter.ExceptionSemantic;
+import uk.ac.derby.ldi.dumb.interpreter.ExceptionSemantic;
 
 public abstract class ValueAbstract implements Value {
 

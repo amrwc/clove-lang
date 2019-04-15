@@ -1,9 +1,9 @@
-package uk.ac.derby.ldi.sili2.interpreter;
+package uk.ac.derby.ldi.dumb.interpreter;
 
-import uk.ac.derby.ldi.sili2.parser.ast.*;
-import uk.ac.derby.ldi.sili2.values.*;
+import uk.ac.derby.ldi.dumb.parser.ast.*;
+import uk.ac.derby.ldi.dumb.values.*;
 
-public class Parser implements SiliVisitor {
+public class Parser implements DumbVisitor {
 	
 	// Scope display handler
 	private Display scope = new Display();
@@ -89,28 +89,28 @@ public class Parser implements SiliVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTValueObjectAccess node, Object data) {
-		Display.Reference reference;
-
-//		System.out.println(node.tokenValue);
-		System.out.println("numChildren: " + node.jjtGetNumChildren());
-		int n = node.jjtGetNumChildren();
-		for (int i = 0; i < n; i++) {
-			String t = getTokenOfChild(node, i);
-			System.out.println(t);
-		}
-		
-		// Dereference copy-pasted:
+//	public Object visit(ASTValueObjectAccess node, Object data) {
 //		Display.Reference reference;
-		if (node.optimised == null) {
-			String name = node.tokenValue;
-			reference = scope.findReference(name);
-			if (reference == null)
-				throw new ExceptionSemantic("ValueObjectAccess: Variable or parameter " + name + " is undefined.");
-			node.optimised = reference;
-		} else
-			reference = (Display.Reference)node.optimised;
-		return reference.getValue();
+//
+////		System.out.println(node.tokenValue);
+//		System.out.println("numChildren: " + node.jjtGetNumChildren());
+//		int n = node.jjtGetNumChildren();
+//		for (int i = 0; i < n; i++) {
+//			String t = getTokenOfChild(node, i);
+//			System.out.println(t);
+//		}
+//		
+//		// Dereference copy-pasted:
+////		Display.Reference reference;
+//		if (node.optimised == null) {
+//			String name = node.tokenValue;
+//			reference = scope.findReference(name);
+//			if (reference == null)
+//				throw new ExceptionSemantic("ValueObjectAccess: Variable or parameter " + name + " is undefined.");
+//			node.optimised = reference;
+//		} else
+//			reference = (Display.Reference)node.optimised;
+//		return reference.getValue();
 
 		// MY OWN:
 //		if (node.optimised == null) {
@@ -143,7 +143,7 @@ public class Parser implements SiliVisitor {
 
 //		return valueObject.get(keyName);
 //		return value;
-	}
+//	}
 
 	/**
 	 * Anonymous function declaration.
