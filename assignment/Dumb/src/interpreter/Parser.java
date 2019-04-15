@@ -1,7 +1,7 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
-import uk.ac.derby.ldi.dumb.parser.ast.*;
-import uk.ac.derby.ldi.dumb.values.*;
+import parser.ast.*;
+import values.*;
 
 public class Parser implements DumbVisitor {
 	

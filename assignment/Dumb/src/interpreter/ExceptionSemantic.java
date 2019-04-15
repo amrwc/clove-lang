@@ -1,4 +1,4 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 /**
  * This exception is thrown when semantic errors are encountered.
  */

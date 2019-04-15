@@ -25,13 +25,13 @@ options {
   VISITOR = true;
   JDK_VERSION = "1.8";
   NODE_DEFAULT_VOID = true;
-  NODE_EXTENDS = "uk.ac.derby.ldi.dumb.interpreter.BaseASTNode";
-  NODE_PACKAGE = "uk.ac.derby.ldi.dumb.parser.ast";
+  NODE_EXTENDS = "interpreter.BaseASTNode";
+  NODE_PACKAGE = "parser.ast";
   JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
 PARSER_BEGIN(Dumb)
-package uk.ac.derby.ldi.dumb.parser.ast;
+package parser.ast;
 public class Dumb {}
 PARSER_END(Dumb)
 

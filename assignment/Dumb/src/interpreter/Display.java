@@ -1,6 +1,6 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
-import uk.ac.derby.ldi.dumb.values.Value;
+import values.Value;
 
 /** A display manages run-time access to variable and parameter scope where
  * functions may be nested.

@@ -1,11 +1,11 @@
-package uk.ac.derby.ldi.dumb.values;
+package values;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Vector;
 
-import uk.ac.derby.ldi.dumb.interpreter.ExceptionSemantic;
-import uk.ac.derby.ldi.dumb.parser.ast.SimpleNode;
+import interpreter.ExceptionSemantic;
+import parser.ast.SimpleNode;
 
 public class ValueFn extends ValueAbstract implements Comparable<Object>, Serializable {
 	private static final long serialVersionUID = 0;

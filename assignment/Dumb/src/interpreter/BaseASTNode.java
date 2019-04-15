@@ -1,4 +1,4 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
 /** This is the base class for every AST node.  
  * 

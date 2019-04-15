@@ -1,4 +1,4 @@
-package uk.ac.derby.ldi.dumb.values;
+package values;
 
 public class ValueString extends ValueAbstract {
 	

@@ -1,8 +1,8 @@
-package uk.ac.derby.ldi.dumb.interpreter;
+package interpreter;
 
 import java.util.Vector;
 
-import uk.ac.derby.ldi.dumb.parser.ast.SimpleNode;
+import parser.ast.SimpleNode;
 
 import java.util.HashMap;
 import java.io.Serializable;
