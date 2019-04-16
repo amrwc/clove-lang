@@ -193,8 +193,9 @@ public class Parser implements DumbVisitor {
 			throw new ExceptionSemantic("Function " + fnname + " already exists.");
 		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
 		
+//		System.out.println("getChild: " + node.jjtGetChild(0));
 		// Child 0 -- function definition parameter list
-		doChild(node, 0, currentFunctionDefinition);
+		doChild(node, 0, currentFunctionDefinition); // TODO: NOTE: The params are not executed correctly?
 
 		// Add to available functions
 		scope.addFunction(currentFunctionDefinition);
@@ -206,11 +207,15 @@ public class Parser implements DumbVisitor {
 		if (node.fnHasReturn)
 			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
 		
+		ValueFn valueFunction = new ValueFn(fnname, scope.getLevel() + 1);
+		
 		// Preserve this definition for future reference, and so we don't define
 		// it every time this node is processed.
-		node.optimised = currentFunctionDefinition;
-		return data;
-//		return node.optimised; // It has to return this.
+//		node.optimised = currentFunctionDefinition;
+		node.optimised = valueFunction;
+		
+//		return data;
+		return node.optimised; // It has to return this.
 //		return currentFunctionDefinition;
 	}
 
@@ -286,22 +291,29 @@ public class Parser implements DumbVisitor {
 //		int numChildren = node.jjtGetNumChildren();
 //		Value leftChild = doChild(node, 0);
 		int numChildren = node.jjtGetChild(0).jjtGetNumChildren(); // numChildren of the left child
-		System.out.println("numChildren: " + numChildren);
+//		System.out.println("numChildren: " + numChildren);
 
-//		if (numChildren > 0) {
-//			Value val = doChild(node, 0);
+		if (numChildren > 0) {
+			Value val = doChild(node, 0);
 //			System.out.println("val: " + val);
-////			for (int i = 1; i < numChildren; i++) {
-//			for (int i = 1; i < numChildren - 1; i++) {
-//				val = doChild(node, i);
-//			}
+//			for (int i = 1; i < numChildren; i++) {
+			for (int i = 1; i < numChildren - 1; i++) {
+				val = doChild(node, i);
+			}
+			
+			ValueFn valueFunction = (ValueFn) val;
+			
+//			System.out.println(val.getName());
+//			System.out.println(valueFunction.getScope());
+
 //			fndef = (FunctionDefinition)val;
-//			FunctionInvocation newInvocation = new FunctionInvocation(fndef);
-//			// Child 1 - arglist
-//			doChild(node, 1, newInvocation);
-//			// Execute
-//			return scope.execute(newInvocation, this);
-//		}
+			fndef = new FunctionDefinition(valueFunction.getName(), valueFunction.getScope());
+			FunctionInvocation newInvocation = new FunctionInvocation(fndef);
+			// Child 1 - arglist
+			doChild(node, 1, newInvocation);
+			// Execute
+			return scope.execute(newInvocation, this);
+		}
 		
 //		FunctionDefinition fndef;
 		if (node.optimised == null) { 

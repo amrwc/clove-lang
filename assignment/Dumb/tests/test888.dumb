@@ -8,4 +8,4 @@ obj3 = {
 	}
 }
 
-write obj3.fn1
+write obj3.fn1(5)

@@ -433,8 +433,8 @@ void primary_expression() :
 void fn_invoke() #FnInvoke :
 {}
 {
-							identifier() arglist()
-//							dereference() arglist()
+//							identifier() arglist()
+							dereference() arglist()
 //							dereference() (arglist())*
 
 //							NOTE: An attempt at invoking a value function declared inside of a ValueObject.
