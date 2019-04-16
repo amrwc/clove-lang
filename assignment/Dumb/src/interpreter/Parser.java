@@ -147,9 +147,41 @@ public class Parser implements DumbVisitor {
 
 	/**
 	 * Anonymous function declaration.
+	 * TODO: Fix the resolution to Value -- it must return a Value type.
 	 * 
 	 * @author amrwc
 	 */
+//	public Object visit(ASTFnVal node, Object data) {
+//		// Already defined?
+//		if (node.optimised != null)
+//			return data;
+//
+//		// Assign the variable name as the function name.
+////		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+////		if (scope.findFunctionInCurrentLevel(fnname) != null)
+////			throw new ExceptionSemantic("Function " + fnname + " already exists.");
+//		ValueFn currentFunctionDefinition = new ValueFn(scope.getLevel() + 1);
+//		
+//		// Child 0 -- function definition parameter list
+//		doChild(node, 0, currentFunctionDefinition);
+//
+//		// Add to available functions
+////		scope.addFunction(currentFunctionDefinition);
+//
+//		// Child 1 -- function body
+//		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
+//
+//		// Child 2 -- optional return expression
+//		if (node.fnHasReturn)
+//			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
+//		
+//		// Preserve this definition for future reference, and so we don't define
+//		// it every time this node is processed.
+//		node.optimised = currentFunctionDefinition;
+//		return data;
+////		return node.optimised; // It has to return this.
+////		return currentFunctionDefinition;
+//	}
 	public Object visit(ASTFnVal node, Object data) {
 		// Already defined?
 		if (node.optimised != null)
@@ -178,6 +210,8 @@ public class Parser implements DumbVisitor {
 		// it every time this node is processed.
 		node.optimised = currentFunctionDefinition;
 		return data;
+//		return node.optimised; // It has to return this.
+//		return currentFunctionDefinition;
 	}
 
 	// Function definition
@@ -246,7 +280,30 @@ public class Parser implements DumbVisitor {
 	
 	// Function invocation in an expression
 	public Object visit(ASTFnInvoke node, Object data) {
+//		System.out.println("numChildren: " + node.jjtGetNumChildren());
 		FunctionDefinition fndef;
+		
+//		int numChildren = node.jjtGetNumChildren();
+//		Value leftChild = doChild(node, 0);
+		int numChildren = node.jjtGetChild(0).jjtGetNumChildren(); // numChildren of the left child
+		System.out.println("numChildren: " + numChildren);
+
+//		if (numChildren > 0) {
+//			Value val = doChild(node, 0);
+//			System.out.println("val: " + val);
+////			for (int i = 1; i < numChildren; i++) {
+//			for (int i = 1; i < numChildren - 1; i++) {
+//				val = doChild(node, i);
+//			}
+//			fndef = (FunctionDefinition)val;
+//			FunctionInvocation newInvocation = new FunctionInvocation(fndef);
+//			// Child 1 - arglist
+//			doChild(node, 1, newInvocation);
+//			// Execute
+//			return scope.execute(newInvocation, this);
+//		}
+		
+//		FunctionDefinition fndef;
 		if (node.optimised == null) { 
 			// Child 0 - identifier (fn name)
 			String fnname = getTokenOfChild(node, 0);
@@ -307,7 +364,7 @@ public class Parser implements DumbVisitor {
 //			}
 //			System.out.print(fnname); System.out.print(": "); // REMOVE
 //			System.out.println(fndef); // REMOVE
-			
+
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 			
@@ -423,14 +480,18 @@ public class Parser implements DumbVisitor {
 		// If it's not a normal dereference of a variable.
 		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
 		if (numChildren > 0) {
+//			System.out.println("BOB2");
 			ValueObject valueObject = (ValueObject) reference.getValue();
 			String keyName = getTokenOfChild(node, 0);
+//			System.out.println(keyName);
 
 			for (int i = 1; i < numChildren; i++) {
 				valueObject = (ValueObject) valueObject.get(keyName);
 				keyName = getTokenOfChild(node, i);
 			}
 
+//			System.out.println("BOBOBO2 " + keyName);
+//			System.out.println("BOBOBO " + valueObject);
 			return valueObject.get(keyName);
 		}
 
@@ -467,6 +528,7 @@ public class Parser implements DumbVisitor {
 				keyName = getTokenOfChild(node, i + 1);
 			}
 
+//			System.out.println("ASS: " + doChild(node, numChildren - 1));
 			valueObject.set(keyName, doChild(node, numChildren - 1));
 
 			return data;

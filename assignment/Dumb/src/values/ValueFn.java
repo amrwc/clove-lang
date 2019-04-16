@@ -35,7 +35,8 @@ public class ValueFn extends ValueAbstract implements Comparable<Object>, Serial
 
 	/** Required by ValueAbstract. */
 	public String getName() {
-		return null;
+//		return null;
+		return "ValueFunction";
 	}
 
 	/** Required by ValueAbstract. */
@@ -44,7 +45,7 @@ public class ValueFn extends ValueAbstract implements Comparable<Object>, Serial
 	}
 
 	/** Set the function body of this function. */
-	void setFunctionBody(SimpleNode node) {
+	public void setFunctionBody(SimpleNode node) {
 		ASTFunctionBody = node;
 	}
 	
@@ -54,7 +55,7 @@ public class ValueFn extends ValueAbstract implements Comparable<Object>, Serial
 	}
 	
 	/** Set the return expression of this function. */
-	void setFunctionReturnExpression(SimpleNode node) {
+	public void setFunctionReturnExpression(SimpleNode node) {
 		ASTFunctionReturnExpression = node;
 	}
 	

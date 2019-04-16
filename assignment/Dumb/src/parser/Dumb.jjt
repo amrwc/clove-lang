@@ -260,9 +260,9 @@ void fndef() #FnDef :
  * @author amrwc
  */
 void fnval() #FnVal :
-{Token t;}
+{}
 {
-  t = <FN> parmlist() "{"
+  <FN> parmlist() "{"
     fnbody()
     [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
   "}"
@@ -434,6 +434,8 @@ void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
+//							dereference() arglist()
+//							dereference() (arglist())*
 
 //							NOTE: An attempt at invoking a value function declared inside of a ValueObject.
 //							This breaks write with the message:

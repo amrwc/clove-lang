@@ -1,0 +1,13 @@
+// Test function invocation from within the anonymous object. 
+write "Functions in objects:"
+write ""
+
+obj3 = {
+	fn1 = fn(a) {
+		return a + 1
+	}
+}
+
+write "obj3.fn1(5): "
+write "TODO:"
+write obj3.fn1(5) // TODO: This blows up, because of the invocation parentheses.
