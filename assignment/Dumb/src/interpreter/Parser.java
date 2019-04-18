@@ -84,104 +84,10 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * TODO: LEFT HERE FOR REFERENCE OF PREVIOUS ATTEMPTS. DELETE THIS METHOD WHEN FINISHED
-	 * Anonymous object accessor.
-	 * 
-	 * @author amrwc
-	 */
-//	public Object visit(ASTValueObjectAccess node, Object data) {
-//		Display.Reference reference;
-//
-////		System.out.println(node.tokenValue);
-//		System.out.println("numChildren: " + node.jjtGetNumChildren());
-//		int n = node.jjtGetNumChildren();
-//		for (int i = 0; i < n; i++) {
-//			String t = getTokenOfChild(node, i);
-//			System.out.println(t);
-//		}
-//		
-//		// Dereference copy-pasted:
-////		Display.Reference reference;
-//		if (node.optimised == null) {
-//			String name = node.tokenValue;
-//			reference = scope.findReference(name);
-//			if (reference == null)
-//				throw new ExceptionSemantic("ValueObjectAccess: Variable or parameter " + name + " is undefined.");
-//			node.optimised = reference;
-//		} else
-//			reference = (Display.Reference)node.optimised;
-//		return reference.getValue();
-
-		// MY OWN:
-//		if (node.optimised == null) {
-//			String name = node.tokenValue;
-//			reference = scope.findReference(name);
-//			if (reference == null)
-//				throw new ExceptionSemantic("Object " + name + " is undefined.");
-//			node.optimised = reference;
-//		} else {
-//			reference = (Display.Reference) node.optimised;
-//		}
-
-//		ValueObject valueObject = (ValueObject) reference.getValue();
-//		String keyName = getTokenOfChild(node, 0);
-
-//		System.out.println(keyName);
-//		System.out.println(keyName + ": " + valueObject.get(keyName));
-//		System.out.println(valueObject.toString());
-		
-//		Value value = valueObject.get(keyName);
-		
-		// Since nested is being casted, then maybe the if statements is redundant?
-		// The returned value from ValueObject.get is always a Value.
-		// Therefore, how can I check whether it's a ValueObject???
-//		if (!(valueObject.get(keyName) instanceof ValueObject)) {
-//			return valueObject.get(keyName);
-//		} else {
-//			ValueObject nested = valueObject.get(keyName);
-//		}
-
-//		return valueObject.get(keyName);
-//		return value;
-//	}
-
-	/**
 	 * Anonymous function declaration.
-	 * TODO: Fix the resolution to Value -- it must return a Value type.
 	 * 
 	 * @author amrwc
 	 */
-//	public Object visit(ASTFnVal node, Object data) {
-//		// Already defined?
-//		if (node.optimised != null)
-//			return data;
-//
-//		// Assign the variable name as the function name.
-////		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
-////		if (scope.findFunctionInCurrentLevel(fnname) != null)
-////			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-//		ValueFn currentFunctionDefinition = new ValueFn(scope.getLevel() + 1);
-//		
-//		// Child 0 -- function definition parameter list
-//		doChild(node, 0, currentFunctionDefinition);
-//
-//		// Add to available functions
-////		scope.addFunction(currentFunctionDefinition);
-//
-//		// Child 1 -- function body
-//		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
-//
-//		// Child 2 -- optional return expression
-//		if (node.fnHasReturn)
-//			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
-//		
-//		// Preserve this definition for future reference, and so we don't define
-//		// it every time this node is processed.
-//		node.optimised = currentFunctionDefinition;
-//		return data;
-////		return node.optimised; // It has to return this.
-////		return currentFunctionDefinition;
-//	}
 	public Object visit(ASTFnVal node, Object data) {
 		// Already defined?
 		if (node.optimised != null)
@@ -192,8 +98,7 @@ public class Parser implements DumbVisitor {
 		if (scope.findFunctionInCurrentLevel(fnname) != null)
 			throw new ExceptionSemantic("Function " + fnname + " already exists.");
 		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
-		
-//		System.out.println("getChild: " + node.jjtGetChild(0));
+
 		// Child 0 -- function definition parameter list
 		doChild(node, 0, currentFunctionDefinition); // TODO: NOTE: The params are not executed correctly?
 
@@ -206,17 +111,14 @@ public class Parser implements DumbVisitor {
 		// Child 2 -- optional return expression
 		if (node.fnHasReturn)
 			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
-		
+
 		ValueFn valueFunction = new ValueFn(fnname, scope.getLevel() + 1);
-		
+
 		// Preserve this definition for future reference, and so we don't define
 		// it every time this node is processed.
-//		node.optimised = currentFunctionDefinition;
 		node.optimised = valueFunction;
-		
-//		return data;
-		return node.optimised; // It has to return this.
-//		return currentFunctionDefinition;
+
+		return node.optimised;
 	}
 
 	// Function definition
@@ -282,41 +184,33 @@ public class Parser implements DumbVisitor {
 		scope.execute(newInvocation, this);
 		return data;
 	}
-	
-	// Function invocation in an expression
+
+	/**
+	 * Function invocation in an expression.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTFnInvoke node, Object data) {
-//		System.out.println("numChildren: " + node.jjtGetNumChildren());
 		FunctionDefinition fndef;
-		
-//		int numChildren = node.jjtGetNumChildren();
-//		Value leftChild = doChild(node, 0);
-		int numChildren = node.jjtGetChild(0).jjtGetNumChildren(); // numChildren of the left child
-//		System.out.println("numChildren: " + numChildren);
+		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren(); // numChildren of the left child
 
-		if (numChildren > 0) {
-			Value val = doChild(node, 0);
-//			System.out.println("val: " + val);
-//			for (int i = 1; i < numChildren; i++) {
-			for (int i = 1; i < numChildren - 1; i++) {
-				val = doChild(node, i);
-			}
-			
-			ValueFn valueFunction = (ValueFn) val;
-			
-//			System.out.println(val.getName());
-//			System.out.println(valueFunction.getScope());
+		// NOTE: This locates ValueFn inside of ValueObject.
+		// If there's more than 1 child in the left child, it's an object.
+		if (leftNumChildren > 0) {
+			Value value = doChild(node, 0); // Do the dereference.
 
-//			fndef = (FunctionDefinition)val;
-			fndef = new FunctionDefinition(valueFunction.getName(), valueFunction.getScope());
-			FunctionInvocation newInvocation = new FunctionInvocation(fndef);
-			// Child 1 - arglist
-			doChild(node, 1, newInvocation);
-			// Execute
-			return scope.execute(newInvocation, this);
+			ValueFn valueFunction = (ValueFn) value;
+			if (valueFunction == null)
+				throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
+
+			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+			if (fndef == null)
+				throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
+
+			node.optimised = fndef;
 		}
-		
-//		FunctionDefinition fndef;
-		if (node.optimised == null) { 
+
+		if (node.optimised == null) {
 			// Child 0 - identifier (fn name)
 			String fnname = getTokenOfChild(node, 0);
 //			System.out.print(fnname); System.out.print(": "); // REMOVE
@@ -453,7 +347,7 @@ public class Parser implements DumbVisitor {
 			doChild(node, 1);
 		}
 
-//		return data; // What is the difference?
+//		return data; // TODO: What is the difference?
 		return null;
 	}
 	
@@ -474,11 +368,14 @@ public class Parser implements DumbVisitor {
 		return data;
 	}
 
-	// TODO: It's just an anchor, remove later.
-	// Dereference a variable or parameter, and return its value.
+	/**
+	 * Dereference a variable or parameter, and return its value.
+	 * TODO: It's just an anchor, remove later.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
-		int numChildren = node.jjtGetNumChildren();
 
 		if (node.optimised == null) {
 			String name = node.tokenValue;
@@ -488,23 +385,23 @@ public class Parser implements DumbVisitor {
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference)node.optimised;
-
-		// If it's not a normal dereference of a variable.
+		
 		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
+		// If it's not a normal dereference of a variable.
+		int numChildren = node.jjtGetNumChildren();
 		if (numChildren > 0) {
-//			System.out.println("BOB2");
 			ValueObject valueObject = (ValueObject) reference.getValue();
 			String keyName = getTokenOfChild(node, 0);
-//			System.out.println(keyName);
 
 			for (int i = 1; i < numChildren; i++) {
 				valueObject = (ValueObject) valueObject.get(keyName);
 				keyName = getTokenOfChild(node, i);
 			}
+			Value value = valueObject.get(keyName);
+			if (value == null)
+				throw new ExceptionSemantic("Key \"" + keyName + "\" is undefined or equal to null.");
 
-//			System.out.println("BOBOBO2 " + keyName);
-//			System.out.println("BOBOBO " + valueObject);
-			return valueObject.get(keyName);
+			return value;
 		}
 
 		return reference.getValue();
@@ -540,7 +437,6 @@ public class Parser implements DumbVisitor {
 				keyName = getTokenOfChild(node, i + 1);
 			}
 
-//			System.out.println("ASS: " + doChild(node, numChildren - 1));
 			valueObject.set(keyName, doChild(node, numChildren - 1));
 
 			return data;

@@ -31,7 +31,7 @@ write ""
  * TODO:
  *  - Get ArgList and check whether there's a function included. Then, add it to the scope.
  */
-write "The Dave's second challenge:"
+write "Dave's second challenge:"
 myop2 = fn(x, y) {
 	return x(22) + y
 }
@@ -41,10 +41,3 @@ write myop2(
 	},
 	3
 )
-
-
-
-
-
-
-

@@ -17,6 +17,6 @@ singleNested = fn(a, b) {
 // "null" as the function's name twice.
 write singleNested(
 	fn() { return 10 },
-	//10
-	fn() { return 10 }
+	10
+	//fn() { return 10 }
 )

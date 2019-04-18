@@ -433,16 +433,15 @@ void primary_expression() :
 void fn_invoke() #FnInvoke :
 {}
 {
-//							identifier() arglist()
-							dereference() arglist()
-//							dereference() (arglist())*
+							identifier() arglist()
 
-//							NOTE: An attempt at invoking a value function declared inside of a ValueObject.
-//							This breaks write with the message:
-//							Encountered " "WRITE" "write "" at line 13, column 1.
-//							Was expecting:
-//									"(" ...
-//							[identifier() <DOT>] identifier() arglist()
+							// NOTE: An attempt at invoking a ValueFn declared inside of a ValueObject.
+							// This breaks write with the message:
+							// Encountered " "WRITE" "write "" at line 13, column 1.
+							// Was expecting:
+							//		"(" ...
+							// It does, however, work with the ValueFn declared inside of ValueObject.
+//							dereference() arglist()
 }
 
 void literal() :
@@ -454,6 +453,8 @@ void literal() :
 							| bool()
 				| fnval()
 				| valueObject()
+//		| valueObject()
+//		| fnval()
 }
 
 void identifier() #Identifier :
