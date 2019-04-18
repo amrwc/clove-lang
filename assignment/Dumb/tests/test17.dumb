@@ -27,10 +27,6 @@ write anon(1, 2)
 write ""
 
 
-/**
- * TODO:
- *  - Get ArgList and check whether there's a function included. Then, add it to the scope.
- */
 write "Dave's second challenge:"
 myop2 = fn(x, y) {
 	return x(22) + y

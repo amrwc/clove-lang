@@ -16,6 +16,11 @@ public class ValueFn extends ValueAbstract {
 		return fnname;
 	}
 	
+//	TODO: DO I NEED IT?
+	public void resetName(String newName) {
+		fnname = newName;
+	}
+	
 	public int getScope() {
 		return scope;
 	}

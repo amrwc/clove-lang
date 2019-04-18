@@ -277,9 +277,10 @@ void returnexpr() #ReturnExpression :
 void assignment() #Assignment :
 {}
 {
+					identifier() ( <DOT> identifier() )* "=" expression()
+
 //  				The original implementation, left for reference:
 //					identifier() "=" expression() #Assignment(2)
-					identifier() ( <DOT> identifier() )* "=" expression()
 }
 
 /**
@@ -453,8 +454,6 @@ void literal() :
 							| bool()
 				| fnval()
 				| valueObject()
-//		| valueObject()
-//		| fnval()
 }
 
 void identifier() #Identifier :
@@ -500,23 +499,6 @@ void dereference() #Dereference :
 //	  	( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
 //		| <DOT> fn_invoke() {jjtThis.tokenValue = t.image;} #FnInvoke
 //	)
-
-// NOTE: Left here for now for reference to not waste time on trying it.
-
-//  	t = <IDENTIFIER> (
-//	      <DOT> identifier() {jjtThis.tokenValue = t.image;} #ValueObjectAccess(1)
-//		| {jjtThis.tokenValue = t.image;} #Dereference
-//	)
-//	( <DOT> identifier() {jjtThis.tokenValue = t.image;} #ValueObjectAccess(1) )*
-
-//	t = <IDENTIFIER> (
-//	      valueObjectAccess()
-//		| {jjtThis.tokenValue = t.image;} #Dereference
-//	)
-
-// These are not equivalent to t = <IDENTIFIER> for some reason:
-//	identifier()
-//	identifier() ( <DOT> identifier() )*
 }
 
 void character() #Character :
