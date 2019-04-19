@@ -1,0 +1,27 @@
+// Test function invocation from within an anonymous object.
+// NOTE: This only works using the second option in fn_invoke() in the grammar,
+// 		 i.e. dereference() arglist() 
+
+write "Function invocation from within an anonymous object:"
+write ""
+
+obj3 = {
+	fn1 = fn() {
+		return 7 + 8
+	},
+	fn2 = fn(a) {
+		return a + 1
+	}
+}
+
+bob = fn() {
+	return "Im the real bob"
+}
+
+write "obj3.fn1() -- expected 15:"
+write obj3.fn1()
+
+write ""
+
+write "obj3.fn2(5) -- expected 6:"
+write obj3.fn2(5)
