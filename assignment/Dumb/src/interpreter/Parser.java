@@ -98,12 +98,11 @@ public class Parser implements DumbVisitor {
 
 		// Assign the variable name as the function name.
 		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+		// If the name is null, it most likely is an FnVal passed as an argument.
+		// Give it a random, unique name for later reuse.
 		if (fnname == null) {
-//			System.out.println("HAHAHA " + scope.getLevel());
 			UUID uuid = UUID.randomUUID();
 	        fnname = uuid.toString();
-//	        System.out.println("HAHAHA2 " + scope.getLevel());
-//	        System.out.println("HAHAHA " + fnname);
 		}
 
 		if (scope.findFunctionInCurrentLevel(fnname) != null)
@@ -206,7 +205,7 @@ public class Parser implements DumbVisitor {
 
 	public Object visit(ASTFnInvoke node, Object data) {
 		FunctionDefinition fndef;
-		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren(); // numChildren of the left child
+		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
 		// NOTE: This locates ValueFn inside of ValueObject.
 		// 		 Only works after modifying grammar to dereference() arglist(). 
@@ -228,27 +227,17 @@ public class Parser implements DumbVisitor {
 		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-//			System.out.println("out loop: " + fndef + " of " + fnname);
-//			System.out.println("parameter name: " + fndef.getParameterName(0));
-			
 			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
 			
-			// Search for ValueFn's among the arguments.
+			// Search for ValueFn's among the arguments and store their unique names in the alias table.
 			if (arglist.jjtGetNumChildren() > 0) {
-//				HashMap<Integer, String> fnValAliases = new HashMap<Integer, String>();
-
 				for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
 					var currentArg = doChild(arglist, i);
-//					System.out.print("FnName: " + currentArg.getName());
-//					System.out.println(" FnClass: " + currentArg.getClass());
-					if (currentArg instanceof values.ValueFn) {
+					if (currentArg instanceof values.ValueFn)
 						FN_VAL_ALIASES.put(i, currentArg.getName()); // Store the alias in the map.
-					}
 				}
 			}
 
-//			System.out.println("luls " + fnValAliases.get(0));
-			
 			// If function seems to be undefined, try to find the function in the aliases map.
 			// This procedure climbs the tree up to the FnVal node, then scans the parameters,
 			// and if there is a parameter that matches the function's name, try finding it in
@@ -256,123 +245,30 @@ public class Parser implements DumbVisitor {
 			// position.
 			if (fndef == null) {
 				var parentNode = node.jjtGetParent();
-				while(parentNode.toString() != "FnVal") {
+				while(parentNode.toString() != "FnVal")
 					parentNode = parentNode.jjtGetParent();
-				}
 
 				var paramList = parentNode.jjtGetChild(0);
-				// TODO: Iterate through all parameters.
-				// Run the ASTIdentifier method to get the token (parameter's name).
-				doChild((SimpleNode) paramList, 0); // The current param's name is stored in LAST_IDENTIFIER.				
+				for (int i = 0; i < paramList.jjtGetNumChildren(); i++) {
+					// Run the ASTIdentifier method to get the token (parameter's name).
+					doChild((SimpleNode) paramList, i); // The current param's name is stored in LAST_IDENTIFIER.
 
-//				System.out.println("cd " + LAST_IDENTIFIER);
+					// If the currently invoked function matches the parameter's name, look up an alias.
+					if (fnname.compareTo(LAST_IDENTIFIER) == 0) {
+						var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(i);
+						if (valueFnPassedAsAnArgument != null) {
+							fnname = valueFnPassedAsAnArgument;
+							fndef = scope.findFunction(fnname);
+						}
+					}
 
-				// If the currently invoked function matches the parameter's name, look up an alias.
-//				if (fnname == LAST_IDENTIFIER) { // How is this false?????
-				if (fnname.compareTo(LAST_IDENTIFIER) == 0) {
-					var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(0); // 0 should be a loop index.
-//					System.out.println("wut? " + temp);
-					if (valueFnPassedAsAnArgument != null) fnname = valueFnPassedAsAnArgument;
-					fndef = scope.findFunction(fnname);
+					if (fndef != null) break;
 				}
 			}
 
-//			if (fndef == null) {
-//				SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
-//				System.out.println("in loop111: " + arglist.jjtGetNumChildren());
-//
-//				for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
-////					doChild(node, i);
-//					arglist.jjtGetChild(i);
-////					System.out.println("in loop: " + one.jjtGetChild(i).toString());
-////					if (one.jjtGetChild(i).toString() == "FnVal") System.out.println("eh");
-////					ValueFn two = (ValueFn) one.jjtGetChild(i);
-//					var two = arglist;
-//					var three = doChild(two, i);
-//					System.out.println("in loop: " + three.getName());
-////					fnname = three.getName();
-//				}
-//			}
-
-//			System.out.println("out loop: " + fnname);
-			
-			// Go through all arguments of the invoked function.
-			
-//			System.out.println("THERE " + one.jjtGetChild(0).getClass());
-//			((ValueFn) one.jjtGetChild(0)).resetName(getTokenOfChild(node, 0));
-//			if (one.jjtGetChild(0).getClass() == "class parser.ast.ASTFnVal") {
-//				System.out.println("THERE " + one.jjtGetChild(0));
-//			}
-			// TODO: Find the right condition and then loop through the arguments looking for FnVal.
-			// 		 When found, try to get their name by fnVal.getName() and pass that name to the
-			//		 function definition below, or just do fnname = fnVal.getName().
-//			System.out.println(doChild((SimpleNode) node.jjtGetChild(1), 0));
-//			System.out.println(doChild((SimpleNode) node.jjtGetChild(1), 0));
-			
-			// Child 0 - identifier (fn name)
-//			String fnname = getTokenOfChild(node, 0);
-//			System.out.println("dupa: " + fnname); // REMOVE
-//			fndef = scope.findFunction(fnname);
-//			System.out.println("DOPE: " + fndef + "   " + scope.getLevel()); // REMOVE
-
-
-			// NOTE: This solution works with an anonymous function passed as a parameter,
-			// but assigns the function's name to be null. Please fix.
-			// UPDATE: It doesn't assign "null" as the function's name here, it's being
-			// defined implicitly, and since there is no assignment on the invocation,
-			// it assigns null as the zero'th parameter (anonymous function's identifier).
-			// Maybe I could assign a random name to it while parsing the parameters?
-//			if (fndef == null) {
-//				String fnParamName = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0); // WRONG -- returns null
-////				System.out.println("DOPE777: " + fnParamName); // REMOVE
-//				FunctionDefinition fnParamDefinition = scope.findFunction(fnParamName);
-//				
-//				fndef = fnParamDefinition;
-//			}
-			
-			
-			// NOTE: If the invoked function is not found in the scope, try adding it
-			// immediately. If it's still null, then throw the exception. TODO: It's just an anchor to quickly scroll here.
-//			if (fndef == null) { // Try to define the anonymous function on the go.
-//				FunctionDefinition tryFndef = new FunctionDefinition(fnname, scope.getLevel());
-//
-//				// Child 0 -- function definition parameter list
-//				doChild(node, 0, tryFndef); // Copy-pasted
-////				doChild((SimpleNode)node.jjtGetParent(), 0, tryFndef); // Trying differently
-//				
-//				// Add to available functions
-//				scope.addFunction(tryFndef);
-//				
-//				// Child 1 -- function body
-//				tryFndef.setFunctionBody(getChild(node, 1)); // Copy-pasted
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1)); // Trying differently
-//				
-//				// Child 2 -- optional return expression
-//				if (node.fnHasReturn) {
-//					System.out.println("IT DOES INDEED HAVE RETURN");
-////					tryFndef.setFunctionReturnExpression(getChild(node, 2)); // Copy-pasted
-//					tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2)); // Trying differently
-//				}
-//				
-//				
-//				
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 0));
-////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 1));
-//				
-////				tryFndef.getParameterCount(getChild((SimpleNode)node.jjtGetParent(), 0));
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1));
-////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2));
-////				System.out.println(tryFndef.getFunctionBody());
-//				
-//				scope.addFunction(tryFndef);
-//				fndef = scope.findFunction(fnname);
-//			}
-//			System.out.print(fnname); System.out.print(": "); // REMOVE
-//			System.out.println(fndef); // REMOVE
-
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
-			
+
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
 			// Save it for next time

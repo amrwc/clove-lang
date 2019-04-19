@@ -37,3 +37,34 @@ write myop2(
 	},
 	3
 )
+
+
+write ""
+
+
+write "Beyond the challenges:"
+singleNested = fn(a, b, c) {
+	return a() + b() + c()
+}
+write singleNested(
+	fn() { return 222 },
+	fn() { return 777 },
+	fn() { return 2+2 }
+)
+
+withArguments = fn(a, b) {
+	return a(1) + b
+}
+write withArguments(
+	fn(x) { return x + 2 },
+	9
+)
+
+//doubleNested = fn(a, b, c) {
+//	return a(fn() { return 44 + 55}) + b + c
+//}
+//write doubleNested(
+//	fn(xyz) { return xyz() + 11 },
+//	22,
+//	33
+//)
