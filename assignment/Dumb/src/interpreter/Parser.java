@@ -1,5 +1,8 @@
 package interpreter;
 
+import java.util.HashMap;
+import java.util.UUID;
+
 import parser.ast.*;
 import values.*;
 
@@ -84,68 +87,6 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * TODO: LEFT HERE FOR REFERENCE OF PREVIOUS ATTEMPTS. DELETE THIS METHOD WHEN FINISHED
-	 * Anonymous object accessor.
-	 * 
-	 * @author amrwc
-	 */
-//	public Object visit(ASTValueObjectAccess node, Object data) {
-//		Display.Reference reference;
-//
-////		System.out.println(node.tokenValue);
-//		System.out.println("numChildren: " + node.jjtGetNumChildren());
-//		int n = node.jjtGetNumChildren();
-//		for (int i = 0; i < n; i++) {
-//			String t = getTokenOfChild(node, i);
-//			System.out.println(t);
-//		}
-//		
-//		// Dereference copy-pasted:
-////		Display.Reference reference;
-//		if (node.optimised == null) {
-//			String name = node.tokenValue;
-//			reference = scope.findReference(name);
-//			if (reference == null)
-//				throw new ExceptionSemantic("ValueObjectAccess: Variable or parameter " + name + " is undefined.");
-//			node.optimised = reference;
-//		} else
-//			reference = (Display.Reference)node.optimised;
-//		return reference.getValue();
-
-		// MY OWN:
-//		if (node.optimised == null) {
-//			String name = node.tokenValue;
-//			reference = scope.findReference(name);
-//			if (reference == null)
-//				throw new ExceptionSemantic("Object " + name + " is undefined.");
-//			node.optimised = reference;
-//		} else {
-//			reference = (Display.Reference) node.optimised;
-//		}
-
-//		ValueObject valueObject = (ValueObject) reference.getValue();
-//		String keyName = getTokenOfChild(node, 0);
-
-//		System.out.println(keyName);
-//		System.out.println(keyName + ": " + valueObject.get(keyName));
-//		System.out.println(valueObject.toString());
-		
-//		Value value = valueObject.get(keyName);
-		
-		// Since nested is being casted, then maybe the if statements is redundant?
-		// The returned value from ValueObject.get is always a Value.
-		// Therefore, how can I check whether it's a ValueObject???
-//		if (!(valueObject.get(keyName) instanceof ValueObject)) {
-//			return valueObject.get(keyName);
-//		} else {
-//			ValueObject nested = valueObject.get(keyName);
-//		}
-
-//		return valueObject.get(keyName);
-//		return value;
-//	}
-
-	/**
 	 * Anonymous function declaration.
 	 * 
 	 * @author amrwc
@@ -157,12 +98,19 @@ public class Parser implements DumbVisitor {
 
 		// Assign the variable name as the function name.
 		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
+		// If the name is null, it most likely is an FnVal passed as an argument.
+		// Give it a random, unique name for later reuse.
+		if (fnname == null) {
+			UUID uuid = UUID.randomUUID();
+	        fnname = uuid.toString();
+		}
+
 		if (scope.findFunctionInCurrentLevel(fnname) != null)
 			throw new ExceptionSemantic("Function " + fnname + " already exists.");
 		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
-		
+
 		// Child 0 -- function definition parameter list
-		doChild(node, 0, currentFunctionDefinition);
+		doChild(node, 0, currentFunctionDefinition); // TODO: NOTE: The params are not executed correctly?
 
 		// Add to available functions
 		scope.addFunction(currentFunctionDefinition);
@@ -173,11 +121,14 @@ public class Parser implements DumbVisitor {
 		// Child 2 -- optional return expression
 		if (node.fnHasReturn)
 			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
-		
+
+		ValueFn valueFunction = new ValueFn(fnname, scope.getLevel() + 1);
+
 		// Preserve this definition for future reference, and so we don't define
 		// it every time this node is processed.
-		node.optimised = currentFunctionDefinition;
-		return data;
+		node.optimised = valueFunction;
+
+		return node.optimised;
 	}
 
 	// Function definition
@@ -243,74 +194,81 @@ public class Parser implements DumbVisitor {
 		scope.execute(newInvocation, this);
 		return data;
 	}
-	
-	// Function invocation in an expression
+
+	/**
+	 * Function invocation in an expression.
+	 * 
+	 * @author amrwc
+	 */
+	// NOTE: It's a hack to keep track of potentially useful aliases stored like <argument index, UUID.toString()>.
+	HashMap<Integer, String> FN_VAL_ALIASES = new HashMap<Integer, String>();
+
 	public Object visit(ASTFnInvoke node, Object data) {
 		FunctionDefinition fndef;
-		if (node.optimised == null) { 
-			// Child 0 - identifier (fn name)
+		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
+
+		// NOTE: This locates ValueFn inside of ValueObject.
+		// 		 Only works after modifying grammar to dereference() arglist(). 
+		// If there's more than 1 child in the left child, it's an object.
+		if (leftNumChildren > 0) {
+			Value value = doChild(node, 0); // Do the dereference.
+
+			ValueFn valueFunction = (ValueFn) value;
+			if (valueFunction == null)
+				throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
+
+			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+			if (fndef == null)
+				throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
+
+			node.optimised = fndef;
+		}
+
+		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
-//			System.out.print(fnname); System.out.print(": "); // REMOVE
 			fndef = scope.findFunction(fnname);
-//			System.out.println(fndef); // REMOVE
+			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
 			
-			
-			// NOTE: This solution works with an anonymous function passed as a parameter,
-			// but assigns the function's name to be null. Please fix.
-			// UPDATE: It doesn't assign "null" as the function's name here, it's being
-			// defined implicitly, and since there is no assignment on the invocation,
-			// it assigns null as the zero'th parameter (anonymous function's identifier).
-			// Maybe I could assign a random name to it while parsing the parameters?
-			if (fndef == null) {
-				String fnParamName = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
-				FunctionDefinition fnParamDefinition = scope.findFunction(fnParamName);
-				
-				fndef = fnParamDefinition;
+			// Search for ValueFn's among the arguments and store their unique names in the alias table.
+			if (arglist.jjtGetNumChildren() > 0) {
+				for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
+					var currentArg = doChild(arglist, i);
+					if (currentArg instanceof values.ValueFn)
+						FN_VAL_ALIASES.put(i, currentArg.getName()); // Store the alias in the map.
+				}
 			}
-			
-			
-			// NOTE: If the invoked function is not found in the scope, try adding it
-			// immediately. If it's still null, then throw the exception. TODO: It's just an anchor to quickly scroll here.
-//			if (fndef == null) { // Try to define the anonymous function on the go.
-//				FunctionDefinition tryFndef = new FunctionDefinition(fnname, scope.getLevel());
-//
-//				// Child 0 -- function definition parameter list
-//				doChild(node, 0, tryFndef); // Copy-pasted
-////				doChild((SimpleNode)node.jjtGetParent(), 0, tryFndef); // Trying differently
-//				
-//				// Add to available functions
-//				scope.addFunction(tryFndef);
-//				
-//				// Child 1 -- function body
-//				tryFndef.setFunctionBody(getChild(node, 1)); // Copy-pasted
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1)); // Trying differently
-//				
-//				// Child 2 -- optional return expression
-//				if (node.fnHasReturn) {
-//					System.out.println("IT DOES INDEED HAVE RETURN");
-////					tryFndef.setFunctionReturnExpression(getChild(node, 2)); // Copy-pasted
-//					tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2)); // Trying differently
-//				}
-//				
-//				
-//				
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 0));
-////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 1));
-//				
-////				tryFndef.getParameterCount(getChild((SimpleNode)node.jjtGetParent(), 0));
-////				tryFndef.setFunctionBody(getChild((SimpleNode)node.jjtGetParent(), 1));
-////				tryFndef.setFunctionReturnExpression(getChild((SimpleNode)node.jjtGetParent(), 2));
-////				System.out.println(tryFndef.getFunctionBody());
-//				
-//				scope.addFunction(tryFndef);
-//				fndef = scope.findFunction(fnname);
-//			}
-//			System.out.print(fnname); System.out.print(": "); // REMOVE
-//			System.out.println(fndef); // REMOVE
-			
+
+			// If function seems to be undefined, try to find the function in the aliases map.
+			// This procedure climbs the tree up to the FnVal node, then scans the parameters,
+			// and if there is a parameter that matches the function's name, try finding it in
+			// the aliases map using the parameter's index, since it must match the argument's
+			// position.
+			if (fndef == null) {
+				var parentNode = node.jjtGetParent();
+				while(parentNode.toString() != "FnVal")
+					parentNode = parentNode.jjtGetParent();
+
+				var paramList = parentNode.jjtGetChild(0);
+				for (int i = 0; i < paramList.jjtGetNumChildren(); i++) {
+					// Run the ASTIdentifier method to get the token (parameter's name).
+					doChild((SimpleNode) paramList, i); // The current param's name is stored in LAST_IDENTIFIER.
+
+					// If the currently invoked function matches the parameter's name, look up an alias.
+					if (fnname.compareTo(LAST_IDENTIFIER) == 0) {
+						var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(i);
+						if (valueFnPassedAsAnArgument != null) {
+							fnname = valueFnPassedAsAnArgument;
+							fndef = scope.findFunction(fnname);
+						}
+					}
+
+					if (fndef != null) break;
+				}
+			}
+
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
-			
+
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
 			// Save it for next time
@@ -384,13 +342,15 @@ public class Parser implements DumbVisitor {
 			doChild(node, 1);
 		}
 
-//		return data; // What is the difference?
+//		return data; // TODO: What is the difference?
 		return null;
 	}
 	
 	// Process an identifier
 	// This doesn't do anything, but needs to be here because we need an ASTIdentifier node.
+	String LAST_IDENTIFIER; // NOTE: This is a hack to get the Identifier's token for the parameter scanning purposes.
 	public Object visit(ASTIdentifier node, Object data) {
+		LAST_IDENTIFIER = node.tokenValue;
 		return data;
 	}
 	
@@ -405,11 +365,14 @@ public class Parser implements DumbVisitor {
 		return data;
 	}
 
-	// TODO: It's just an anchor, remove later.
-	// Dereference a variable or parameter, and return its value.
+	/**
+	 * Dereference a variable or parameter, and return its value.
+	 * TODO: It's just an anchor, remove later.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
-		int numChildren = node.jjtGetNumChildren();
 
 		if (node.optimised == null) {
 			String name = node.tokenValue;
@@ -419,9 +382,10 @@ public class Parser implements DumbVisitor {
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference)node.optimised;
-
-		// If it's not a normal dereference of a variable.
+		
 		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
+		// If it's not a normal dereference of a variable.
+		int numChildren = node.jjtGetNumChildren();
 		if (numChildren > 0) {
 			ValueObject valueObject = (ValueObject) reference.getValue();
 			String keyName = getTokenOfChild(node, 0);
@@ -430,8 +394,11 @@ public class Parser implements DumbVisitor {
 				valueObject = (ValueObject) valueObject.get(keyName);
 				keyName = getTokenOfChild(node, i);
 			}
+			Value value = valueObject.get(keyName);
+			if (value == null)
+				throw new ExceptionSemantic("Key \"" + keyName + "\" is undefined or equal to null.");
 
-			return valueObject.get(keyName);
+			return value;
 		}
 
 		return reference.getValue();
