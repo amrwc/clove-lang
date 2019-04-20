@@ -110,7 +110,7 @@ public class Parser implements DumbVisitor {
 		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
 
 		// Child 0 -- function definition parameter list
-		doChild(node, 0, currentFunctionDefinition); // TODO: NOTE: The params are not executed correctly?
+		doChild(node, 0, currentFunctionDefinition);
 
 		// Add to available functions
 		scope.addFunction(currentFunctionDefinition);
@@ -173,20 +173,93 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTReturnExpression node, Object data) {
 		return doChildren(node, data);
 	}
-	
-	// Function call
+
+	/**
+	 * Store ValueFn's aliases when they're passed as arguments.
+	 * 
+	 * @author amrwc
+	 */
+	// NOTE: It's a hack to keep track of potentially useful aliases stored like <argument index, UUID.toString()>.
+	// TODO: Currently it's easily overwritten if another nested ValueFn is passed at the same index.
+	// 		 I.e. bob(fn(fn(){}){}) -- index is the same, they're both ValueFn without names.
+	// TODO: CONSIDER USING SCOPE FOR STORAGE?
+	HashMap<Integer, String> FN_VAL_ALIASES = new HashMap<Integer, String>();
+	public void storeArgumentAliases(SimpleNode arglist) {
+		// Search for ValueFn's among the arguments and store their unique names in the alias table.
+		if (arglist.jjtGetNumChildren() > 0) {
+			for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
+				var currentArg = doChild(arglist, i);
+				if (currentArg instanceof values.ValueFn)
+					FN_VAL_ALIASES.put(i, currentArg.getName()); // Store the alias in the map.
+			}
+		}
+	}
+
+	/**
+	 * Get fixed FunctionDefinition in case of FnVal passed as an argument.
+	 * 
+	 * @author amrwc
+	 */
+	public FunctionDefinition getAdjustedFnDef(String fnname, FunctionDefinition functionDefinition,
+			Node parentNode) {
+		FunctionDefinition fndef = functionDefinition;
+
+		// If function seems to be undefined, try to find the function in the aliases map.
+		// This procedure climbs the tree up to the FnVal node, then scans the parameters,
+		// and if there is a parameter that matches the function's name, try finding it in
+		// the aliases map using the parameter's index, since it must match the argument's
+		// position.
+		if (fndef == null) {
+			while(parentNode.toString() != "FnVal")
+				parentNode = parentNode.jjtGetParent();
+
+			var paramList = parentNode.jjtGetChild(0);
+			for (int i = 0; i < paramList.jjtGetNumChildren(); i++) {
+				// Run the ASTIdentifier method to get the token (parameter's name).
+				doChild((SimpleNode) paramList, i); // The current param's name is stored in LAST_IDENTIFIER.
+
+				// If the currently invoked function matches the parameter's name, look up an alias.
+				if (fnname.equals(LAST_IDENTIFIER)) {
+					var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(i);
+					if (valueFnPassedAsAnArgument != null) {
+						fnname = valueFnPassedAsAnArgument;
+						fndef = scope.findFunction(fnname);
+					}
+				}
+
+				if (fndef != null) break;
+			}
+		}
+		
+		return fndef;
+	}
+
+	/**
+	 * Function call.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTCall node, Object data) {
 		FunctionDefinition fndef;
 		if (node.optimised == null) { 
 			// Child 0 - identifier (fn name)
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
+
+			// If an FnVal is passed as an argument, fix the fndef.
+			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
+			storeArgumentAliases(arglist);
+			Node parentNode = node.jjtGetParent();
+			fndef = getAdjustedFnDef(fnname, fndef, parentNode);
+
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
+
 			// Save it for next time
 			node.optimised = fndef;
 		} else
 			fndef = (FunctionDefinition)node.optimised;
+
 		FunctionInvocation newInvocation = new FunctionInvocation(fndef);
 		// Child 1 - arglist
 		doChild(node, 1, newInvocation);
@@ -200,9 +273,6 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	// NOTE: It's a hack to keep track of potentially useful aliases stored like <argument index, UUID.toString()>.
-	HashMap<Integer, String> FN_VAL_ALIASES = new HashMap<Integer, String>();
-
 	public Object visit(ASTFnInvoke node, Object data) {
 		FunctionDefinition fndef;
 		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
@@ -210,6 +280,7 @@ public class Parser implements DumbVisitor {
 		// NOTE: This locates ValueFn inside of ValueObject.
 		// 		 Only works after modifying grammar to dereference() arglist(). 
 		// If there's more than 1 child in the left child, it's an object.
+		// NOTE: It needs to be added to FnCall as well when it works properly.
 		if (leftNumChildren > 0) {
 			Value value = doChild(node, 0); // Do the dereference.
 
@@ -227,54 +298,24 @@ public class Parser implements DumbVisitor {
 		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
 			
-			// Search for ValueFn's among the arguments and store their unique names in the alias table.
-			if (arglist.jjtGetNumChildren() > 0) {
-				for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
-					var currentArg = doChild(arglist, i);
-					if (currentArg instanceof values.ValueFn)
-						FN_VAL_ALIASES.put(i, currentArg.getName()); // Store the alias in the map.
-				}
-			}
-
-			// If function seems to be undefined, try to find the function in the aliases map.
-			// This procedure climbs the tree up to the FnVal node, then scans the parameters,
-			// and if there is a parameter that matches the function's name, try finding it in
-			// the aliases map using the parameter's index, since it must match the argument's
-			// position.
-			if (fndef == null) {
-				var parentNode = node.jjtGetParent();
-				while(parentNode.toString() != "FnVal")
-					parentNode = parentNode.jjtGetParent();
-
-				var paramList = parentNode.jjtGetChild(0);
-				for (int i = 0; i < paramList.jjtGetNumChildren(); i++) {
-					// Run the ASTIdentifier method to get the token (parameter's name).
-					doChild((SimpleNode) paramList, i); // The current param's name is stored in LAST_IDENTIFIER.
-
-					// If the currently invoked function matches the parameter's name, look up an alias.
-					if (fnname.compareTo(LAST_IDENTIFIER) == 0) {
-						var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(i);
-						if (valueFnPassedAsAnArgument != null) {
-							fnname = valueFnPassedAsAnArgument;
-							fndef = scope.findFunction(fnname);
-						}
-					}
-
-					if (fndef != null) break;
-				}
-			}
+			// If an FnVal is passed as an argument, fix the fndef.
+			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
+			storeArgumentAliases(arglist);
+			Node parentNode = node.jjtGetParent();
+			fndef = getAdjustedFnDef(fnname, fndef, parentNode);
 
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
+
 			// Save it for next time
 			node.optimised = fndef;
 		} else
 			fndef = (FunctionDefinition)node.optimised;
+
 		FunctionInvocation newInvocation = new FunctionInvocation(fndef);
 		// Child 1 - arglist
 		doChild(node, 1, newInvocation);

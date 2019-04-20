@@ -68,3 +68,12 @@ write withArguments(
 //	22,
 //	33
 //)
+
+write ""
+z = 0
+bob = fn(x, y) {
+	z = x() + y()
+}
+bob(fn() { return 222 },
+	fn() { return 777 })
+write z
