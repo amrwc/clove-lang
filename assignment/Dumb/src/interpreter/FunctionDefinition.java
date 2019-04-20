@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author dave
  *
  */
-class FunctionDefinition implements Comparable<Object>, Serializable {
+public class FunctionDefinition implements Comparable<Object>, Serializable {
 	private static final long serialVersionUID = 0;
 
 	private String name;
@@ -29,6 +29,10 @@ class FunctionDefinition implements Comparable<Object>, Serializable {
 		name = functionName;
 		depth = level;
 	}
+	
+	FunctionDefinition(int level) {
+		depth = level;
+	}
 
 	/** Get the depth of this definition.
 	 * 0 - root or main scope
@@ -36,7 +40,7 @@ class FunctionDefinition implements Comparable<Object>, Serializable {
 	 * 2 - definition inside 1
 	 * n - etc.
 	 */
-	int getLevel() {
+	public int getLevel() {
 		return depth;
 	}
 	

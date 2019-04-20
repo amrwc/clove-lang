@@ -60,20 +60,11 @@ write withArguments(
 	9
 )
 
-//doubleNested = fn(a, b, c) {
-//	return a(fn() { return 44 + 55}) + b + c
-//}
-//write doubleNested(
-//	fn(xyz) { return xyz() + 11 },
-//	22,
-//	33
-//)
-
-write ""
-z = 0
-bob = fn(x, y) {
-	z = x() + y()
+doubleNested = fn(a, b, c) {
+	return a(fn() { return 44 + 55}) + b + c
 }
-bob(fn() { return 222 },
-	fn() { return 777 })
-write z
+write doubleNested(
+	fn(xyz) { return xyz() + 11 },
+	22,
+	33
+)
