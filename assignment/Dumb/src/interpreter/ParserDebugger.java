@@ -28,7 +28,7 @@ public class ParserDebugger implements DumbVisitor {
 		return data;
 	}
 	
-	// Execute a Sili program
+	// Execute a Dumb program
 	public Object visit(ASTCode node, Object data) {
 		dump(node, data);
 		return data;
