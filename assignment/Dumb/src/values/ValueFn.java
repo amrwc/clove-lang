@@ -1,23 +1,27 @@
 package values;
 
+import interpreter.FunctionDefinition;
+
 public class ValueFn extends ValueAbstract {
-	private String fnname;
-	private int scope;
+	private FunctionDefinition functionDefinition;
 
 	public ValueFn() {}
 
-	public ValueFn(String fnname, int scope) {
-		this.fnname = fnname;
-		this.scope = scope;
+	public ValueFn(FunctionDefinition fndef) {
+		functionDefinition = fndef;
 	}
 
 	@Override
 	public String getName() {
-		return fnname;
+		return "ValueFn";
 	}
-	
-	public int getScope() {
-		return scope;
+
+	public int getLevel() {
+		return functionDefinition.getLevel();
+	}
+
+	public FunctionDefinition get() {
+		return functionDefinition;
 	}
 
 	@Override

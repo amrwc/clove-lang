@@ -1,8 +1,6 @@
 package interpreter;
 
-import java.util.HashMap;
-import java.util.UUID;
-
+import interpreter.Display.Reference;
 import parser.ast.*;
 import values.*;
 
@@ -43,7 +41,7 @@ public class Parser implements DumbVisitor {
 		return data;
 	}
 	
-	// Execute a Sili program
+	// Execute a Dumb program
 	public Object visit(ASTCode node, Object data) {
 		return doChildren(node, data);	
 	}
@@ -96,33 +94,17 @@ public class Parser implements DumbVisitor {
 		if (node.optimised != null)
 			return data;
 
-		// Assign the variable name as the function name.
-		String fnname = getTokenOfChild((SimpleNode)node.jjtGetParent(), 0);
-		// If the name is null, it most likely is an FnVal passed as an argument.
-		// Give it a random, unique name for later reuse.
-		if (fnname == null) {
-			UUID uuid = UUID.randomUUID();
-	        fnname = uuid.toString();
-		}
-
-		if (scope.findFunctionInCurrentLevel(fnname) != null)
-			throw new ExceptionSemantic("Function " + fnname + " already exists.");
-		FunctionDefinition currentFunctionDefinition = new FunctionDefinition(fnname, scope.getLevel() + 1);
+		FunctionDefinition currentFnDef = new FunctionDefinition(scope.getLevel() + 1);
 
 		// Child 0 -- function definition parameter list
-		doChild(node, 0, currentFunctionDefinition);
-
-		// Add to available functions
-		scope.addFunction(currentFunctionDefinition);
-
+		doChild(node, 0, currentFnDef);
 		// Child 1 -- function body
-		currentFunctionDefinition.setFunctionBody(getChild(node, 1));
-
+		currentFnDef.setFunctionBody(getChild(node, 1));
 		// Child 2 -- optional return expression
 		if (node.fnHasReturn)
-			currentFunctionDefinition.setFunctionReturnExpression(getChild(node, 2));
+			currentFnDef.setFunctionReturnExpression(getChild(node, 2));
 
-		ValueFn valueFunction = new ValueFn(fnname, scope.getLevel() + 1);
+		ValueFn valueFunction = new ValueFn(currentFnDef);
 
 		// Preserve this definition for future reference, and so we don't define
 		// it every time this node is processed.
@@ -173,65 +155,19 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTReturnExpression node, Object data) {
 		return doChildren(node, data);
 	}
-
+	
 	/**
-	 * Store ValueFn's aliases when they're passed as arguments.
+	 * Try finding the ValueFn inside the scope and extract its FunctionDefinition.
 	 * 
 	 * @author amrwc
 	 */
-	// NOTE: It's a hack to keep track of potentially useful aliases stored like <argument index, UUID.toString()>.
-	// TODO: Currently it's easily overwritten if another nested ValueFn is passed at the same index.
-	// 		 I.e. bob(fn(fn(){}){}) -- index is the same, they're both ValueFn without names.
-	// TODO: CONSIDER USING SCOPE FOR STORAGE?
-	HashMap<Integer, String> FN_VAL_ALIASES = new HashMap<Integer, String>();
-	public void storeArgumentAliases(SimpleNode arglist) {
-		// Search for ValueFn's among the arguments and store their unique names in the alias table.
-		if (arglist.jjtGetNumChildren() > 0) {
-			for (int i = 0; i < arglist.jjtGetNumChildren(); i++) {
-				var currentArg = doChild(arglist, i);
-				if (currentArg instanceof values.ValueFn)
-					FN_VAL_ALIASES.put(i, currentArg.getName()); // Store the alias in the map.
-			}
-		}
-	}
+	public FunctionDefinition findValueFn(String fnname) {
+		Reference value = scope.findReference(fnname);
+		if (value == null)
+			throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 
-	/**
-	 * Get fixed FunctionDefinition in case of FnVal passed as an argument.
-	 * 
-	 * @author amrwc
-	 */
-	public FunctionDefinition getAdjustedFnDef(String fnname, FunctionDefinition functionDefinition,
-			Node parentNode) {
-		FunctionDefinition fndef = functionDefinition;
-
-		// If function seems to be undefined, try to find the function in the aliases map.
-		// This procedure climbs the tree up to the FnVal node, then scans the parameters,
-		// and if there is a parameter that matches the function's name, try finding it in
-		// the aliases map using the parameter's index, since it must match the argument's
-		// position.
-		if (fndef == null) {
-			while(parentNode.toString() != "FnVal")
-				parentNode = parentNode.jjtGetParent();
-
-			var paramList = parentNode.jjtGetChild(0);
-			for (int i = 0; i < paramList.jjtGetNumChildren(); i++) {
-				// Run the ASTIdentifier method to get the token (parameter's name).
-				doChild((SimpleNode) paramList, i); // The current param's name is stored in LAST_IDENTIFIER.
-
-				// If the currently invoked function matches the parameter's name, look up an alias.
-				if (fnname.equals(LAST_IDENTIFIER)) {
-					var valueFnPassedAsAnArgument = FN_VAL_ALIASES.get(i);
-					if (valueFnPassedAsAnArgument != null) {
-						fnname = valueFnPassedAsAnArgument;
-						fndef = scope.findFunction(fnname);
-					}
-				}
-
-				if (fndef != null) break;
-			}
-		}
-		
-		return fndef;
+		ValueFn valueFunction = (ValueFn) value.getValue();
+		return valueFunction.get(); // Extract the FunctionDefinition stored in ValueFn.
 	}
 
 	/**
@@ -246,14 +182,7 @@ public class Parser implements DumbVisitor {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
 
-			// If an FnVal is passed as an argument, fix the fndef.
-			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
-			storeArgumentAliases(arglist);
-			Node parentNode = node.jjtGetParent();
-			fndef = getAdjustedFnDef(fnname, fndef, parentNode);
-
-			if (fndef == null)
-				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
+			if (fndef == null) fndef = findValueFn(fnname);
 
 			// Save it for next time
 			node.optimised = fndef;
@@ -298,15 +227,8 @@ public class Parser implements DumbVisitor {
 		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-			
-			// If an FnVal is passed as an argument, fix the fndef.
-			SimpleNode arglist = (SimpleNode) node.jjtGetChild(1);
-			storeArgumentAliases(arglist);
-			Node parentNode = node.jjtGetParent();
-			fndef = getAdjustedFnDef(fnname, fndef, parentNode);
 
-			if (fndef == null)
-				throw new ExceptionSemantic("Function " + fnname + " is undefined.");
+			if (fndef == null) fndef = findValueFn(fnname);
 
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
@@ -389,9 +311,7 @@ public class Parser implements DumbVisitor {
 	
 	// Process an identifier
 	// This doesn't do anything, but needs to be here because we need an ASTIdentifier node.
-	String LAST_IDENTIFIER; // NOTE: This is a hack to get the Identifier's token for the parameter scanning purposes.
 	public Object visit(ASTIdentifier node, Object data) {
-		LAST_IDENTIFIER = node.tokenValue;
 		return data;
 	}
 	
