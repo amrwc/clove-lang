@@ -8,5 +8,5 @@ function fib(n) {
 }
 
 for (i = 0; i < 35; i = i + 1) {
-    write fib(i)
+    write(fib(i))
 }

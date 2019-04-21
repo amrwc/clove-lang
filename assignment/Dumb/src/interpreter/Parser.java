@@ -305,8 +305,7 @@ public class Parser implements DumbVisitor {
 			doChild(node, 1);
 		}
 
-//		return data; // TODO: What is the difference?
-		return null;
+		return data;
 	}
 	
 	// Process an identifier
@@ -314,15 +313,17 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTIdentifier node, Object data) {
 		return data;
 	}
-	
-	// Execute the WRITE statement
+
+	/**
+	 * Execute the WRITE statement. Print out all given arguments.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTWrite node, Object data) {
-//		int num = node.jjtGetNumChildren();
-//		System.out.println(num);
-//		for (int i = 0; i < num; num++) {
-//			System.out.println(doChild(node, i));
-//		}
-		System.out.println(doChild(node, 0));
+		int numChildren = node.jjtGetNumChildren();
+		for (int i = 0; i < numChildren; i++) {
+			System.out.println(doChild(node, i));
+		}
 		return data;
 	}
 

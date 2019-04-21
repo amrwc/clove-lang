@@ -326,24 +326,16 @@ void whileloop() #WhileLoop :
   					<WHILE> "(" expression() ")" statement()
 }
 
-void write() :
-{}
-{
-					<WRITE> expression() #Write(1)
-}
-
 /**
- * TODO:
- * An attempt at implementing write() with multiple arguments,
- * similarly to JavaScript's console.log(param1, param2, ...).
+ * Write all the arguments to the command line.
  * 
  * @author amrwc
  */
-//void write() #Write :
-//{}
-//{
-//					<WRITE> expression() ( "," expression() )* <SEMICOLON>
-//}
+void write() #Write :
+{}
+{
+					<WRITE> "(" expression() ( "," expression() )* ")"
+}
 
 void call() #Call :
 {}
