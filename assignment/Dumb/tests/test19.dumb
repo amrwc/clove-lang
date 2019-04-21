@@ -1,12 +1,14 @@
 // Test arrow functions
-write("Arrow functions:", "")
+write("Arrow functions:")
+write()
 
 
 // Dave's first challenge:
 myop = (x, y) => {
 	return x + y
 }
-write(myop(2, 3), "")
+write(myop(2, 3))
+write()
 
 
 // Nested arrow functions:
@@ -17,7 +19,8 @@ anon = (x, y) => {
 	
 	return x + y + anonNested(3, 4)
 }
-write(anon(1, 2), "")
+write(anon(1, 2))
+write()
 
 
 // Dave's second challenge:
@@ -29,7 +32,8 @@ write(myop2(
 		return p * 4
 	},
 	3
-), "")
+))
+write()
 
 
 // Beyond the challenges:

@@ -1,4 +1,5 @@
-write("While loop:", "")
+write("While loop:")
+write()
 
 i = 0
 while (i < 10) {

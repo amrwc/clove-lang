@@ -4,14 +4,17 @@ obj = {
 	num = 999,
 	str = "Hi"
 }
-write("obj.num: ", obj.num, "")
-write("obj.str: ", obj.str, "")
+write("obj.num: ", obj.num)
+write()
+write("obj.str: ", obj.str)
+write()
 
 
 write("----------------------------")
 
 
-write("Nested objects:", "")
+write("Nested objects:")
+write()
 obj2 = {
 	nested = {
 		num2 = {
@@ -21,26 +24,32 @@ obj2 = {
 	},
 	test = "test"
 }
-write("obj2.nested.str2: ", obj2.nested.str2, "")
-write("obj2.nested.num2.nines: ", obj2.nested.num2.nines, "")
+write("obj2.nested.str2: ", obj2.nested.str2)
+write()
+write("obj2.nested.num2.nines: ", obj2.nested.num2.nines)
+write()
 
 
 write("----------------------------")
 
 
-write("Key-value pairs reassignment:", "")
+write("Key-value pairs reassignment:")
+write()
 write("obj.num = 33")
 obj.num = 33
-write("obj.num: ", obj.num, "")
+write("obj.num: ", obj.num)
+write()
 write("obj2.nested.str2 = Very nice!")
 obj2.nested.str2 = "Very nice!"
-write("obj2.nested.str2:", obj2.nested.str2)
+write("obj2.nested.str2: ", obj2.nested.str2)
+write()
 
 
 write("----------------------------")
 
 
-write("Functions in objects:", "")
+write("Functions in objects:")
+write()
 obj3 = {
 	fn1 = function(a) {
 		return a + 1

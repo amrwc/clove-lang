@@ -322,8 +322,9 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTWrite node, Object data) {
 		int numChildren = node.jjtGetNumChildren();
 		for (int i = 0; i < numChildren; i++) {
-			System.out.println(doChild(node, i));
+			System.out.print(doChild(node, i));
 		}
+		System.out.println();
 		return data;
 	}
 
