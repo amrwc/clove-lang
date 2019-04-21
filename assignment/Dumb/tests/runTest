@@ -1,0 +1,17 @@
+#!/bin/sh
+
+testNum="$1"							# Get the first command line argument.
+
+if [[ -n "$testNum" ]]; then			# If testNum is not empty...
+
+	if [ $testNum -gt 9 ]; then			# If testNum > 9...
+		file=test$testNum.dumb			# Get the file name.
+	else
+		file=test0$testNum.dumb			# Prepend the test number with 0.
+	fi
+
+	echo "=== $file ==="
+	java -classpath ../bin Dumb < $file
+else
+	echo "ERROR: Specify the test number in the first argument."
+fi
