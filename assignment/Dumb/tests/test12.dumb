@@ -19,4 +19,4 @@ function blah(p) {
 
 v = 3
 
-write blah(v)
+write(blah(v))

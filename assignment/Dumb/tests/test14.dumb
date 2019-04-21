@@ -6,5 +6,5 @@ function sum(n) {
    return p
 }
 
-write sum(5)
+write(sum(5))
 
