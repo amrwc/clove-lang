@@ -328,13 +328,14 @@ void whileloop() #WhileLoop :
 
 /**
  * Write all the arguments to the command line.
+ * If there is no arguments, it will print a new line.
  * 
  * @author amrwc
  */
 void write() #Write :
 {}
 {
-					<WRITE> "(" expression() ( "," expression() )* ")"
+					<WRITE> "(" [ expression() ] ( "," expression() )* ")"
 }
 
 void call() #Call :

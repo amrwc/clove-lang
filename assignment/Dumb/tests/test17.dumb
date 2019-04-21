@@ -1,5 +1,6 @@
 // Test anonymous functions
-write("Anonymous functions:", "")
+write("Anonymous functions:")
+write()
 
 
 write("Dave's first challenge:")
@@ -9,7 +10,8 @@ myop = function(x, y) {
 write(myop(2, 3))
 
 
-write("", "", "Nested anonymous function:")
+write()
+write("Nested anonymous function:")
 anon = function(x, y) {
 	anonNested = function(a, b) {
 		return a + b
@@ -20,7 +22,8 @@ anon = function(x, y) {
 write(anon(1, 2))
 
 
-write("", "", "Dave's second challenge:")
+write()
+write("Dave's second challenge:")
 myop2 = function(x, y) {
 	return x(22) + y
 }
@@ -32,7 +35,8 @@ write(myop2(
 ))
 
 
-write("", "", "Beyond the challenges:")
+write()
+write("Beyond the challenges:")
 singleNested = function(a, b, c) {
 	return a() + b() + c()
 }
