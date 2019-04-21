@@ -64,11 +64,11 @@ write "Functions in objects:"
 write ""
 
 obj3 = {
-	fn1 = fn(a) {
+	fn1 = function(a) {
 		return a + 1
 	}
 }
 
 write "obj3.fn1(5): "
-write "TODO:"
-//write obj3.fn1(5) // TODO: This blows up, because of the invocation parentheses.
+write "REQUIRES SPECIAL ATTENTION"
+//write obj3.fn1(5) // NOTE: This only works with 'dereference() arglist()' in fn_invoke() inside Dumb.jjt.

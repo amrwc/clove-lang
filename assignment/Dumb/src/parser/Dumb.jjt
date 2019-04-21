@@ -64,7 +64,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < FOR: "FOR" >
 | < WHILE: "WHILE" >
 | < WRITE: "WRITE" >
-| < FN: "FN" >
+| < FUNCTION: "FUNCTION" >
 | < RETURN: "RETURN" >
 | < OR: "OR" >
 | < AND: "AND" >
@@ -201,6 +201,7 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < STAR: "*" >
 | < SLASH: "/" >
 | < REM: "%" >
+| < ARROW: "=>" > // Used for arrow functions.
 }
 
 /***********************************************
@@ -248,7 +249,7 @@ void fnbody() #FnBody :
 void fndef() #FnDef :
 {}
 {
-					<FN> identifier() parmlist() "{" 
+					<FUNCTION> identifier() parmlist() "{" 
 						fnbody()
 						[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ] 
 					"}"
@@ -262,10 +263,17 @@ void fndef() #FnDef :
 void fnval() #FnVal :
 {}
 {
-  <FN> parmlist() "{"
-    fnbody()
-    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-  "}"
+  (    <FUNCTION> parmlist() "{"
+    	fnbody()
+    	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+  |
+  ( // Arrow function:
+    parmlist() <ARROW> "{"
+    	fnbody()
+    	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+  	"}"  )
 }
 
 void returnexpr() #ReturnExpression :
@@ -435,6 +443,8 @@ void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
+//							( identifier() arglist() )
+//						  | ( dereference() arglist() ) 
 
 							// NOTE: An attempt at invoking a ValueFn declared inside of a ValueObject.
 							// This breaks write with the message:
@@ -475,7 +485,7 @@ void dereference() #Dereference :
 //void dereference() :
 {Token t;}
 {
-//	NOTE: This works, but only with objects, no functions.
+//	NOTE: This works, but only with objects, no functions. But works when fn_invoke() is dereference() arglist()
 	t = <IDENTIFIER> ( <DOT> identifier() )* {jjtThis.tokenValue = t.image;}
 
 // NOTE: There's a difference between caling the implementation inline and the default next to the dereference().
