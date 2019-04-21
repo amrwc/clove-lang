@@ -57,21 +57,26 @@ SPECIAL_TOKEN : /* COMMENTS */
 | <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
 }
 
+/**
+ * These tokens include many aliases for versatility, including some in Polish.
+ * 
+ * @author amrwc
+ */
 TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 {
-  < IF: "IF" >
-| < ELSE: "ELSE" >
-| < FOR: "FOR" >
-| < WHILE: "WHILE" >
-| < WRITE: "WRITE" >
-| < FUNCTION: "FUNCTION" >
-| < RETURN: "RETURN" >
-| < OR: "OR" >
-| < AND: "AND" >
-| < NOT: "NOT" >
-| < TRUE: "TRUE" >
-| < FALSE: "FALSE" >
-| < QUIT: "QUIT" >
+  < IF: ("IF"|"JESLI") >
+| < ELSE: ("ELSE"|"ALBO") >
+| < FOR: ("FOR"|"DLA") >
+| < WHILE: ("WHILE"|"GDY") >
+| < WRITE: ("WRITE"|"LOG"|"PRINT"|"PRINTLN"|"WYSWIETL"|"POKAZ") >
+| < FUNCTION: ("FUNCTION"|"FUNC"|"FN"|"FUNKCJA") >
+| < RETURN: ("RETURN"|"ZWROC") >
+| < OR: ("OR"|"BADZ") >
+| < AND: ("AND"|"ORAZ") >
+| < NOT: ("NOT"|"NEGACJA"|"ZANEGUJ") >
+| < TRUE: ("TRUE"|"PRAWDA") >
+| < FALSE: ("FALSE"|"FALSZ") >
+| < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
 }
 
 TOKEN : /* LITERALS */

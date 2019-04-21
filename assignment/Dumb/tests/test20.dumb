@@ -1,0 +1,17 @@
+// Test token aliases
+log("This text") // write := log, print, println, wyswietl, pokaz
+print("          has been")
+println("                   printed using")
+wyswietl("                                 different aliases")
+pokaz("                                                   for write().")
+
+log()
+
+funkcja foo(str) {
+	log(str)
+}
+foo("function := func, fn, funkcja")
+
+zakoncz // quit := zakoncz, wyjdz
+
+log("This won't be printed out.")
