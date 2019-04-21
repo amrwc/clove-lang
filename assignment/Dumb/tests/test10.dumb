@@ -1,9 +1,9 @@
 p = 3
 
-fn blah(start, fin) {
+function blah(start, fin) {
 
-	fn zot(x, y) {
-	   	fn zaz(r) {
+	function zot(x, y) {
+	   	function zaz(r) {
 		   return p + x * r
 		}
 
