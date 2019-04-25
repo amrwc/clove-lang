@@ -3,10 +3,20 @@ log("ValueList:")
 log()
 
 list1 = ["hello 1", 1, {num = 55}]
+log("list1: ", list1)
 log("list1[0]: ", list1[0])
 log("list1[2].num: ", list1[2].num)
-
 log()
 
+
 nestedList = { list2 = ["hello 2", 2, 3, 4, {deep = 777}] }
+log("nestedList: ", nestedList)
 log("nestedList.list2[4].deep: ", nestedList.list2[4].deep)
+log()
+
+
+list3 = [100, 200, 300]
+log("list3: ", list3)
+list3[1] = 888
+log("list3[1] = 888")
+log("list3[1]: ", list3[1])
