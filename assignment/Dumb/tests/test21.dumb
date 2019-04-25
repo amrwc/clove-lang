@@ -1,0 +1,104 @@
+// Test linked list
+
+function newNode(v) {
+	//log("hello ", v)
+	//log("hello2 ", n)
+
+	return {
+		value = v
+	}
+}
+
+//node = newNode(10, 0)
+//node = {value = 10, next = 0}
+node = {value = 10, next = {}}
+firstNode = node
+
+//////////////////////////////////////////////
+// This works:
+
+//node.next = {value = node.value + 10, next = 0}
+//log(node)
+//node = node.next
+//log(node)
+//node.next = {value = node.value + 10, next = 0}
+//log(node)
+//node = node.next
+//log(node)
+
+
+//quit
+//////////////////////////////////////////////
+
+
+//node.next = {value = node.value + 10, next = 0}
+//node = node.next
+//node.next = {value = node.value + 10, next = 0}
+//node = node.next
+//node.next = {value = node.value + 10, next = 0}
+//node = node.next
+//node.next = {value = node.value + 10, next = 0}
+//node = node.next
+
+//node = firstNode
+//log(node.value)
+//i = 0
+//while (i < 8) {
+//	node = node.next
+//	log(node.value)
+//	i = i + 1
+//}
+
+
+//quit
+
+log("node = ", node)
+i = 0
+while (i < 4) {
+
+	node.next = {value = node.value + 10, next = {}}
+	log(i, ". node = ", node)
+	//log(i, ". node.next = ", node.next)
+	
+	node = node.next
+	log(i, ". node = ", node)
+	
+	i = i + 1
+}
+
+
+
+
+node = firstNode
+log(node.value)
+
+i = 0
+while (i < 4) {
+	node = node.next
+	log(node.value)
+	i = i + 1
+}
+
+//for (i = 0; i < 4; i = i+1) {
+//	node = node.next
+//	log(node.value)
+//}
+
+//while (node.next.next) {
+//	node = node.next
+//	log(node.value)
+//}
+
+//log("??? ", newNode(node.value + 10, {}))
+
+//while (node.value < 1000) {
+	//new = newNode(node.value + 10, {})
+//	log("??? ", newNode(node.value + 10, {}))
+//	node.next = new
+//	node = new
+//}
+
+//while (node.next > 0) {
+//	node = node.next
+//	log(node.value)
+//}

@@ -304,7 +304,8 @@ void assignment() #Assignment :
 void valueObject() #ValueObject :
 {}
 {
-  	"{" assignment() ( "," assignment() )* "}"
+//  	"{" assignment() ( "," assignment() )* "}"
+		"{" [assignment()] ( "," assignment() )* "}"  	
 }
 
 void ifstatement() #IfStatement :
