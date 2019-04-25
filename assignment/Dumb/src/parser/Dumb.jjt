@@ -290,7 +290,7 @@ void returnexpr() #ReturnExpression :
 void assignment() #Assignment :
 {}
 {
-					identifier() ( <DOT> identifier() )* "=" expression()
+					identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
 
 //  				The original implementation, left for reference:
 //					identifier() "=" expression() #Assignment(2)
@@ -305,6 +305,17 @@ void valueObject() #ValueObject :
 {}
 {
   	"{" assignment() ( "," assignment() )* "}"
+}
+
+/**
+ * List declaration.
+ * 
+ * @author amrwc
+ */
+void valueList() #ValueList :
+{}
+{
+  	"[" literal() ( "," literal() )* "]"
 }
 
 void ifstatement() #IfStatement :
@@ -462,6 +473,7 @@ void literal() :
 							| bool()
 				| fnval()
 				| valueObject()
+				| valueList()
 }
 
 void identifier() #Identifier :
@@ -484,7 +496,7 @@ void dereference() #Dereference :
 {Token t;}
 {
 //	NOTE: This works, but only with objects, no functions. But works when fn_invoke() is dereference() arglist()
-	t = <IDENTIFIER> ( <DOT> identifier() )* {jjtThis.tokenValue = t.image;}
+	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )* {jjtThis.tokenValue = t.image;}
 
 // NOTE: There's a difference between caling the implementation inline and the default next to the dereference().
 //	t = <IDENTIFIER> (
