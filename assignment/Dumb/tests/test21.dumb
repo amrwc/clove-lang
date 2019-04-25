@@ -1,0 +1,7 @@
+// Test ValueList
+log("ValueList:")
+
+bob = ["hello1", 1, {hey = 1}]
+//test = { hey = 1 }
+
+//log(bob)
