@@ -369,11 +369,31 @@ public class Parser implements DumbVisitor {
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference)node.optimised;
-		
-		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
+
 		// If it's not a normal dereference of a variable.
 		int numChildren = node.jjtGetNumChildren();
 		if (numChildren > 0) {
+			// TODO: Move it to a separate method. Same for the ValueObject.
+			if (reference.getValue() instanceof ValueList) {
+				ValueList valueList = (ValueList) reference.getValue();
+				int index = (int) ((ValueInteger) doChild(node, 0)).longValue();
+				if (valueList.length() <= index)
+					throw new ExceptionSemantic("The index " + index + " is out of bounds of \""
+						+ node.tokenValue + "\" of length " + valueList.length() + ".");
+
+				var value = valueList.get(index);
+				if (value == null)
+					throw new ExceptionSemantic("Value of index " + index +
+						" in list " + node.tokenValue + " is undefined or equal to null.");
+				
+				if (value instanceof ValueObject) {
+					// TODO: take care of further dereferencing until the end.
+//					System.out.println("TODO:");
+				}
+
+				return value;
+			}
+
 			ValueObject valueObject = (ValueObject) reference.getValue();
 			String keyName = getTokenOfChild(node, 0);
 
