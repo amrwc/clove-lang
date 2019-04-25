@@ -83,6 +83,30 @@ public class Parser implements DumbVisitor {
 		node.optimised = valueObject;
 		return node.optimised;
 	}
+	
+	/**
+	 * List declaration.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTValueList node, Object data) {
+		// Already defined?
+		if (node.optimised != null)
+			return data;
+		
+		ValueList valueList = new ValueList();
+
+		// Add all the values to the list.
+		int keyCount = node.jjtGetNumChildren();
+		Value currentValue;
+		for (int i = 0; i < keyCount; i++) {
+			currentValue = doChild(node, i);
+			valueList.append(currentValue);
+		}
+
+		node.optimised = valueList;
+		return node.optimised;
+	}
 
 	/**
 	 * Anonymous function declaration.
