@@ -354,7 +354,6 @@ public class Parser implements DumbVisitor {
 
 	/**
 	 * Dereference a variable or parameter, and return its value.
-	 * TODO: It's just an anchor, remove later.
 	 * 
 	 * @author amrwc
 	 */
@@ -368,12 +367,12 @@ public class Parser implements DumbVisitor {
 				throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
 			node.optimised = reference;
 		} else
-			reference = (Display.Reference)node.optimised;
+			reference = (Display.Reference) node.optimised;
 
 		int numChildren = node.jjtGetNumChildren();
 		if (numChildren > 0) { // If it's not a normal dereference of a variable...
 			int currChild = 0; // Keep track of how far it traversed.
-			var value = reference.getValue();
+			Value value = reference.getValue();
 
 			for (; currChild < numChildren; currChild++) {
 				if (value instanceof ValueList)
@@ -393,7 +392,7 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	private Value listDereference(ASTDereference node, Value v, int currChild) {
+	private Value listDereference(SimpleNode node, Value v, int currChild) {
 		ValueList valueList = (ValueList) v;
 		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
 		if (valueList.length() <= index)
@@ -413,7 +412,7 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	private Value objectDereference(ASTDereference node, Value v, int currChild) {
+	private Value objectDereference(SimpleNode node, Value v, int currChild) {
 		ValueObject valueObject = (ValueObject) v;
 		String keyName = getTokenOfChild(node, currChild);
 
@@ -432,6 +431,7 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTAssignment node, Object data) {		
 		Display.Reference reference;
 		int numChildren = node.jjtGetNumChildren();
+		Value newVal = doChild(node, numChildren - 1);
 		
 		if (node.optimised == null) {
 			String name = getTokenOfChild(node, 0);
@@ -440,26 +440,33 @@ public class Parser implements DumbVisitor {
 				reference = scope.defineVariable(name);
 			node.optimised = reference;
 		} else
-			reference = (Display.Reference)node.optimised;
-		
-		// NOTE: It's hard-coded for ValueObjects. With Arrays, it will need some more logic.
-		if (numChildren > 2) {
-			ValueObject valueObject = (ValueObject) reference.getValue();
-			String keyName = getTokenOfChild(node, 1);
+			reference = (Display.Reference) node.optimised;
 
-			// Traversing the nested anonymous objects.
-			// 'numChildren - 2' because '-1' is the value. 
-			for (int i = 1; i < numChildren - 2; i++) {
-				valueObject = (ValueObject) valueObject.get(keyName);
-				keyName = getTokenOfChild(node, i + 1);
+		if (numChildren > 2) {
+			int currChild = 1; // Keep track of how far it traversed.
+			Value value = reference.getValue();
+
+			// Dereference
+			for (; currChild < numChildren - 2; currChild++) {
+				if (value instanceof ValueList)
+					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueObject)
+					value = objectDereference(node, value, currChild);
 			}
 
-			valueObject.set(keyName, doChild(node, numChildren - 1));
+			// Assignment
+			if (value instanceof ValueList) {
+				int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
+				((ValueList) value).set(index, newVal);
+			} else if (value instanceof ValueObject) {
+				String keyName = getTokenOfChild(node, currChild);
+				((ValueObject) value).set(keyName, newVal);
+			}
 
 			return data;
 		}
 
-		reference.setValue(doChild(node, 1));
+		reference.setValue(newVal);
 		return data;
 	}
 
