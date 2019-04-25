@@ -2,8 +2,11 @@
 log("ValueList:")
 log()
 
-bob = ["hello1", 1, {hey = 1}]
-test = { hey = 1 }
+list1 = ["hello 1", 1, {num = 55}]
+log("list1[0]: ", list1[0])
+log("list1[2].num: ", list1[2].num)
 
-log(bob[2].hey.asdf.asdf.asdf)
-log(test.hey)
+log()
+
+nestedList = { list2 = ["hello 2", 2, 3, 4, {deep = 777}] }
+log("nestedList.list2[4].deep: ", nestedList.list2[4].deep)
