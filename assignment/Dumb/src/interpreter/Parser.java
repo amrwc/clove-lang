@@ -370,45 +370,58 @@ public class Parser implements DumbVisitor {
 		} else
 			reference = (Display.Reference)node.optimised;
 
-		// If it's not a normal dereference of a variable.
 		int numChildren = node.jjtGetNumChildren();
-		if (numChildren > 0) {
-			// TODO: Move it to a separate method. Same for the ValueObject.
-			if (reference.getValue() instanceof ValueList) {
-				ValueList valueList = (ValueList) reference.getValue();
-				int index = (int) ((ValueInteger) doChild(node, 0)).longValue();
-				if (valueList.length() <= index)
-					throw new ExceptionSemantic("The index " + index + " is out of bounds of \""
-						+ node.tokenValue + "\" of length " + valueList.length() + ".");
+		if (numChildren > 0) { // If it's not a normal dereference of a variable...
+			int currChild = 0; // Keep track of how far it traversed.
+			var value = reference.getValue();
 
-				var value = valueList.get(index);
-				if (value == null)
-					throw new ExceptionSemantic("Value of index " + index +
-						" in list " + node.tokenValue + " is undefined or equal to null.");
-				
-				if (value instanceof ValueObject) {
-					// TODO: take care of further dereferencing until the end.
-//					System.out.println("TODO:");
-				}
-
-				return value;
+			for (; currChild < numChildren; currChild++) {
+				if (value instanceof ValueList)
+					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueObject)
+					value = objectDereference(node, value, currChild);
 			}
-
-			ValueObject valueObject = (ValueObject) reference.getValue();
-			String keyName = getTokenOfChild(node, 0);
-
-			for (int i = 1; i < numChildren; i++) {
-				valueObject = (ValueObject) valueObject.get(keyName);
-				keyName = getTokenOfChild(node, i);
-			}
-			Value value = valueObject.get(keyName);
-			if (value == null)
-				throw new ExceptionSemantic("Key \"" + keyName + "\" is undefined or equal to null.");
 
 			return value;
 		}
 
 		return reference.getValue();
+	}
+	
+	/**
+	 * Dereference of a list.
+	 * 
+	 * @author amrwc
+	 */
+	private Value listDereference(ASTDereference node, Value v, int currChild) {
+		ValueList valueList = (ValueList) v;
+		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
+		if (valueList.length() <= index)
+			throw new ExceptionSemantic("The index " + index + " is out of bounds of \""
+				+ node.tokenValue + "\" of length " + valueList.length() + ".");
+
+		var value = valueList.get(index);
+		if (value == null)
+			throw new ExceptionSemantic("Value of index " + index +
+				" in list " + node.tokenValue + " is undefined or equal to null.");
+		
+		return value;
+	}
+
+	/**
+	 * Dereference of an anonymous object.
+	 * 
+	 * @author amrwc
+	 */
+	private Value objectDereference(ASTDereference node, Value v, int currChild) {
+		ValueObject valueObject = (ValueObject) v;
+		String keyName = getTokenOfChild(node, currChild);
+
+		Value value = valueObject.get(keyName);
+		if (value == null)
+			throw new ExceptionSemantic("Key \"" + keyName + "\" is undefined or equal to null.");
+		
+		return value;
 	}
 
 	/**
