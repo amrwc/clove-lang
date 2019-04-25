@@ -32,6 +32,10 @@ public class ValueList extends ValueAbstract {
 		return internalValue.get(i);
 	}
 
+	public int length() {
+		return internalValue.size();
+	}
+
 	public String toString() {
 		// https://stackoverflow.com/a/23183963/10620237
 		return internalValue

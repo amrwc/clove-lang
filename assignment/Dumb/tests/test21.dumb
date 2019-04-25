@@ -1,7 +1,9 @@
 // Test ValueList
 log("ValueList:")
+log()
 
 bob = ["hello1", 1, {hey = 1}]
-//test = { hey = 1 }
+test = { hey = 1 }
 
-//log(bob)
+log(bob[2].hey.asdf.asdf.asdf)
+log(test.hey)
