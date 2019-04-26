@@ -276,9 +276,8 @@ public class ParserDebugger implements DumbVisitor {
 		return null;
 	}
 
-	@Override
 	public Object visit(ASTProtoInvoke node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 }

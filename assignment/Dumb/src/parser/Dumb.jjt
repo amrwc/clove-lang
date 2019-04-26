@@ -187,6 +187,7 @@ TOKEN : /* SEPARATORS */
 | < MM: "--" >
 | < ARROW1: "=>" > // Used for arrow functions.
 | < ARROW2: "->" > // Used for prototype functions.
+| < HASH: "#" >    // Used for distinguishing prototype function operation in statement().
 }
 
 TOKEN : /* OPERATOR SYMBOLS */
@@ -232,6 +233,18 @@ void statement() #Statement :
 				|	write()
 				|	call()
 				| quit()
+				| proto_invoke()
+}
+
+/**
+ * Invoke a prototype function 
+ * 
+ * @author amrwc
+ */
+void proto_invoke() #ProtoInvoke :
+{Token t;}
+{
+	<HASH> dereference() <ARROW2> t = <IDENTIFIER> "(" literal() ")" {jjtThis.tokenValue = t.image;}
 }
 
 void block() #Block :
@@ -446,7 +459,6 @@ void primary_expression() :
 {}
 {
                               literal()
-                            | LOOKAHEAD(3) proto_invoke()
                             | LOOKAHEAD(2) fn_invoke()
                             | dereference()
                             | "(" expression() ")"
@@ -456,8 +468,10 @@ void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
-//							( identifier() arglist() )
-//						  | ( dereference() arglist() ) 
+//							LOOKAHEAD(2)
+//							dereference() arglist()
+//							|
+//							identifier() arglist()
 
 							// NOTE: An attempt at invoking a ValueFn declared inside of a ValueObject.
 							// This breaks write with the message:
@@ -466,20 +480,6 @@ void fn_invoke() #FnInvoke :
 							//		"(" ...
 							// It does, however, work with the ValueFn declared inside of ValueObject.
 //							dereference() arglist()
-}
-
-/**
- * Invoke a prototype function 
- * 
- * @author amrwc
- */
-void proto_invoke() #ProtoInvoke :
-{Token t;}
-{
-	dereference() <ARROW2> identifier() arglist()
-
-//	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
-//		<ARROW2> identifier() arglist() {jjtThis.tokenValue = t.image;}
 }
 
 void literal() :

@@ -2,10 +2,10 @@
 log("Prototype functions:")
 log()
 
-list = [100, 200, 300]
+list = [100, 200, 300, (x) => {return x}]
 log("list: ", list)
 
-log("list->append(777)")
-list->append(777)
+log("#list->append(777)")
+#list->append(777)
 
 log("list: ", list)

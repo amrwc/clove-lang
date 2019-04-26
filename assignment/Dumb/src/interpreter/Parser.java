@@ -241,7 +241,8 @@ public class Parser implements DumbVisitor {
 			if (valueFunction == null)
 				throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
 
-			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+//			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+			fndef = valueFunction.get();
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
 
@@ -275,9 +276,20 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTProtoInvoke node, Object data) {
+		Value value = doChild(node, 0);
+		String protoFunc = node.tokenValue;
+		Value protoArg = doChild(node, 1);
+
+		if (value instanceof ValueList) {
+			switch (protoFunc) {
+				case "append":
+					((ValueList) value).append(protoArg);
+			}
+		}
+
 		return data;
 	}
-	
+
 	// Function invocation argument list.
 	public Object visit(ASTArgList node, Object data) {
 		FunctionInvocation newInvocation = (FunctionInvocation)data;
