@@ -1,0 +1,11 @@
+// Test prototype functions
+log("Prototype functions:")
+log()
+
+list = [100, 200, 300]
+log("list: ", list)
+
+log("list->append(777)")
+list->append(777)
+
+log("list: ", list)

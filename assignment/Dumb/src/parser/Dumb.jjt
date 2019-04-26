@@ -185,6 +185,8 @@ TOKEN : /* SEPARATORS */
 | < DOT: "." >
 | < PP: "++" >
 | < MM: "--" >
+| < ARROW1: "=>" > // Used for arrow functions.
+| < ARROW2: "->" > // Used for prototype functions.
 }
 
 TOKEN : /* OPERATOR SYMBOLS */
@@ -206,7 +208,6 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < STAR: "*" >
 | < SLASH: "/" >
 | < REM: "%" >
-| < ARROW: "=>" > // Used for arrow functions.
 }
 
 /***********************************************
@@ -275,7 +276,7 @@ void fnval() #FnVal :
   )
   |
   ( // Arrow function:
-    parmlist() <ARROW> "{"
+    parmlist() <ARROW1> "{"
     	fnbody()
     	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
   	"}"  )
@@ -305,6 +306,7 @@ void valueObject() #ValueObject :
 {}
 {
   	"{" assignment() ( "," assignment() )* "}"
+  	// "{" [ assignment() ( "," assignment() )* ] "}"
 }
 
 /**
@@ -316,6 +318,7 @@ void valueList() #ValueList :
 {}
 {
   	"[" literal() ( "," literal() )* "]"
+  	// "[" [ literal() ( "," literal() )* ] "]"
 }
 
 void ifstatement() #IfStatement :
@@ -351,7 +354,7 @@ void whileloop() #WhileLoop :
 void write() #Write :
 {}
 {
-					<WRITE> "(" [ expression() ] ( "," expression() )* ")"
+					<WRITE> "(" [ expression() ( "," expression() )* ] ")"
 }
 
 void call() #Call :
@@ -371,10 +374,10 @@ void arglist() #ArgList :
  * 
  * @author amrwc
  */
-void quit() :
+void quit() #Quit :
 {}
 {
-  					< QUIT > #Quit
+	<QUIT>
 }
 
 //
@@ -443,6 +446,7 @@ void primary_expression() :
 {}
 {
                               literal()
+                            | LOOKAHEAD(3) proto_invoke()
                             | LOOKAHEAD(2) fn_invoke()
                             | dereference()
                             | "(" expression() ")"
@@ -462,6 +466,20 @@ void fn_invoke() #FnInvoke :
 							//		"(" ...
 							// It does, however, work with the ValueFn declared inside of ValueObject.
 //							dereference() arglist()
+}
+
+/**
+ * Invoke a prototype function 
+ * 
+ * @author amrwc
+ */
+void proto_invoke() #ProtoInvoke :
+{Token t;}
+{
+	dereference() <ARROW2> identifier() arglist()
+
+//	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
+//		<ARROW2> identifier() arglist() {jjtThis.tokenValue = t.image;}
 }
 
 void literal() :
