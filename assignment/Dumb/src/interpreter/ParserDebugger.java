@@ -246,33 +246,28 @@ public class ParserDebugger implements DumbVisitor {
 		return data;
 	}
 
-	@Override
 	public Object visit(ASTWhileLoop node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 
-	@Override
 	public Object visit(ASTQuit node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 
-	@Override
 	public Object visit(ASTFnVal node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 
-	@Override
 	public Object visit(ASTValueObject node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 
-	@Override
 	public Object visit(ASTValueList node, Object data) {
-		// TODO Auto-generated method stub
-		return null;
+		dump(node, data);
+		return data;
 	}
 }
