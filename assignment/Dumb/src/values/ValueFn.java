@@ -2,6 +2,11 @@ package values;
 
 import interpreter.FunctionDefinition;
 
+/**
+ * Stores a FunctionDefinition instance in a Value form.
+ * 
+ * @author amrwc
+ */
 public class ValueFn extends ValueAbstract {
 	private FunctionDefinition functionDefinition;
 
@@ -11,7 +16,10 @@ public class ValueFn extends ValueAbstract {
 		functionDefinition = fndef;
 	}
 
-	@Override
+	public int compare(Value v) {
+		return functionDefinition.compareTo(v);
+	}
+
 	public String getName() {
 		return "ValueFn";
 	}
@@ -22,11 +30,5 @@ public class ValueFn extends ValueAbstract {
 
 	public FunctionDefinition get() {
 		return functionDefinition;
-	}
-
-	@Override
-	public int compare(Value v) {
-		// TODO Auto-generated method stub
-		return 0;
 	}
 }
