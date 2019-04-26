@@ -268,6 +268,15 @@ public class Parser implements DumbVisitor {
 		// Execute
 		return scope.execute(newInvocation, this);
 	}
+
+	/**
+	 * Prototype function invocation.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTProtoInvoke node, Object data) {
+		return data;
+	}
 	
 	// Function invocation argument list.
 	public Object visit(ASTArgList node, Object data) {

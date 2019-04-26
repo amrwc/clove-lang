@@ -52,3 +52,4 @@
 /DumbTreeConstants.java
 /ASTIfStatement.java
 /ASTValueList.java
+/ASTProtoInvoke.java
