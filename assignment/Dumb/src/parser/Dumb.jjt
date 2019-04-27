@@ -77,6 +77,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < TRUE: ("TRUE"|"PRAWDA") >
 | < FALSE: ("FALSE"|"FALSZ") >
 | < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
+| < LET: ("LET"|"VAR"|"ZADEKLARUJ"|"NOWE"|"NOWY") >
 }
 
 TOKEN : /* LITERALS */
@@ -224,7 +225,8 @@ ASTCode code() #Code :
 void statement() #Statement :
 {}
 {
-				 	LOOKAHEAD(2) assignment()
+				 	LOOKAHEAD(3) assignment()
+				| declaration()
 				|	fndef()
 				|	block()
 				|	ifstatement()	
@@ -304,6 +306,17 @@ void returnexpr() #ReturnExpression :
 					expression()
 }
 
+/**
+ * Declaration using a keyword.
+ * 
+ * @author amrwc
+ */
+void declaration() #Declaration :
+{}
+{
+	<LET> assignment()
+}
+
 void assignment() #Assignment :
 {}
 {
@@ -347,7 +360,7 @@ void ifstatement() #IfStatement :
 void forloop() #ForLoop :
 {}
 {
-  					<FOR> "(" assignment() ";" expression() ";" assignment() ")" statement()
+  					<FOR> "(" declaration() ";" expression() ";" assignment() ")" statement()
 }
 
 /**
