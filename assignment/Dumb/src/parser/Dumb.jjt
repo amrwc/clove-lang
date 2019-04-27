@@ -244,7 +244,9 @@ void statement() #Statement :
 void proto_invoke() #ProtoInvoke :
 {Token t;}
 {
-	<HASH> dereference() <ARROW2> t = <IDENTIFIER> "(" literal() ")" {jjtThis.tokenValue = t.image;}
+	<HASH> dereference() <ARROW2> t = <IDENTIFIER>
+		"(" [ literal() | identifier() ] ")"
+		{jjtThis.tokenValue = t.image;}
 }
 
 void block() #Block :
