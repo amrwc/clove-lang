@@ -278,13 +278,17 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTProtoInvoke node, Object data) {
 		Value value = doChild(node, 0);
 		String protoFunc = node.tokenValue;
-		Value protoArg = doChild(node, 1);
+		Value protoArg = (node.jjtGetNumChildren() > 1)
+			? doChild(node, 1)
+			: null;
 
 		if (value instanceof ValueList) {
 			switch (protoFunc.toString()) {
 				case "append":
 					((ValueList) value).append(protoArg);
 					break;
+				case "length":
+					return ((ValueList) value).length();
 				default:
 					throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList.");
 			}
@@ -430,9 +434,9 @@ public class Parser implements DumbVisitor {
 	private Value listDereference(SimpleNode node, Value v, int currChild) {
 		ValueList valueList = (ValueList) v;
 		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-		if (valueList.length() <= index)
+		if (valueList.size() <= index)
 			throw new ExceptionSemantic("The index " + index + " is out of bounds of \""
-				+ node.tokenValue + "\" of length " + valueList.length() + ".");
+				+ node.tokenValue + "\" of length " + valueList.size() + ".");
 
 		var value = valueList.get(index);
 		if (value == null)

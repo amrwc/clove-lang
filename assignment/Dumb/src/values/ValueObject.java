@@ -36,11 +36,10 @@ public class ValueObject extends ValueAbstract {
 	}
 
 	public void remove(String name) {
-		if (internalValue.containsKey(name)) {
+		if (internalValue.containsKey(name))
 			internalValue.remove(name);
-		} else {
+		else
 			throw new ExceptionSemantic("This ValueObject does not contain the \"" + name + "\" key.");
-		}
 	}
 
 	public void tryRemove(String name) {
