@@ -38,7 +38,13 @@ public class ValueList extends ValueAbstract {
 		internalValue.set(i, v);
 	}
 
-	public int length() {
+	// To be used in Dumb-lang because it resolves to a Value.
+	public Value length() {
+		return new ValueInteger((long) internalValue.size());
+	}
+
+	// To be used internally, by the Parser implementation.
+	public int size() {
 		return internalValue.size();
 	}
 

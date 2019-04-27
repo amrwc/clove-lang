@@ -237,7 +237,8 @@ void statement() #Statement :
 }
 
 /**
- * Invoke a prototype function 
+ * Invoke a prototype function.
+ * It can be a statement() or an expression().
  * 
  * @author amrwc
  */
@@ -464,6 +465,7 @@ void primary_expression() :
                             | LOOKAHEAD(2) fn_invoke()
                             | dereference()
                             | "(" expression() ")"
+                            | proto_invoke()
 }
 
 void fn_invoke() #FnInvoke :

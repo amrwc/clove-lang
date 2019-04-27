@@ -9,6 +9,9 @@ log()
 log("#list->append(777)")
 #list->append(777)
 log("list: ", list)
+log("listLen = #list->length()")
+listLen = #list->length()
+log("listLen: ", listLen)
 
 
 log()
