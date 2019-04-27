@@ -53,3 +53,4 @@
 /ASTIfStatement.java
 /ASTValueList.java
 /ASTProtoInvoke.java
+/ASTDeclaration.java

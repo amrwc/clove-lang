@@ -1,0 +1,6 @@
+// Test declaration:
+
+let bob = 0
+bob = 1
+
+log("bob: ", bob)
