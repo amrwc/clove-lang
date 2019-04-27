@@ -463,11 +463,33 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
+	 * Execute a declaration statement.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTDeclaration node, Object data) {
+		Display.Reference reference;
+		Node assignment = node.jjtGetChild(0);
+		String name = getTokenOfChild((SimpleNode) assignment, 0);
+
+		reference = scope.findReference(name);
+		if (reference == null)
+			reference = scope.defineVariable(name);
+		else
+			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
+
+		// Do the assignment.
+		assignment.jjtAccept(this, data);
+
+		return data;
+	}
+
+	/**
 	 * Execute an assignment statement.
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTAssignment node, Object data) {		
+	public Object visit(ASTAssignment node, Object data) {
 		Display.Reference reference;
 		int numChildren = node.jjtGetNumChildren();
 		Value newVal = doChild(node, numChildren - 1);
@@ -476,7 +498,7 @@ public class Parser implements DumbVisitor {
 			String name = getTokenOfChild(node, 0);
 			reference = scope.findReference(name);
 			if (reference == null)
-				reference = scope.defineVariable(name);
+				throw new ExceptionSemantic("Variable \"" + name + "\" doesn't exist.");
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference) node.optimised;
