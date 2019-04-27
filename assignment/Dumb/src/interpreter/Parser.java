@@ -281,9 +281,23 @@ public class Parser implements DumbVisitor {
 		Value protoArg = doChild(node, 1);
 
 		if (value instanceof ValueList) {
-			switch (protoFunc) {
+			switch (protoFunc.toString()) {
 				case "append":
 					((ValueList) value).append(protoArg);
+					break;
+				default:
+					throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList.");
+			}
+		} else if (value instanceof ValueObject) {
+			switch (protoFunc) {
+				case "remove":
+					((ValueObject) value).remove(protoArg.stringValue());
+					break;
+				case "tryRemove":
+					((ValueObject) value).tryRemove(protoArg.stringValue());
+					break;
+				default:
+					throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueObject.");
 			}
 		}
 

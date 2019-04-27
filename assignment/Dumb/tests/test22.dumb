@@ -4,8 +4,30 @@ log()
 
 list = [100, 200, 300, (x) => {return x}]
 log("list: ", list)
+log()
 
 log("#list->append(777)")
 #list->append(777)
-
 log("list: ", list)
+
+
+log()
+log()
+
+
+obj = {
+	num = 1234,
+	nested = {
+		num2 = 4444
+	}
+}
+log("obj: ", obj)
+log()
+
+log('#obj->remove("num")')
+#obj->remove("num")
+log("obj: ", obj)
+
+log('#obj->tryRemove("itsNotHere")')
+#obj->tryRemove("itsNotHere") // No error, since it's just a try.
+log("obj: ", obj)

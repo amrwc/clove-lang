@@ -2,6 +2,8 @@ package values;
 
 import java.util.HashMap;
 
+import interpreter.ExceptionSemantic;
+
 public class ValueObject extends ValueAbstract {
 	
 	private HashMap<String, Value> internalValue = new HashMap<String, Value>();
@@ -35,6 +37,18 @@ public class ValueObject extends ValueAbstract {
 //		System.out.print("DEBUG, ValueObject.set: "); // DEBUG:
 //		System.out.println("oldValue: " + internalValue.put(name, v)); // DEBUG:
 		internalValue.put(name, v);
+	}
+
+	public void remove(String name) {
+		if (internalValue.containsKey(name)) {
+			internalValue.remove(name);
+		} else {
+			throw new ExceptionSemantic("This ValueObject does not contain the \"" + name + "\" key.");
+		}
+	}
+
+	public void tryRemove(String name) {
+		internalValue.remove(name);
 	}
 
 	public String toString() {
