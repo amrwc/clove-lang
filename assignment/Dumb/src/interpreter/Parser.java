@@ -241,7 +241,8 @@ public class Parser implements DumbVisitor {
 			if (valueFunction == null)
 				throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
 
-			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+//			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
+			fndef = valueFunction.get();
 			if (fndef == null)
 				throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
 
@@ -268,7 +269,41 @@ public class Parser implements DumbVisitor {
 		// Execute
 		return scope.execute(newInvocation, this);
 	}
-	
+
+	/**
+	 * Prototype function invocation.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTProtoInvoke node, Object data) {
+		Value value = doChild(node, 0);
+		String protoFunc = node.tokenValue;
+		Value protoArg = doChild(node, 1);
+
+		if (value instanceof ValueList) {
+			switch (protoFunc.toString()) {
+				case "append":
+					((ValueList) value).append(protoArg);
+					break;
+				default:
+					throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList.");
+			}
+		} else if (value instanceof ValueObject) {
+			switch (protoFunc) {
+				case "remove":
+					((ValueObject) value).remove(protoArg.stringValue());
+					break;
+				case "tryRemove":
+					((ValueObject) value).tryRemove(protoArg.stringValue());
+					break;
+				default:
+					throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueObject.");
+			}
+		}
+
+		return data;
+	}
+
 	// Function invocation argument list.
 	public Object visit(ASTArgList node, Object data) {
 		FunctionInvocation newInvocation = (FunctionInvocation)data;

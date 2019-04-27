@@ -185,6 +185,9 @@ TOKEN : /* SEPARATORS */
 | < DOT: "." >
 | < PP: "++" >
 | < MM: "--" >
+| < ARROW1: "=>" > // Used for arrow functions.
+| < ARROW2: "->" > // Used for prototype functions.
+| < HASH: "#" >    // Used for distinguishing prototype function operation in statement().
 }
 
 TOKEN : /* OPERATOR SYMBOLS */
@@ -206,7 +209,6 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < STAR: "*" >
 | < SLASH: "/" >
 | < REM: "%" >
-| < ARROW: "=>" > // Used for arrow functions.
 }
 
 /***********************************************
@@ -231,6 +233,20 @@ void statement() #Statement :
 				|	write()
 				|	call()
 				| quit()
+				| proto_invoke()
+}
+
+/**
+ * Invoke a prototype function 
+ * 
+ * @author amrwc
+ */
+void proto_invoke() #ProtoInvoke :
+{Token t;}
+{
+	<HASH> dereference() <ARROW2> t = <IDENTIFIER>
+		"(" [ literal() | identifier() ] ")"
+		{jjtThis.tokenValue = t.image;}
 }
 
 void block() #Block :
@@ -275,7 +291,7 @@ void fnval() #FnVal :
   )
   |
   ( // Arrow function:
-    parmlist() <ARROW> "{"
+    parmlist() <ARROW1> "{"
     	fnbody()
     	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
   	"}"  )
@@ -305,6 +321,7 @@ void valueObject() #ValueObject :
 {}
 {
   	"{" assignment() ( "," assignment() )* "}"
+  	// "{" [ assignment() ( "," assignment() )* ] "}"
 }
 
 /**
@@ -316,6 +333,7 @@ void valueList() #ValueList :
 {}
 {
   	"[" literal() ( "," literal() )* "]"
+  	// "[" [ literal() ( "," literal() )* ] "]"
 }
 
 void ifstatement() #IfStatement :
@@ -351,7 +369,7 @@ void whileloop() #WhileLoop :
 void write() #Write :
 {}
 {
-					<WRITE> "(" [ expression() ] ( "," expression() )* ")"
+					<WRITE> "(" [ expression() ( "," expression() )* ] ")"
 }
 
 void call() #Call :
@@ -371,10 +389,10 @@ void arglist() #ArgList :
  * 
  * @author amrwc
  */
-void quit() :
+void quit() #Quit :
 {}
 {
-  					< QUIT > #Quit
+	<QUIT>
 }
 
 //
@@ -452,8 +470,10 @@ void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
-//							( identifier() arglist() )
-//						  | ( dereference() arglist() ) 
+//							LOOKAHEAD(2)
+//							dereference() arglist()
+//							|
+//							identifier() arglist()
 
 							// NOTE: An attempt at invoking a ValueFn declared inside of a ValueObject.
 							// This breaks write with the message:
