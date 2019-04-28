@@ -1,7 +1,7 @@
-p = 3
+let p = 3
 
 function blah(start, fin) {
-	for (i=start; i<=fin; i=i+1)
+	for (let i=start; i<=fin; i=i+1)
 		write(i)
 	write(p + 2)
 }

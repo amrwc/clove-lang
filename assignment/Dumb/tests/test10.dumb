@@ -1,4 +1,4 @@
-p = 3
+let p = 3
 
 function blah(start, fin) {
 
@@ -10,7 +10,7 @@ function blah(start, fin) {
 		return x * y + zaz(y)
 	}
 
-	for (i=start; i<=fin; i=i+1) {
+	for (let i=start; i<=fin; i=i+1) {
 		write(zot(i, p))
 	}
 

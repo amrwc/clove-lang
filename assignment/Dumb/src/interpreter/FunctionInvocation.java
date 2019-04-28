@@ -45,9 +45,13 @@ class FunctionInvocation {
 	/** Execute this invocation. */
 	Value execute(Parser parser) {
 		parser.doChildren(function.getFunctionBody(), null);
-		if (function.hasReturn())
-			return parser.doChild(function.getFunctionReturnExpression(), 0);
-		return null;
+		Value returnValue = function.hasReturn()
+			? parser.doChild(function.getFunctionReturnExpression(), 0)
+			: null;
+
+		// Clean up the definitions after the invocation is finished.
+		parser.removeDefinitions(function.getFunctionBody(), null);
+		return returnValue;
 	}
 
 	/** Get the slot number of a given variable or parameter name.  Return -1 if not found. */
@@ -83,9 +87,6 @@ class FunctionInvocation {
 	/**
 	 * Remove previously defined variable.
 	 * 
-	 * NOTE: It should only be used for scopes that are not functions,
-	 * 		 i.e. loops, if-statements.
-	 * 
 	 * @param name
 	 * @author amrwc
 	 */
@@ -95,9 +96,6 @@ class FunctionInvocation {
 
 	/**
 	 * Remove previously defined function.
-	 * 
-	 * NOTE: It should only be used for scopes that are not functions,
-	 * 		 i.e. loops, if-statements.
 	 * 
 	 * @param name
 	 * @author amrwc

@@ -108,7 +108,6 @@ class Display {
 	 * @author amrwc
 	 */
 	public void removeVariable(String name) {
-//		System.out.println("removing variable: " + name); // DEBUG: TODO: Remove after fixing while-loops, if-statements.
 		display[currentLevel].removeVariable(name);
 	}
 
@@ -118,7 +117,6 @@ class Display {
 	 * @author amrwc
 	 */
 	public void removeFunction(String fnName) {
-//		System.out.println("removing function: " + fnName); // DEBUG: TODO: Remove after fixing while-loops, if-statements.
 		display[currentLevel].removeFunction(fnName);
 	}
 }

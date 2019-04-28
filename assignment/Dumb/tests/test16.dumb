@@ -1,7 +1,7 @@
 write("While loop:")
 write()
 
-i = 0
+let i = 0
 while (i < 10) {
 	write(321)
 	i = i + 1
