@@ -28,6 +28,28 @@ public class ValueList extends ValueAbstract {
 			return 1;
 	}
 
+	/**
+	 * Execute a prototype function.
+	 * 
+	 * @param protoFunc
+	 * @param protoArg
+	 * @return Value
+	 * @author amrwc
+	 */
+	public Value execProto(String protoFunc, Value protoArg) {
+		switch (protoFunc) {
+			case "append":
+				append(protoArg);
+				break;
+			case "length":
+				return length();
+			default:
+				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList class.");
+		}
+
+		return null;
+	}
+
 	public void append(Value v) {
 		if (v == null) throw new ExceptionSemantic("The argument for ValueList.append() cannot be null.");
 		internalValue.add(v);
@@ -50,7 +72,7 @@ public class ValueList extends ValueAbstract {
 	}
 
 	// To be used in Dumb-lang because it resolves to a Value.
-	public Value length() {
+	private Value length() {
 		return new ValueInteger((long) internalValue.size());
 	}
 
