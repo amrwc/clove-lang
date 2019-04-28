@@ -71,9 +71,9 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < WRITE: ("WRITE"|"LOG"|"PRINT"|"PRINTLN"|"WYSWIETL"|"POKAZ") >
 | < FUNCTION: ("FUNCTION"|"FUNC"|"FN"|"FUNKCJA") >
 | < RETURN: ("RETURN"|"ZWROC") >
-| < OR: ("OR"|"BADZ") >
-| < AND: ("AND"|"ORAZ") >
-| < NOT: ("NOT"|"NEGACJA"|"ZANEGUJ") >
+| < OR: ("||"|"OR"|"BADZ") >
+| < AND: ("&&"|"AND"|"ORAZ") >
+| < NOT: ("!"|"NOT"|"NEGACJA"|"ZANEGUJ") >
 | < TRUE: ("TRUE"|"PRAWDA") >
 | < FALSE: ("FALSE"|"FALSZ") >
 | < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
@@ -202,7 +202,7 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < LT: "<" >
 | < LE: "<=" >
 | < GE: ">=" >
-| < NE: "!=" >
+| < NE: ("!="|"<>") >
 | < HOOK: "?" >
 | < COLON: ":" >
 | < PLUS: "+" >
@@ -435,12 +435,12 @@ void compare_expression() :
 {} 
 { 
                               add_expression() [
-                                 "=="  add_expression() #CompEqual(2)
-                               | "<>" add_expression() #CompNequal(2)
-                               | ">=" add_expression() #CompGTE(2)
-                               | "<=" add_expression() #CompLTE(2)
-                               | ">"  add_expression() #CompGT(2)
-                               | "<"  add_expression() #CompLT(2)
+                                 <EQ> add_expression() #CompEqual(2)
+                               | <NE> add_expression() #CompNequal(2)
+                               | <GE> add_expression() #CompGTE(2)
+                               | <LE> add_expression() #CompLTE(2)
+                               | <GT> add_expression() #CompGT(2)
+                               | <LT> add_expression() #CompLT(2)
                                ]
 }
 
