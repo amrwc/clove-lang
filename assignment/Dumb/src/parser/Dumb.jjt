@@ -317,13 +317,34 @@ void definition() #Definition :
 	<LET> assignment()
 }
 
+/**
+ * Assignment operations.
+ * 
+ * @author amrwc
+ */
 void assignment() #Assignment :
-{}
+{Token operator;}
 {
-					identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
+	LOOKAHEAD(2)
+	(
+	  identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
+	)
+	|
+	(
+	  LOOKAHEAD(2)
+	  (
+	    identifier() operator = <PEQ> expression()
+	  	{jjtThis.shorthandOperator = operator.image;}	  )
+	  |
+	  (
+	    identifier() operator = <MEQ> expression()
+	  	{jjtThis.shorthandOperator = operator.image;}	  ) 	)
 
-//  				The original implementation, left for reference:
-//					identifier() "=" expression() #Assignment(2)
+//	Previous implementation -- doesn't support shorthand operations.
+//	identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
+
+//	The original implementation, left for reference:
+//	identifier() "=" expression() #Assignment(2)
 }
 
 /**
