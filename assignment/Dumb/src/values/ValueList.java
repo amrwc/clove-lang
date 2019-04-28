@@ -3,6 +3,8 @@ package values;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+import interpreter.ExceptionSemantic;
+
 /**
  * @see https://docs.oracle.com/javase/8/docs/api/index.html?java/util/ArrayList.html
  * @author amrwc
@@ -31,7 +33,13 @@ public class ValueList extends ValueAbstract {
 	}
 	
 	public Value get(int i) {
-		return internalValue.get(i);
+		if (internalValue.size() <= i)
+			throw new ExceptionSemantic("The index " + i + " is out of bounds of the list with length "
+			+ internalValue.size() + ".");
+
+		Value val = internalValue.get(i);
+		if (val != null) return val;
+		throw new ExceptionSemantic("Value of index " + i + " in the list is undefined or equal to null.");
 	}
 
 	public void set(int i, Value v) {

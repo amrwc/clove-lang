@@ -248,7 +248,7 @@ void proto_invoke() #ProtoInvoke :
 {Token t;}
 {
 	<HASH> dereference() <ARROW2> t = <IDENTIFIER>
-		"(" [ literal() | identifier() ] ")"
+		"(" [ LOOKAHEAD(2) expression() | identifier() ] ")"
 		{jjtThis.tokenValue = t.image;}
 }
 
