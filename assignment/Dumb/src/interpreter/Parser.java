@@ -390,7 +390,7 @@ public class Parser implements DumbVisitor {
 	 * @param init -- initialisation node in for-loops.
 	 * @author amrwc
 	 */
-	private void removeDefinitions(SimpleNode node, SimpleNode init) {
+	public void removeDefinitions(SimpleNode node, SimpleNode init) {
 		ArrayList<SimpleNode> definitions = collectDefinitions(node, init);
 
 		Consumer<SimpleNode> removeDefinition = definition -> {
@@ -419,6 +419,9 @@ public class Parser implements DumbVisitor {
 
 		// If it's a for-loop including an initialisation node...
 		if (init != null) definitions.add(init);
+
+		// Handle statement()/block() without children.
+		if (node.jjtGetNumChildren() == 0) return definitions;
 
 		// Collect the definitions from the statement()/block().
 		Node statement = node.jjtGetChild(node.jjtGetNumChildren() - 1);

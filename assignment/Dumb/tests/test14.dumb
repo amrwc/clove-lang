@@ -1,10 +1,10 @@
+let p = 0
 function sum(n) {
-   if (n > 0)
-      	p = n + sum(n - 1)
-   else
-	p = 0
-   return p
+	if (n > 0)
+		p = n + sum(n - 1)
+	else
+		p = 0
+	return p
 }
 
-write(sum(5))
-
+write(sum(5)) // 15

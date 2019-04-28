@@ -2,7 +2,7 @@
 log("Prototype functions:")
 log()
 
-list = [100, 200, 300, (x) => {return x}]
+let list = [100, 200, 300, (x) => {return x}]
 log("list: ", list)
 log()
 
@@ -10,7 +10,7 @@ log("#list->append(777)")
 #list->append(777)
 log("list: ", list)
 log("listLen = #list->length()")
-listLen = #list->length()
+let listLen = #list->length()
 log("listLen: ", listLen)
 
 
@@ -18,7 +18,7 @@ log()
 log()
 
 
-obj = {
+let obj = {
 	num = 1234,
 	nested = {
 		num2 = 4444

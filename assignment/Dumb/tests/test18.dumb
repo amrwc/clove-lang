@@ -1,6 +1,6 @@
 // Test anonymous objects
 write("Anonymous object initialisation and accessing:")
-obj = {
+let obj = {
 	num = 999,
 	str = "Hi"
 }
@@ -15,7 +15,7 @@ write("----------------------------")
 
 write("Nested objects:")
 write()
-obj2 = {
+let obj2 = {
 	nested = {
 		num2 = {
 			nines = 9999999
@@ -50,7 +50,7 @@ write("----------------------------")
 
 write("Functions in objects:")
 write()
-obj3 = {
+let obj3 = {
 	fn1 = function(a) {
 		return a + 1
 	}
