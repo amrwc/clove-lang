@@ -1,5 +1,8 @@
 package interpreter;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 import interpreter.Display.Reference;
 import parser.ast.*;
 import values.*;
@@ -332,8 +335,8 @@ public class Parser implements DumbVisitor {
 	
 	// Execute a FOR loop
 	public Object visit(ASTForLoop node, Object data) {
-		// loop initialisation
-		doChild(node, 0);
+		doChild(node, 0); // loop initialisation
+
 		while (true) {
 			// evaluate loop test
 			Value hopefullyValueBoolean = doChild(node, 1);
@@ -341,11 +344,37 @@ public class Parser implements DumbVisitor {
 				throw new ExceptionSemantic("The test expression of a for loop must be boolean.");
 			if (!((ValueBoolean)hopefullyValueBoolean).booleanValue())
 				break;
+
 			// do loop statement
 			doChild(node, 3);
 			// assign loop increment
 			doChild(node, 2);
 		}
+
+		ArrayList<SimpleNode> declarations = new ArrayList<SimpleNode>();
+
+		// Get the variable name declared on the loop's initialisation.
+		Node initialisationNode = node.jjtGetChild(0);
+		declarations.add((SimpleNode) initialisationNode);
+
+		// Get all declarations from the loop's statement() (code block).
+		// statement() -> block() -> statement() -> declaration()+
+		Node loopStatement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
+		Node codeBlock = loopStatement.jjtGetChild(0);
+		for (int i = 0; i < codeBlock.jjtGetNumChildren(); i++) {
+			Node hopefullyDeclaration = codeBlock.jjtGetChild(i).jjtGetChild(0);
+			if (hopefullyDeclaration instanceof ASTDeclaration)
+				declarations.add((SimpleNode) hopefullyDeclaration);			
+		}
+
+		// Remove all declarations in this scope.
+		Consumer<SimpleNode> remove = declaration -> {
+			SimpleNode assignmentNode = (SimpleNode) declaration.jjtGetChild(0);
+			String variableName = getTokenOfChild(assignmentNode, 0);
+			scope.removeVariable(variableName);
+		};
+		declarations.forEach(remove);
+
 		return data;
 	}
 	
@@ -472,6 +501,19 @@ public class Parser implements DumbVisitor {
 		Node assignment = node.jjtGetChild(0);
 		String name = getTokenOfChild((SimpleNode) assignment, 0);
 
+		// If it's in a for loop, make an exception and allow for
+		// an assignment on subsequent runs.
+//		if (node.jjtGetParent() instanceof ASTForLoop) {
+//			reference = scope.findReference(name);
+//			if (reference == null) {
+//				reference = scope.defineVariable(name);
+////				System.out.println("hmm " + reference.getLevel());
+//				assignment.jjtAccept(this, data);
+//			} else
+//				assignment.jjtAccept(this, data);
+//			return data;
+//		}
+
 		reference = scope.findReference(name);
 		if (reference == null)
 			reference = scope.defineVariable(name);
@@ -480,7 +522,6 @@ public class Parser implements DumbVisitor {
 
 		// Do the assignment.
 		assignment.jjtAccept(this, data);
-
 		return data;
 	}
 

@@ -69,6 +69,19 @@ class FunctionInvocation {
 	int defineVariable(String name) {
 		return function.defineVariable(name);
 	}
+
+	/**
+	 * Remove previously defined variable.
+	 * 
+	 * NOTE: It should only be used for scopes that are not functions,
+	 * 		 i.e. loops, if-statements.
+	 * 
+	 * @param name
+	 * @author amrwc
+	 */
+	void removeVariable(String name) {
+		function.removeVariable(name);
+	}
 	
 	/** Add a function definition. */
 	void addFunction(FunctionDefinition definition) {
