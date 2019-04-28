@@ -96,20 +96,29 @@ class Display {
 		display[currentLevel].addFunction(definition);
 	}
 
-	// The functions below this point are here for scope management
+	// The methods below this point are here for scope management
 	// in order to accommodate variables declared outside of functions.
+	// NOTE: It's a hack for scoped operations, such as loops,
+	// 		 to make them inaccessible outside of their scope
+	// 		 -- a functionality not offered by this Display
+	// 		 implementation by default.
 	/**
-	 * Remove scoped variables.
-	 * 
-	 * NOTE: It's a hack for scoped operations, such as loops,
-	 * 		 to make them inaccessible outside of their scope
-	 * 		 -- a functionality not offered by this Display
-	 * 		 implementation by default. 
+	 * Remove a scoped variable.
 	 * 
 	 * @author amrwc
 	 */
 	public void removeVariable(String name) {
-		System.out.println("removing: " + name); //TODO:
+//		System.out.println("removing variable: " + name); // DEBUG: TODO: Remove after fixing while-loops, if-statements.
 		display[currentLevel].removeVariable(name);
+	}
+
+	/**
+	 * Remove a scoped function.
+	 * 
+	 * @author amrwc
+	 */
+	public void removeFunction(String fnName) {
+//		System.out.println("removing function: " + fnName); // DEBUG: TODO: Remove after fixing while-loops, if-statements.
+		display[currentLevel].removeFunction(fnName);
 	}
 }

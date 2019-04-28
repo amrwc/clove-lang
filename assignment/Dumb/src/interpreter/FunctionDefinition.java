@@ -126,6 +126,16 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 		return slotNumber;
 	}
 
+	/** Add an inner function definition. */
+	void addFunction(FunctionDefinition definition) {
+		functions.put(definition.getName(), definition);
+	}
+	
+	/** Find an inner function definition.  Return null if it doesn't exist. */
+	FunctionDefinition findFunction(String name) {
+		return functions.get(name);
+	}
+
 	/**
 	 * Remove previously defined variable.
 	 * 
@@ -139,14 +149,16 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 		slots.remove(name);
 	}
 
-	/** Add an inner function definition. */
-	void addFunction(FunctionDefinition definition) {
-		functions.put(definition.getName(), definition);
+	/**
+	 * Remove previously defined function.
+	 * 
+	 * NOTE: It should only be used for scopes that are not functions,
+	 * 		 i.e. loops, if-statements.
+	 * 
+	 * @param name
+	 * @author amrwc
+	 */
+	void removeFunction(String fnName) {
+		functions.remove(fnName);
 	}
-	
-	/** Find an inner function definition.  Return null if it doesn't exist. */
-	FunctionDefinition findFunction(String name) {
-		return functions.get(name);
-	}
-
 }

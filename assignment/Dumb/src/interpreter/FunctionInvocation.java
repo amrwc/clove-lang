@@ -69,6 +69,16 @@ class FunctionInvocation {
 	int defineVariable(String name) {
 		return function.defineVariable(name);
 	}
+	
+	/** Add a function definition. */
+	void addFunction(FunctionDefinition definition) {
+		function.addFunction(definition);
+	}
+
+	/** Find a function definition.  Return null if it doesn't exist. */
+	FunctionDefinition findFunction(String name) {
+		return function.findFunction(name);
+	}
 
 	/**
 	 * Remove previously defined variable.
@@ -82,15 +92,17 @@ class FunctionInvocation {
 	void removeVariable(String name) {
 		function.removeVariable(name);
 	}
-	
-	/** Add a function definition. */
-	void addFunction(FunctionDefinition definition) {
-		function.addFunction(definition);
-	}
 
-	/** Find a function definition.  Return null if it doesn't exist. */
-	FunctionDefinition findFunction(String name) {
-		return function.findFunction(name);
+	/**
+	 * Remove previously defined function.
+	 * 
+	 * NOTE: It should only be used for scopes that are not functions,
+	 * 		 i.e. loops, if-statements.
+	 * 
+	 * @param name
+	 * @author amrwc
+	 */
+	void removeFunction(String fnName) {
+		function.removeFunction(fnName);
 	}
-	
 }
