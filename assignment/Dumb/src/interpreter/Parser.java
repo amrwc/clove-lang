@@ -319,65 +319,71 @@ public class Parser implements DumbVisitor {
 		newInvocation.checkArgumentCount();
 		return data;
 	}
-	
-	// Execute an IF 
+
+	/**
+	 * Execute an if statement.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTIfStatement node, Object data) {
-		// evaluate boolean expression
-		Value hopefullyValueBoolean = doChild(node, 0);
-		if (!(hopefullyValueBoolean instanceof ValueBoolean))
+		Value test = doChild(node, 0);
+		if (!(test instanceof ValueBoolean))
 			throw new ExceptionSemantic("The test expression of an if statement must be boolean.");
-		if (((ValueBoolean)hopefullyValueBoolean).booleanValue())
-			doChild(node, 1);							// if(true), therefore do 'if' statement
-		else if (node.ifHasElse)						// does it have an else statement?
-			doChild(node, 2);							// if(false), therefore do 'else' statement
+
+		if (((ValueBoolean) test).booleanValue()) // If test evaluated to true...
+			doChild(node, 1);                     // ...do 'if'. Or...
+		else if (node.ifHasElse)                  // ...if it evaluated to false and has 'else'...
+			doChild(node, 2);                     // ...do 'else'.
+
+		removeDefinitions(node, null);
 		return data;
 	}
-	
-	// Execute a FOR loop
+
+	/**
+	 * Execute a for loop.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTForLoop node, Object data) {
-		doChild(node, 0); // loop initialisation
+		doChild(node, 0); // Initialise the loop (usually 'let i = 0').
 
 		while (true) {
-			// evaluate loop test
-			Value hopefullyValueBoolean = doChild(node, 1);
-			if (!(hopefullyValueBoolean instanceof ValueBoolean))
+			Value loopTest = doChild(node, 1);
+			if (!(loopTest instanceof ValueBoolean))
 				throw new ExceptionSemantic("The test expression of a for loop must be boolean.");
-			if (!((ValueBoolean)hopefullyValueBoolean).booleanValue())
+
+			if (!((ValueBoolean) loopTest).booleanValue()) // If loopTest evaluated to false, break.
 				break;
 
-			// do loop statement
-			doChild(node, 3);
+			doChild(node, 3); // Do the loop statement()/body().
 
 			// Remove the definitions made inside a statement() without block().
 			removeDefinitions(node, null);
 
-			// assign loop increment
-			doChild(node, 2);
+			doChild(node, 2); // Evaluate the loop expression (usually 'i++').
 		}
 
-		// Remove all definitions in this scope.
+		// Remove all definitions in this scope, including the initialisation.
 		removeDefinitions(node, (SimpleNode) node.jjtGetChild(0));
-
 		return data;
 	}
 	
 	/**
-	 * Execute while loop.
+	 * Execute a while loop.
 	 * 
 	 * @author amrwc
 	 */
 	public Object visit(ASTWhileLoop node, Object data) {
 		while (true) {
-			// evaluate loop test
-			Value hopefullyValueBoolean = doChild(node, 0);
-
-			if (!(hopefullyValueBoolean instanceof ValueBoolean))
+			Value loopTest = doChild(node, 0);
+			if (!(loopTest instanceof ValueBoolean))
 				throw new ExceptionSemantic("The test expression of a while loop must be boolean.");
-			if (!((ValueBoolean)hopefullyValueBoolean).booleanValue())
+
+			if (!((ValueBoolean) loopTest).booleanValue()) // If loopTest evaluated to false, break.
 				break;
 
-			// do loop statement
-			doChild(node, 1);
+			doChild(node, 1); // Do loop statement()/block().
+			removeDefinitions(node, null); // Clean up the variable/function definitions.
 		}
 
 		return data;
@@ -418,7 +424,7 @@ public class Parser implements DumbVisitor {
 		ArrayList<SimpleNode> definitions = new ArrayList<SimpleNode>();
 
 		// If it's a for-loop including an initialisation node...
-		if (init != null) definitions.add(init);
+		if (init != null && init instanceof ASTDefinition) definitions.add(init);
 
 		// Handle statement()/block() without children.
 		if (node.jjtGetNumChildren() == 0) return definitions;
