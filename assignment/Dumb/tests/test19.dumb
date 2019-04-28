@@ -4,7 +4,7 @@ write()
 
 
 // Dave's first challenge:
-myop = (x, y) => {
+let myop = (x, y) => {
 	return x + y
 }
 write(myop(2, 3))
@@ -12,8 +12,8 @@ write()
 
 
 // Nested arrow functions:
-anon = (x, y) => {
-	anonNested = (a, b) => {
+let anon = (x, y) => {
+	let anonNested = (a, b) => {
 		return a + b
 	}
 	
@@ -24,7 +24,7 @@ write()
 
 
 // Dave's second challenge:
-myop2 = (x, y) => {
+let myop2 = (x, y) => {
 	return x(22) + y
 }
 write(myop2(
@@ -37,7 +37,7 @@ write()
 
 
 // Beyond the challenges:
-singleNested = (a, b, c) => {
+let singleNested = (a, b, c) => {
 	return a() + b() + c()
 }
 write(singleNested(
@@ -46,7 +46,7 @@ write(singleNested(
 	() => { return 2+2 }
 ))
 
-withArguments = (a, b) => {
+let withArguments = (a, b) => {
 	return a(1) + b
 }
 write(withArguments(
@@ -54,7 +54,7 @@ write(withArguments(
 	9
 ))
 
-doubleNested = (a, b, c) => {
+let doubleNested = (a, b, c) => {
 	return a(() => { return 44 + 55}) + b + c
 }
 write(doubleNested(

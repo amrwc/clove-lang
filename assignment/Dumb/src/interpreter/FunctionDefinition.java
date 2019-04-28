@@ -139,9 +139,6 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 	/**
 	 * Remove previously defined variable.
 	 * 
-	 * NOTE: It should only be used for scopes that are not functions,
-	 * 		 i.e. loops, if-statements.
-	 * 
 	 * @param name
 	 * @author amrwc
 	 */
@@ -151,9 +148,6 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 
 	/**
 	 * Remove previously defined function.
-	 * 
-	 * NOTE: It should only be used for scopes that are not functions,
-	 * 		 i.e. loops, if-statements.
 	 * 
 	 * @param name
 	 * @author amrwc
