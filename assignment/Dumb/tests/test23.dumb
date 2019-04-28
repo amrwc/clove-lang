@@ -1,0 +1,11 @@
+// Test shorthand operators
+
+let var1 = "lorem ipsum"
+var1 += " doloret"
+log(var1)
+
+log()
+
+let var2 = 17
+var2 -= 2
+log(var2)

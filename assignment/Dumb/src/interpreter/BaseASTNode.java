@@ -21,4 +21,12 @@ public class BaseASTNode {
 	// reference a compiled function definition, so that the function needn't be redefined
 	// on every execution.	
 	public Object optimised = null;
+
+	/**
+	 * Stores the short operator used in the node.
+	 * E.g. '+=', '++', etc.
+	 * 
+	 * @author amrwc
+	 */
+	public String shorthandOperator = null;
 }

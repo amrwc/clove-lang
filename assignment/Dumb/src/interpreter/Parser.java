@@ -559,16 +559,31 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTAssignment node, Object data) {
 		Display.Reference reference;
 		int numChildren = node.jjtGetNumChildren();
-		Value newVal = doChild(node, numChildren - 1);
+		Value rightVal = doChild(node, numChildren - 1);
 		
 		if (node.optimised == null) {
 			String name = getTokenOfChild(node, 0);
 			reference = scope.findReference(name);
 			if (reference == null)
-				throw new ExceptionSemantic("Variable \"" + name + "\" doesn't exist.");
+				throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference) node.optimised;
+
+		if (node.shorthandOperator != null) {
+			Value value = reference.getValue();
+			
+			switch (node.shorthandOperator) {
+				case "+=":
+					var sum = value.add(rightVal);
+					reference.setValue(sum);
+					break;
+				case "-=":
+					var sub = value.subtract(rightVal);
+					reference.setValue(sub);
+			}
+			return data;
+		}
 
 		if (numChildren > 2) {
 			int currChild = 1; // Keep track of how far it traversed.
@@ -585,16 +600,16 @@ public class Parser implements DumbVisitor {
 			// Assignment
 			if (value instanceof ValueList) {
 				int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-				((ValueList) value).set(index, newVal);
+				((ValueList) value).set(index, rightVal);
 			} else if (value instanceof ValueObject) {
 				String keyName = getTokenOfChild(node, currChild);
-				((ValueObject) value).set(keyName, newVal);
+				((ValueObject) value).set(keyName, rightVal);
 			}
 
 			return data;
 		}
 
-		reference.setValue(newVal);
+		reference.setValue(rightVal);
 		return data;
 	}
 
