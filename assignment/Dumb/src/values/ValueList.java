@@ -29,6 +29,7 @@ public class ValueList extends ValueAbstract {
 	}
 
 	public void append(Value v) {
+		if (v == null) throw new ExceptionSemantic("The argument for ValueList.append() cannot be null.");
 		internalValue.add(v);
 	}
 	
@@ -43,6 +44,8 @@ public class ValueList extends ValueAbstract {
 	}
 
 	public void set(int i, Value v) {
+		if (i < 0) throw new ExceptionSemantic("The index in ValueList cannot be negative.");
+		if (v == null) throw new ExceptionSemantic("The Value passed into ValueList.set() cannot be null.");
 		internalValue.set(i, v);
 	}
 
