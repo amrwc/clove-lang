@@ -1,14 +1,6 @@
-//for (let i = 1; i<20; i=i+1) {
-//  write(i)
-//  for (let j = 1; j<20; j=j+1) {
-//   write(i * j)
-//  }
-//}
-
-for (let i = 1; i<2; i=i+1) {
-	for (let j = 1; j<2; j=j+1) {
-		let bob = 10
-		function lol (x) {return x}
-	}
+for (let i = 1; i<20; i=i+1) {
+  write(i)
+  for (let j = 1; j<20; j=j+1) {
+   write(i * j)
+  }
 }
-log("If 10, then it's bad: ", lol(10))
