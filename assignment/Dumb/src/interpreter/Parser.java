@@ -72,14 +72,11 @@ public class Parser implements DumbVisitor {
 		ValueObject valueObject = new ValueObject();
 
 		// Add all the key-value pairs to the anonymous object.
-		int keyCount = node.jjtGetNumChildren();
-		SimpleNode currentKey;
 		String keyName;
 		Value value;
-		for (int i = 0; i < keyCount; i++) {
-			currentKey = (SimpleNode) node.jjtGetChild(i);
-			keyName = getTokenOfChild(currentKey, 0);
-			value = doChild(currentKey, 1);
+		for (int i = 0; i < node.jjtGetNumChildren(); i += 2) {
+			keyName = getTokenOfChild(node, i);
+			value = doChild(node, i + 1);
 			valueObject.add(keyName, value);
 		}
 
@@ -96,7 +93,7 @@ public class Parser implements DumbVisitor {
 		// Already defined?
 		if (node.optimised != null)
 			return data;
-		
+
 		ValueList valueList = new ValueList();
 
 		// Add all the values to the list.
@@ -519,7 +516,7 @@ public class Parser implements DumbVisitor {
 		var value = valueList.get(index);
 		if (value == null)
 			throw new ExceptionSemantic("Value of index " + index +
-				" in list " + node.tokenValue + " is undefined or equal to null.");
+				" in list \"" + node.tokenValue + "\" is undefined or equal to null.");
 		
 		return value;
 	}

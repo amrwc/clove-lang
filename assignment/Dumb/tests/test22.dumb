@@ -19,9 +19,9 @@ log()
 
 
 let obj = {
-	num = 1234,
-	nested = {
-		num2 = 4444
+	num: 1234,
+	nested: {
+		num2: 4444
 	}
 }
 log("obj: ", obj)

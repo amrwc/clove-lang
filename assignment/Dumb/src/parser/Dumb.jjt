@@ -334,8 +334,9 @@ void assignment() #Assignment :
 void valueObject() #ValueObject :
 {}
 {
-  	"{" assignment() ( "," assignment() )* "}"
+  	//"{" assignment() ( "," assignment() )* "}"
   	// "{" [ assignment() ( "," assignment() )* ] "}"
+  	"{" identifier() ":" expression() ( "," identifier() ":" expression() )* "}"
 }
 
 /**

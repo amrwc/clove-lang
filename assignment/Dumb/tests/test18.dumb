@@ -1,8 +1,8 @@
 // Test anonymous objects
 write("Anonymous object initialisation and accessing:")
 let obj = {
-	num = 999,
-	str = "Hi"
+	num: 999,
+	str: "Hi"
 }
 write("obj.num: ", obj.num)
 write()
@@ -16,13 +16,13 @@ write("----------------------------")
 write("Nested objects:")
 write()
 let obj2 = {
-	nested = {
-		num2 = {
-			nines = 9999999
+	nested: {
+		num2: {
+			nines: 9999999
 		},
-		str2 = "Hello"
+		str2: "Hello"
 	},
-	test = "test"
+	test: "test"
 }
 write("obj2.nested.str2: ", obj2.nested.str2)
 write()
@@ -35,7 +35,7 @@ write("----------------------------")
 
 write("Key-value pairs reassignment:")
 write()
-write("obj.num = 33")
+write("obj.num: 33")
 obj.num = 33
 write("obj.num: ", obj.num)
 write()
@@ -51,7 +51,7 @@ write("----------------------------")
 write("Functions in objects:")
 write()
 let obj3 = {
-	fn1 = function(a) {
+	fn1: function(a) {
 		return a + 1
 	}
 }
