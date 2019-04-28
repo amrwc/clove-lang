@@ -278,9 +278,7 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTProtoInvoke node, Object data) {
 		Value value = doChild(node, 0);
 		String protoFunc = node.tokenValue;
-		Value protoArg = (node.jjtGetNumChildren() > 1)
-			? doChild(node, 1)
-			: null;
+		Value protoArg = parseProtoArg((SimpleNode) node.jjtGetChild(1));
 
 		if (value instanceof ValueList) {
 			switch (protoFunc.toString()) {
@@ -306,6 +304,28 @@ public class Parser implements DumbVisitor {
 		}
 
 		return data;
+	}
+
+	/**
+	 * Parse the prototype function's arguments.
+	 * 
+	 * @param node -- proto_invoke() == ASTProtoInvoke
+	 * @author amrwc
+	 */
+	private Value parseProtoArg(SimpleNode node) {
+		Value value;
+
+		if (node instanceof ASTIdentifier) {
+			Display.Reference ref = scope.findReference(node.tokenValue);
+			if (ref == null) throw new ExceptionSemantic("Variable \"" + node.tokenValue + "\" doesn't exist.");
+			value = ref.getValue();
+		} else {
+			value = (Value) node.jjtAccept(this, null);
+		}
+
+		if (value == null)
+			throw new ExceptionSemantic("The prototype function's argument cannot evaluate to null.");
+		return value;
 	}
 
 	// Function invocation argument list.
@@ -500,7 +520,7 @@ public class Parser implements DumbVisitor {
 
 		return reference.getValue();
 	}
-	
+
 	/**
 	 * Dereference of a list.
 	 * 
@@ -509,16 +529,7 @@ public class Parser implements DumbVisitor {
 	private Value listDereference(SimpleNode node, Value v, int currChild) {
 		ValueList valueList = (ValueList) v;
 		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-		if (valueList.size() <= index)
-			throw new ExceptionSemantic("The index " + index + " is out of bounds of \""
-				+ node.tokenValue + "\" of length " + valueList.size() + ".");
-
-		var value = valueList.get(index);
-		if (value == null)
-			throw new ExceptionSemantic("Value of index " + index +
-				" in list \"" + node.tokenValue + "\" is undefined or equal to null.");
-		
-		return value;
+		return valueList.get(index);
 	}
 
 	/**
@@ -529,12 +540,7 @@ public class Parser implements DumbVisitor {
 	private Value objectDereference(SimpleNode node, Value v, int currChild) {
 		ValueObject valueObject = (ValueObject) v;
 		String keyName = getTokenOfChild(node, currChild);
-
-		Value value = valueObject.get(keyName);
-		if (value == null)
-			throw new ExceptionSemantic("Key \"" + keyName + "\" is undefined or equal to null.");
-		
-		return value;
+		return valueObject.get(keyName);
 	}
 
 	/**

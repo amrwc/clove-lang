@@ -28,10 +28,14 @@ public class ValueObject extends ValueAbstract {
 	}
 
 	public Value get(String name) {
-		return internalValue.get(name);
+		Value value = internalValue.get(name);
+		if (value != null) return value;
+		throw new ExceptionSemantic("Object key \"" + name + "\" is undefined or equal to null.");
 	}
 
 	public void set(String name, Value v) {
+		if (name == null || name == "null" || v == null)
+			throw new ExceptionSemantic("Neither key nor value of an object can be null.");
 		internalValue.put(name, v);
 	}
 
