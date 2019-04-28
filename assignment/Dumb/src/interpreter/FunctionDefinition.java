@@ -124,8 +124,21 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 		int slotNumber = slots.size();
 		slots.put(name, Integer.valueOf(slotNumber));
 		return slotNumber;
-	}	
-	
+	}
+
+	/**
+	 * Remove previously defined variable.
+	 * 
+	 * NOTE: It should only be used for scopes that are not functions,
+	 * 		 i.e. loops, if-statements.
+	 * 
+	 * @param name
+	 * @author amrwc
+	 */
+	void removeVariable(String name) {
+		slots.remove(name);
+	}
+
 	/** Add an inner function definition. */
 	void addFunction(FunctionDefinition definition) {
 		functions.put(definition.getName(), definition);

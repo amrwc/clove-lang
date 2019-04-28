@@ -95,4 +95,67 @@ class Display {
 	void addFunction(FunctionDefinition definition) {
 		display[currentLevel].addFunction(definition);
 	}
+
+	// The functions below this point are here for scope management
+	// in order to accommodate variables declared outside of functions.
+	/**
+	 * Remove scoped variables.
+	 * 
+	 * NOTE: It's a hack for scoped operations, such as loops,
+	 * 		 to make them inaccessible outside of their scope
+	 * 		 -- a functionality not offered by this Display
+	 * 		 implementation by default. 
+	 * 
+	 * @author amrwc
+	 */
+	public void removeVariable(String name) {
+		//TODO:
+		System.out.println("removing: " + name);
+		display[currentLevel].removeVariable(name);
+	}
+//	/**
+//	 * Increase the scope level by set amount.
+//	 * 
+//	 * @param lvls
+//	 * @author amrwc
+//	 */
+//	void increaseLevel(int lvls) {
+//		if (currentLevel + lvls >= maximumFunctionNesting) {
+//			currentLevel = maximumFunctionNesting;
+//			return;
+//		}
+//		currentLevel += lvls;
+//	}
+//
+//	/**
+//	 * Increase the scope level by 1.
+//	 * 
+//	 * @author amrwc
+//	 */
+//	void increaseLevel() {
+//		increaseLevel(1);
+//	}
+//
+//	/**
+//	 * Decrease the scope level by set amount.
+//	 * 
+//	 * @param lvls
+//	 * @author amrwc
+//	 */
+//	void decreaseLevel(int lvls) {
+//		if (currentLevel - lvls <= 0) {
+//			currentLevel = 0;
+//			return;
+//		}
+//		currentLevel -= lvls;
+//	}
+//
+//	/**
+//	 * Decrease the scope level by 1.
+//	 * 
+//	 * @author amrwc
+//	 */
+//	void decreaseLevel() {
+//		decreaseLevel(1);
+//	}
 }
