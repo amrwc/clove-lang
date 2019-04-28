@@ -387,42 +387,59 @@ public class Parser implements DumbVisitor {
 	 * Remove all definitions from the scope.
 	 * 
 	 * @param node
-	 * @param initialisation -- initialisation node in for-loops.
+	 * @param init -- initialisation node in for-loops.
 	 * @author amrwc
 	 */
-	private void removeDefinitions(SimpleNode node, SimpleNode initialisation) {
+	private void removeDefinitions(SimpleNode node, SimpleNode init) {
+		ArrayList<SimpleNode> definitions = collectDefinitions(node, init);
+
+		Consumer<SimpleNode> removeDefinition = definition -> {
+			if (definition instanceof ASTDefinition) {
+				SimpleNode assignmentNode = (SimpleNode) definition.jjtGetChild(0);
+				String variableName = getTokenOfChild(assignmentNode, 0);
+				scope.removeVariable(variableName);
+			} else if (definition instanceof ASTFnDef) {
+				String fnName = getTokenOfChild(definition, 0);
+				scope.removeFunction(fnName);
+			}
+		};
+
+		definitions.forEach(removeDefinition);
+	}
+
+	/**
+	 * Collect all definitions in the scope.
+	 * 
+	 * @param node
+	 * @param init -- initialisation node in for-loops.
+	 * @author amrwc
+	 */
+	private ArrayList<SimpleNode> collectDefinitions(SimpleNode node, SimpleNode init) {
 		ArrayList<SimpleNode> definitions = new ArrayList<SimpleNode>();
 
 		// If it's a for-loop including an initialisation node...
-		if (initialisation != null) {
-			definitions.add(initialisation);
-		}
+		if (init != null) definitions.add(init);
 
 		// Collect the definitions from the statement()/block().
 		Node statement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
 		if (statement.jjtGetChild(0) instanceof ASTBlock) {
-			// statement() -> block() -> statement() -> definition()+
+			// statement() -> block() -> statement() -> definition()+/fndef()+
 			Node codeBlock = statement.jjtGetChild(0);
 			for (int i = 0; i < codeBlock.jjtGetNumChildren(); i++) {
 				Node innerNode = codeBlock.jjtGetChild(i).jjtGetChild(0);
-				if (innerNode instanceof ASTDefinition)
-					definitions.add((SimpleNode) innerNode);			
+				if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
+					definitions.add((SimpleNode) innerNode);
 			}
 		} else {
-			// statement() -> definition() -- there can only be one, since it's not a block.
+			// statement() -> definition()/fndef() -- there can only be one, since it's not a block.
 			Node innerNode = statement.jjtGetChild(0);
-			if (innerNode instanceof ASTDefinition)
+			if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
 				definitions.add((SimpleNode) innerNode);
 		}
 
-		Consumer<SimpleNode> removeVariable = definition -> {
-			SimpleNode assignmentNode = (SimpleNode) definition.jjtGetChild(0);
-			String variableName = getTokenOfChild(assignmentNode, 0);
-			scope.removeVariable(variableName);
-		};
-		definitions.forEach(removeVariable);
+		return definitions;
 	}
-	
+
 	// Process an identifier
 	// This doesn't do anything, but needs to be here because we need an ASTIdentifier node.
 	public Object visit(ASTIdentifier node, Object data) {
