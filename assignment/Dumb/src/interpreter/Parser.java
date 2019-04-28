@@ -278,7 +278,9 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTProtoInvoke node, Object data) {
 		Value value = doChild(node, 0);
 		String protoFunc = node.tokenValue;
-		Value protoArg = parseProtoArg((SimpleNode) node.jjtGetChild(1));
+		Value protoArg = (node.jjtGetNumChildren() > 1)
+			? parseProtoArg((SimpleNode) node.jjtGetChild(1))
+			: null;
 
 		if (value instanceof ValueList) {
 			switch (protoFunc.toString()) {
