@@ -226,7 +226,7 @@ void statement() #Statement :
 {}
 {
 				 	LOOKAHEAD(3) assignment()
-				| declaration()
+				| definition()
 				|	fndef()
 				|	block()
 				|	ifstatement()	
@@ -307,11 +307,11 @@ void returnexpr() #ReturnExpression :
 }
 
 /**
- * Declaration using a keyword.
+ * Definition using the <LET> keyword.
  * 
  * @author amrwc
  */
-void declaration() #Declaration :
+void definition() #Definition :
 {}
 {
 	<LET> assignment()
@@ -360,7 +360,7 @@ void ifstatement() #IfStatement :
 void forloop() #ForLoop :
 {}
 {
-  					<FOR> "(" declaration() ";" expression() ";" assignment() ")" statement()
+  					<FOR> "(" definition() ";" expression() ";" assignment() ")" statement()
 }
 
 /**

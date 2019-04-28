@@ -276,7 +276,7 @@ public class ParserDebugger implements DumbVisitor {
 		return data;
 	}
 
-	public Object visit(ASTDeclaration node, Object data) {
+	public Object visit(ASTDefinition node, Object data) {
 		dump(node, data);
 		return null;
 	}

@@ -109,53 +109,7 @@ class Display {
 	 * @author amrwc
 	 */
 	public void removeVariable(String name) {
-		//TODO:
-		System.out.println("removing: " + name);
+		System.out.println("removing: " + name); //TODO:
 		display[currentLevel].removeVariable(name);
 	}
-//	/**
-//	 * Increase the scope level by set amount.
-//	 * 
-//	 * @param lvls
-//	 * @author amrwc
-//	 */
-//	void increaseLevel(int lvls) {
-//		if (currentLevel + lvls >= maximumFunctionNesting) {
-//			currentLevel = maximumFunctionNesting;
-//			return;
-//		}
-//		currentLevel += lvls;
-//	}
-//
-//	/**
-//	 * Increase the scope level by 1.
-//	 * 
-//	 * @author amrwc
-//	 */
-//	void increaseLevel() {
-//		increaseLevel(1);
-//	}
-//
-//	/**
-//	 * Decrease the scope level by set amount.
-//	 * 
-//	 * @param lvls
-//	 * @author amrwc
-//	 */
-//	void decreaseLevel(int lvls) {
-//		if (currentLevel - lvls <= 0) {
-//			currentLevel = 0;
-//			return;
-//		}
-//		currentLevel -= lvls;
-//	}
-//
-//	/**
-//	 * Decrease the scope level by 1.
-//	 * 
-//	 * @author amrwc
-//	 */
-//	void decreaseLevel() {
-//		decreaseLevel(1);
-//	}
 }

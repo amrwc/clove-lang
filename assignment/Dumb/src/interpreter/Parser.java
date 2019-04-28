@@ -335,6 +335,8 @@ public class Parser implements DumbVisitor {
 	
 	// Execute a FOR loop
 	public Object visit(ASTForLoop node, Object data) {
+		ArrayList<SimpleNode> definitions = new ArrayList<SimpleNode>();
+
 		doChild(node, 0); // loop initialisation
 
 		while (true) {
@@ -347,33 +349,50 @@ public class Parser implements DumbVisitor {
 
 			// do loop statement
 			doChild(node, 3);
+
+			Node loopStatement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
+			if (!(loopStatement.jjtGetChild(0) instanceof ASTBlock)) {
+				// statement() -> definition() -- there can only be one, since it's not a block.
+				Node innerNode = loopStatement.jjtGetChild(0);
+				if (innerNode instanceof ASTDefinition)
+					definitions.add((SimpleNode) innerNode);
+
+				// Remove all definitions in this scope.
+				Consumer<SimpleNode> removeVariable = definition -> {
+					SimpleNode assignmentNode = (SimpleNode) definition.jjtGetChild(0);
+					String variableName = getTokenOfChild(assignmentNode, 0);
+					scope.removeVariable(variableName);
+				};
+				definitions.forEach(removeVariable);
+			}
+
 			// assign loop increment
 			doChild(node, 2);
 		}
 
-		ArrayList<SimpleNode> declarations = new ArrayList<SimpleNode>();
-
-		// Get the variable name declared on the loop's initialisation.
+		// Get the variable name defined on the loop's initialisation.
 		Node initialisationNode = node.jjtGetChild(0);
-		declarations.add((SimpleNode) initialisationNode);
+		definitions.add((SimpleNode) initialisationNode);
 
-		// Get all declarations from the loop's statement() (code block).
-		// statement() -> block() -> statement() -> declaration()+
+		// Get all definitions from the loop's statement()/block().
 		Node loopStatement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
-		Node codeBlock = loopStatement.jjtGetChild(0);
-		for (int i = 0; i < codeBlock.jjtGetNumChildren(); i++) {
-			Node hopefullyDeclaration = codeBlock.jjtGetChild(i).jjtGetChild(0);
-			if (hopefullyDeclaration instanceof ASTDeclaration)
-				declarations.add((SimpleNode) hopefullyDeclaration);			
+		if (loopStatement.jjtGetChild(0) instanceof ASTBlock) {
+			// statement() -> block() -> statement() -> definition()+
+			Node codeBlock = loopStatement.jjtGetChild(0);
+			for (int i = 0; i < codeBlock.jjtGetNumChildren(); i++) {
+				Node innerNode = codeBlock.jjtGetChild(i).jjtGetChild(0);
+				if (innerNode instanceof ASTDefinition)
+					definitions.add((SimpleNode) innerNode);			
+			}
 		}
 
-		// Remove all declarations in this scope.
-		Consumer<SimpleNode> remove = declaration -> {
-			SimpleNode assignmentNode = (SimpleNode) declaration.jjtGetChild(0);
+		// Remove all definitions in this scope.
+		Consumer<SimpleNode> removeVariable = definition -> {
+			SimpleNode assignmentNode = (SimpleNode) definition.jjtGetChild(0);
 			String variableName = getTokenOfChild(assignmentNode, 0);
 			scope.removeVariable(variableName);
 		};
-		declarations.forEach(remove);
+		definitions.forEach(removeVariable);
 
 		return data;
 	}
@@ -492,27 +511,14 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Execute a declaration statement.
+	 * Definition using the <LET> keyword.
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTDeclaration node, Object data) {
+	public Object visit(ASTDefinition node, Object data) {
 		Display.Reference reference;
 		Node assignment = node.jjtGetChild(0);
 		String name = getTokenOfChild((SimpleNode) assignment, 0);
-
-		// If it's in a for loop, make an exception and allow for
-		// an assignment on subsequent runs.
-//		if (node.jjtGetParent() instanceof ASTForLoop) {
-//			reference = scope.findReference(name);
-//			if (reference == null) {
-//				reference = scope.defineVariable(name);
-////				System.out.println("hmm " + reference.getLevel());
-//				assignment.jjtAccept(this, data);
-//			} else
-//				assignment.jjtAccept(this, data);
-//			return data;
-//		}
 
 		reference = scope.findReference(name);
 		if (reference == null)
