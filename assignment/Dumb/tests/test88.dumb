@@ -1,0 +1,7 @@
+// Test increment, decrement
+
+let v1 = 12
+let v2 = 17
+
+let v3 = ++v1 + v2
+log("SUCCESS: ", v3)

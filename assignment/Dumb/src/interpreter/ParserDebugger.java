@@ -280,4 +280,14 @@ public class ParserDebugger implements DumbVisitor {
 		dump(node, data);
 		return null;
 	}
+
+	public Object visit(ASTPostOperation node, Object data) {
+		dump(node, data);
+		return null;
+	}
+
+	public Object visit(ASTPreOperation node, Object data) {
+		dump(node, data);
+		return null;
+	}
 }
