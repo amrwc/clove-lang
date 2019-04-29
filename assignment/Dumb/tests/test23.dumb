@@ -1,11 +1,52 @@
 // Test shorthand operators
 
-let var1 = "lorem ipsum"
-var1 += " doloret"
-log(var1)
-
+let lorem = "lorem ipsum"
+log("lorem: ", lorem)
+lorem += " doloret"
+log('lorem += " doloret": ', lorem) // lorem ipsum doloret
 log()
 
-let var2 = 17
-var2 -= 2
-log(var2)
+
+let seven = 7
+log("seven: ", seven)
+seven -= 2
+log("seven -= 2: ", seven) // 5
+log()
+
+
+let eight = 8
+log("eight: ", eight)
+eight++
+log("eight++: ", eight) // 9
+log()
+
+
+// This could come useful for iterating through objects,
+// e.g. str = "key"; obj[key + 1]; obj[key + 2]
+let str = "string"
+log("str: ", str)
+str++
+log("str++: ", str) // string1
+log()
+
+
+let six = 6
+log("six: ", six)
+six--
+log("six--: ", six) // 5
+log()
+
+
+// TODO:
+
+let t1 = 10
+let t2 = 90
+t2 -= t2
+log(t2)
+
+
+
+
+
+
+

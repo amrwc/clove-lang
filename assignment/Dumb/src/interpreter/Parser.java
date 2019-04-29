@@ -560,7 +560,7 @@ public class Parser implements DumbVisitor {
 		Display.Reference reference;
 		int numChildren = node.jjtGetNumChildren();
 		Value rightVal = doChild(node, numChildren - 1);
-		
+
 		if (node.optimised == null) {
 			String name = getTokenOfChild(node, 0);
 			reference = scope.findReference(name);
@@ -572,15 +572,13 @@ public class Parser implements DumbVisitor {
 
 		if (node.shorthandOperator != null) {
 			Value value = reference.getValue();
-			
+
 			switch (node.shorthandOperator) {
 				case "+=":
-					var sum = value.add(rightVal);
-					reference.setValue(sum);
+					reference.setValue(value.add(rightVal));
 					break;
 				case "-=":
-					var sub = value.subtract(rightVal);
-					reference.setValue(sub);
+					reference.setValue(value.subtract(rightVal));
 			}
 			return data;
 		}
@@ -611,6 +609,51 @@ public class Parser implements DumbVisitor {
 
 		reference.setValue(rightVal);
 		return data;
+	}
+
+	/**
+	 * Post-increment/decrement.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTPostOperation node, Object data) {
+		return shortIncDec(node);
+	}
+
+	/**
+	 * Pre-increment/decrement.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTPreOperation node, Object data) {
+		return shortIncDec(node);
+	}
+
+	/**
+	 * Increment/decrement.
+	 * 
+	 * @author amrwc
+	 */
+	private Value shortIncDec(SimpleNode node) {
+		Display.Reference reference;
+
+		String name = getTokenOfChild(node, 0);
+		reference = scope.findReference(name);
+		if (reference == null)
+			throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
+
+		Value value = reference.getValue();
+		ValueInteger one = new ValueInteger(1);
+
+		switch (node.shorthandOperator) {
+			case "++":
+				reference.setValue(value.add(one));
+				break;
+			case "--":
+				reference.setValue(value.subtract(one));
+		}
+
+		return reference.getValue();
 	}
 
 	// OR

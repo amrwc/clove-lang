@@ -55,3 +55,7 @@
 /ASTProtoInvoke.java
 /ASTDeclaration.java
 /ASTDefinition.java
+/ASTPostIncrement.java
+/ASTPostDecrement.java
+/ASTPostOperation.java
+/ASTPreOperation.java

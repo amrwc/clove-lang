@@ -233,9 +233,11 @@ void statement() #Statement :
 				|	forloop()
 				| whileloop()
 				|	write()
-				|	call()
+				|	LOOKAHEAD(2) call()
 				| quit()
 				| proto_invoke()
+				| post_operation()
+				| pre_operation()
 }
 
 /**
@@ -333,12 +335,43 @@ void assignment() #Assignment :
 	(
 	  LOOKAHEAD(2)
 	  (
+		// identifier += expression
 	    identifier() operator = <PEQ> expression()
 	  	{jjtThis.shorthandOperator = operator.image;}	  )
 	  |
+//	  LOOKAHEAD(2)
 	  (
+		// identifier -= expression
 	    identifier() operator = <MEQ> expression()
-	  	{jjtThis.shorthandOperator = operator.image;}	  ) 	)
+	  	{jjtThis.shorthandOperator = operator.image;}	  )
+//	  |
+//	  LOOKAHEAD(2)
+//	  (
+//		// identifier++
+//	  	identifier() operator = <PP>
+//	  	{jjtThis.shorthandOperator = operator.image;}
+//	  )
+//	  |
+//	  LOOKAHEAD(2)
+//	  (
+//		// identifier--
+//	    identifier() operator = <MM>
+//	  	{jjtThis.shorthandOperator = operator.image;}
+//	  )
+//	  |
+//	  LOOKAHEAD(2)
+//	  (
+//		// ++identifier
+//	    <PP> identifier()
+//	  	{jjtThis.shorthandOperator = "pre++";}
+//	  )
+//	  |
+//	  (
+//		// --identifier
+//	    <MM> identifier()
+//	  	{jjtThis.shorthandOperator = "pre--";}
+//	  )
+	)
 
 //	Previous implementation -- doesn't support shorthand operations.
 //	identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
@@ -435,10 +468,44 @@ void quit() #Quit :
 // Expressions
 //
 
-void expression() :
-{}
+void post_operation() #PostOperation(1) :
+{Token operator;}
 {
-                  or_expression()
+  LOOKAHEAD(2)
+  (
+	// identifier++
+  	identifier() operator = <PP>
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
+  |
+  (
+	// identifier--
+    identifier() operator = <MM>
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
+}
+
+void pre_operation() #PreOperation(1) :
+{Token operator;}
+{
+  LOOKAHEAD(2)
+  (
+	// ++identifier
+  	operator = <PP> identifier()
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
+  |
+  (
+	// --identifier
+    operator = <MM> identifier()
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
+}
+
+void expression() :
+{Token operator;}
+{
+                  LOOKAHEAD(2) or_expression() | post_operation()
 }
 
 void or_expression() : 
@@ -466,7 +533,7 @@ void compare_expression() :
                                ]
 }
 
-void add_expression() : 
+void add_expression() :
 {} 
 {
                               mul_expression() (
@@ -475,7 +542,7 @@ void add_expression() :
                               )*
 }
 
-void mul_expression() : 
+void mul_expression() :
 {} 
 { 
 			      			  unary_expression() ( 
@@ -493,20 +560,48 @@ void unary_expression() :
                             | primary_expression()
 }
 
-void primary_expression() : 
+void primary_expression() :
 {}
 {
-                              literal()
+                              LOOKAHEAD(3) literal()
                             | LOOKAHEAD(2) fn_invoke()
                             | dereference()
                             | "(" expression() ")"
                             | proto_invoke()
+                            | pre_operation()
 }
 
 void fn_invoke() #FnInvoke :
 {}
 {
 							identifier() arglist()
+
+							// This one errors in test999, but works with test18. How is it different from the ones below?
+//							( LOOKAHEAD(2) identifier() | dereference() ) arglist()
+
+							// The same effect as the ones below.
+//							( LOOKAHEAD(2) dereference() | identifier() ) arglist()
+
+							// This one errors in test18, but works with test999.
+//							LOOKAHEAD(2)
+//							(
+//							  identifier() arglist()
+//							)
+//							|
+//							(
+//							  dereference() arglist()
+//							)
+
+							// This has the same effect as the one right above.
+//							LOOKAHEAD(2)
+//							(
+//							  dereference() arglist()
+//							)
+//							|
+//							(
+//							  identifier() arglist()
+//							)
+
 //							LOOKAHEAD(2)
 //							dereference() arglist()
 //							|
