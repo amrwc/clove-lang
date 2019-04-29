@@ -339,7 +339,7 @@ public class Parser implements DumbVisitor {
 		else if (node.ifHasElse)                  // ...if it evaluated to false and has 'else'...
 			doChild(node, 2);                     // ...do 'else'.
 
-		removeDefinitions(node, null);
+		removeDefinitions(node);
 		return data;
 	}
 
@@ -362,7 +362,7 @@ public class Parser implements DumbVisitor {
 			doChild(node, 3); // Do the loop statement()/body().
 
 			// Remove the definitions made inside a statement() without block().
-			removeDefinitions(node, null);
+			removeDefinitions(node);
 
 			doChild(node, 2); // Evaluate the loop expression (usually 'i++').
 		}
@@ -387,7 +387,7 @@ public class Parser implements DumbVisitor {
 				break;
 
 			doChild(node, 1); // Do loop statement()/block().
-			removeDefinitions(node, null); // Clean up the variable/function definitions.
+			removeDefinitions(node); // Clean up the variable/function definitions.
 		}
 
 		return data;
@@ -415,6 +415,10 @@ public class Parser implements DumbVisitor {
 		};
 
 		definitions.forEach(removeDefinition);
+	}
+
+	public void removeDefinitions(SimpleNode node) {
+		removeDefinitions(node, null);
 	}
 
 	/**

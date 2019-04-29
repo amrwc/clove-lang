@@ -56,4 +56,5 @@ let obj3 = {
 	}
 }
 write("obj3.fn1(5): ", "REQUIRES SPECIAL ATTENTION")
-//write(obj3.fn1(5)) // NOTE: This only works with 'dereference() arglist()' in fn_invoke() inside Dumb.jjt.
+write(obj3.fn1(5)) // NOTE: This only works with 'dereference() arglist()' in fn_invoke() inside Dumb.jjt.
+//obj3.fn1(5) // NOTE: Now that we found a cheeky way, this call should also work, but it doesn't.
