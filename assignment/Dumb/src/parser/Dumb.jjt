@@ -444,7 +444,8 @@ void write() #Write :
 void call() #Call :
 {}
 {
-					identifier() arglist()
+//					identifier() arglist()
+					dereference() arglist()
 }
 
 void arglist() #ArgList :
@@ -564,8 +565,8 @@ void primary_expression() :
 {}
 {
                               LOOKAHEAD(3) literal()
-                            | LOOKAHEAD(2) fn_invoke()
-                            | dereference()
+                            | LOOKAHEAD(30) fn_invoke()
+                            | LOOKAHEAD(30) dereference()
                             | "(" expression() ")"
                             | proto_invoke()
                             | pre_operation()
@@ -574,46 +575,8 @@ void primary_expression() :
 void fn_invoke() #FnInvoke :
 {}
 {
-							identifier() arglist()
-
-							// This one errors in test999, but works with test18. How is it different from the ones below?
-//							( LOOKAHEAD(2) identifier() | dereference() ) arglist()
-
-							// The same effect as the ones below.
-//							( LOOKAHEAD(2) dereference() | identifier() ) arglist()
-
-							// This one errors in test18, but works with test999.
-//							LOOKAHEAD(2)
-//							(
-//							  identifier() arglist()
-//							)
-//							|
-//							(
-//							  dereference() arglist()
-//							)
-
-							// This has the same effect as the one right above.
-//							LOOKAHEAD(2)
-//							(
-//							  dereference() arglist()
-//							)
-//							|
-//							(
-//							  identifier() arglist()
-//							)
-
-//							LOOKAHEAD(2)
-//							dereference() arglist()
-//							|
 //							identifier() arglist()
-
-							// NOTE: An attempt at invoking a ValueFn declared inside of a ValueObject.
-							// This breaks write with the message:
-							// Encountered " "WRITE" "write "" at line 13, column 1.
-							// Was expecting:
-							//		"(" ...
-							// It does, however, work with the ValueFn declared inside of ValueObject.
-//							dereference() arglist()
+							dereference() arglist()
 }
 
 void literal() :
@@ -635,42 +598,15 @@ void identifier() #Identifier :
 }
 
 /**
- * Dereference:
- *  - anonymous object accessor, or
- *	- normal dereference of a literal,
- *		followed by:
- *		 - any number of anonymous object accessors. 
+ * Dereference.
  * 
  * @author amrwc
  */
 void dereference() #Dereference :
-//void dereference() :
 {Token t;}
 {
-//	NOTE: This works, but only with objects, no functions. But works when fn_invoke() is dereference() arglist()
-	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )* {jjtThis.tokenValue = t.image;}
-
-// NOTE: There's a difference between caling the implementation inline and the default next to the dereference().
-//	t = <IDENTIFIER> (
-//	  		( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
-//		| 	( <DOT> identifier() )* arglist()  {jjtThis.tokenValue = t.image;} #FnInvoke
-//	)
-// Even this won't work:
-// t = <IDENTIFIER> ( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
-
-// NOTE: This one doesn't blow up instantly by encountering the invocation parentheses.
-// It does however require all dot-accessors to have parentheses at the end. Maybe swap their order?
-//	t = <IDENTIFIER> ( <DOT> identifier() arglist() | ( <DOT> identifier() )* ) {jjtThis.tokenValue = t.image;}
-//	t = <IDENTIFIER> ( ( <DOT> identifier() )* | ( <DOT> fn_invoke() ) ) {jjtThis.tokenValue = t.image;}
-
-//	NOTE: An attempt at invoking a function declared inside of an anonymous object.
-//	t = <IDENTIFIER> ( <DOT> identifier() | LOOKAHEAD(2) fn_invoke() )* {jjtThis.tokenValue = t.image;}
-
-//	NOTE: An attempt at invoking a function nested inside an object.
-//	t = <IDENTIFIER> (
-//	  	( <DOT> identifier() )* {jjtThis.tokenValue = t.image;} #Dereference
-//		| <DOT> fn_invoke() {jjtThis.tokenValue = t.image;} #FnInvoke
-//	)
+	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
+	{jjtThis.tokenValue = t.image;}
 }
 
 void character() #Character :
