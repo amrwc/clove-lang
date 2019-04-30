@@ -4,4 +4,20 @@ let v1 = 12
 let v2 = 17
 
 let v3 = ++v1 + v2
-log("SUCCESS: ", v3)
+log("v1: ", v1, "     Should be: 13")
+log("v2: ", v2, "     Should be: 17")
+log("v3: ", v3, "     Should be: 30")
+log()
+
+
+
+// Order of operations:
+// 1. Add 1 to v1.
+// 2. Add v1 and v2 together.
+// 3. Subtract 1 from v1.
+
+// NOTE: Somehow, the Parser thinks the 'v2--' expression is a Dereference.
+//let v3 = ++v1 + v2--
+//log("v1: ", v1, "     Should be: 13")
+//log("v2: ", v2, "     Should be: 16")
+//log("v3: ", v3, "     Should be: 29")

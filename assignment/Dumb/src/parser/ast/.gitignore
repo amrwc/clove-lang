@@ -59,3 +59,5 @@
 /ASTPostDecrement.java
 /ASTPostOperation.java
 /ASTPreOperation.java
+/ASTPrefixExpression.java
+/ASTPostfixExpression.java

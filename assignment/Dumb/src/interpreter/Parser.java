@@ -620,7 +620,7 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTPostOperation node, Object data) {
+	public Object visit(ASTPostfixExpression node, Object data) {
 		return shortIncDec(node);
 	}
 
@@ -629,7 +629,7 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTPreOperation node, Object data) {
+	public Object visit(ASTPrefixExpression node, Object data) {
 		return shortIncDec(node);
 	}
 

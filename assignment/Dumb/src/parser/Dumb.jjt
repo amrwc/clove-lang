@@ -212,6 +212,10 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < REM: "%" >
 }
 
+
+
+
+
 /***********************************************
  *          THE GRAMMAR STARTS HERE            *
  ***********************************************/
@@ -219,94 +223,35 @@ TOKEN : /* OPERATOR SYMBOLS */
 ASTCode code() #Code :
 {}
 {
-     			      statement() ( statement() )* <EOF>  {return jjtThis;}
+  statement() ( statement() )* <EOF> {return jjtThis;}
 }
+
+
+
+
+
+/***********************************************
+ *                 Statements                  *
+ ***********************************************/
 
 void statement() #Statement :
 {}
 {
-				 	LOOKAHEAD(3) assignment()
-				| definition()
-				|	fndef()
-				|	block()
-				|	ifstatement()	
-				|	forloop()
-				| whileloop()
-				|	write()
-				|	LOOKAHEAD(2) call()
-				| quit()
-				| proto_invoke()
-				| post_operation()
-				| pre_operation()
+    definition()
+  | LOOKAHEAD(3) assignment()
+  | fndef()
+  | block()
+  | ifstatement()
+  | forloop()
+  | whileloop()
+  | write()
+  | LOOKAHEAD(2) call()
+  | quit()
+  | proto_invoke()
+  | postfix_expression()
+  | prefix_expression()
 }
 
-/**
- * Invoke a prototype function.
- * It can be a statement() or an expression().
- * 
- * @author amrwc
- */
-void proto_invoke() #ProtoInvoke :
-{Token t;}
-{
-	<HASH> dereference() <ARROW2> t = <IDENTIFIER>
-		"(" [ LOOKAHEAD(2) expression() | identifier() ] ")"
-		{jjtThis.tokenValue = t.image;}
-}
-
-void block() #Block :
-{}
-{
-					"{" ( statement() )* "}"
-}
-
-void parmlist() #Parmlist :
-{}
-{
-					"(" [ identifier() ( "," identifier() )* ] ")"
-}
-
-void fnbody() #FnBody :
-{}
-{
-					( statement() )* 
-}
-
-void fndef() #FnDef :
-{}
-{
-					<FUNCTION> identifier() parmlist() "{" 
-						fnbody()
-						[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ] 
-					"}"
-}
-
-/**
- * Anonymous function grammar.
- * 
- * @author amrwc
- */
-void fnval() #FnVal :
-{}
-{
-  (    <FUNCTION> parmlist() "{"
-    	fnbody()
-    	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-  	"}"
-  )
-  |
-  ( // Arrow function:
-    parmlist() <ARROW1> "{"
-    	fnbody()
-    	[ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-  	"}"  )
-}
-
-void returnexpr() #ReturnExpression :
-{}
-{
-					expression()
-}
 
 /**
  * Definition using the <LET> keyword.
@@ -316,34 +261,32 @@ void returnexpr() #ReturnExpression :
 void definition() #Definition :
 {}
 {
-	<LET> assignment()
+  <LET> assignment()
 }
 
-/**
- * Assignment operations.
- * 
- * @author amrwc
- */
+
 void assignment() #Assignment :
 {Token operator;}
 {
-	LOOKAHEAD(2)
-	(
-	  identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
-	)
-	|
-	(
-	  LOOKAHEAD(2)
-	  (
-		// identifier += expression
-	    identifier() operator = <PEQ> expression()
-	  	{jjtThis.shorthandOperator = operator.image;}	  )
-	  |
-//	  LOOKAHEAD(2)
-	  (
-		// identifier -= expression
-	    identifier() operator = <MEQ> expression()
-	  	{jjtThis.shorthandOperator = operator.image;}	  )
+  LOOKAHEAD(2)
+  (
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
+  )
+  |
+  (
+    LOOKAHEAD(2)
+    (
+	  // identifier += expression
+      identifier() operator = <PEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+//    LOOKAHEAD(2)
+    (
+	  // identifier -= expression
+      identifier() operator = <MEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
 //	  |
 //	  LOOKAHEAD(2)
 //	  (
@@ -371,63 +314,53 @@ void assignment() #Assignment :
 //	    <MM> identifier()
 //	  	{jjtThis.shorthandOperator = "pre--";}
 //	  )
-	)
+    )
 
 //	Previous implementation -- doesn't support shorthand operations.
 //	identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
 
-//	The original implementation, left for reference:
-//	identifier() "=" expression() #Assignment(2)
+//	identifier() "=" expression() #Assignment(2) // OG
 }
 
-/**
- * Anonymous object declaration.
- * 
- * @author amrwc
- */
-void valueObject() #ValueObject :
+
+void fndef() #FnDef :
 {}
 {
-  	//"{" assignment() ( "," assignment() )* "}"
-  	// "{" [ assignment() ( "," assignment() )* ] "}"
-  	"{" identifier() ":" expression() ( "," identifier() ":" expression() )* "}"
+  <FUNCTION> identifier() parmlist() "{" 
+    fnbody()
+    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ] 
+  "}"
 }
 
-/**
- * List declaration.
- * 
- * @author amrwc
- */
-void valueList() #ValueList :
+
+void block() #Block :
 {}
 {
-  	"[" literal() ( "," literal() )* "]"
-  	// "[" [ literal() ( "," literal() )* ] "]"
+  "{" ( statement() )* "}"
 }
+
 
 void ifstatement() #IfStatement :
 {}
 {
-  					<IF> "(" expression() ")" statement() 
-  					[ LOOKAHEAD(1) <ELSE> statement() {jjtThis.ifHasElse = true;} ]
+  <IF> "(" expression() ")" statement() 
+  [ LOOKAHEAD(1) <ELSE> statement() {jjtThis.ifHasElse = true;} ]
 }
+
 
 void forloop() #ForLoop :
 {}
 {
-  					<FOR> "(" definition() ";" expression() ";" assignment() ")" statement()
+  <FOR> "(" definition() ";" expression() ";" assignment() ")" statement()
 }
 
-/**
- * While loop grammar.
- * 
- * @author amrwc
- */
+
 void whileloop() #WhileLoop :
 {}
 {
-  					<WHILE> "(" expression() ")" statement()
+  <WHILE> "(" expression() ")" statement()
 }
+
 
 /**
  * Write all the arguments to the command line.
@@ -438,55 +371,204 @@ void whileloop() #WhileLoop :
 void write() #Write :
 {}
 {
-					<WRITE> "(" [ expression() ( "," expression() )* ] ")"
+  <WRITE> "(" [ expression() ( "," expression() )* ] ")"
 }
+
 
 void call() #Call :
 {}
 {
-//					identifier() arglist()
-					dereference() arglist()
+  dereference() arglist()
+//  identifier() arglist() // OG
 }
+
+
+void quit() #Quit :
+{}
+{
+  <QUIT>
+}
+
+
+/**
+ * Invoke a prototype function.
+ * It can be a statement() or a primary_expression().
+ * 
+ * @author amrwc
+ */
+void proto_invoke() #ProtoInvoke :
+{Token t;}
+{
+  <HASH> dereference() <ARROW2> t = <IDENTIFIER>
+  "(" [ LOOKAHEAD(2) expression() | identifier() ] ")"
+  {jjtThis.tokenValue = t.image;}
+}
+
+
+/**
+ * Anonymous function.
+ * 
+ * @author amrwc
+ */
+void fnval() #FnVal :
+{}
+{
+  (
+    <FUNCTION> parmlist() "{"
+      fnbody()
+      [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+  |
+  ( // Arrow function:
+    parmlist() <ARROW1> "{"
+      fnbody()
+      [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+}
+
 
 void arglist() #ArgList :
 {}
 {
-					"(" [ expression() ] ( "," expression() )* ")"
+  "(" [ expression() ] ( "," expression() )* ")"
 }
 
+
+void parmlist() #Parmlist :
+{}
+{
+  "(" [ identifier() ( "," identifier() )* ] ")"
+}
+
+
+void fnbody() #FnBody :
+{}
+{
+  ( statement() )* 
+}
+
+
+void returnexpr() #ReturnExpression :
+{}
+{
+  expression()
+}
+
+
 /**
- * Quit instruction.
+ * Anonymous object declaration.
  * 
  * @author amrwc
  */
-void quit() #Quit :
+void valueObject() #ValueObject :
 {}
 {
-	<QUIT>
+  "{" identifier() ":" expression() ( "," identifier() ":" expression() )* "}"
+//  "{" assignment() ( "," assignment() )* "}"
+//  "{" [ assignment() ( "," assignment() )* ] "}" // TBD
 }
 
-//
-// Expressions
-//
 
-void post_operation() #PostOperation(1) :
-{Token operator;}
+/**
+ * List declaration.
+ * 
+ * @author amrwc
+ */
+void valueList() #ValueList :
+{}
 {
-  LOOKAHEAD(2)
-  (
-	// identifier++
-  	identifier() operator = <PP>
-  	{jjtThis.shorthandOperator = operator.image;}
-  )
-  |
-  (
-	// identifier--
-    identifier() operator = <MM>
-  	{jjtThis.shorthandOperator = operator.image;}
-  )
+  "[" literal() ( "," literal() )* "]"
+//  "[" [ literal() ( "," literal() )* ] "]" // TBD
 }
 
-void pre_operation() #PreOperation(1) :
+
+
+
+
+
+/***********************************************
+ *                Expressions                  *
+ ***********************************************/
+
+void expression() :
+{}
+{
+//  or_expression() // OG
+//  or_expression() [ LOOKAHEAD(1) postfix_operator() #PostfixExpression(1) ]
+  or_expression() [ LOOKAHEAD(1) postfix_operator() ] // This works-ish
+//  LOOKAHEAD(2) or_expression() | postfix_expression()
+//  LOOKAHEAD(2) postfix_expression() | or_expression()
+//  expression_secondary() [ LOOKAHEAD(1) postfix_operator() ]
+//  or_expression [ LOOKAHEAD(1) postfix_expression() ]
+}
+
+void or_expression() :
+{}
+{
+  and_expression() ( <OR> and_expression() #Or(2) )*
+}
+
+void and_expression() :
+{}
+{
+  compare_expression() ( <AND> compare_expression() #And(2) )*
+}
+
+void compare_expression() :
+{}
+{
+  add_expression() [
+      <EQ> add_expression() #CompEqual(2)
+    | <NE> add_expression() #CompNequal(2)
+    | <GE> add_expression() #CompGTE(2)
+    | <LE> add_expression() #CompLTE(2)
+    | <GT> add_expression() #CompGT(2)
+    | <LT> add_expression() #CompLT(2)
+  ]
+}
+
+void add_expression() :
+{}
+{
+  mul_expression() (
+      "+"  mul_expression() #Add(2)
+    | "-"  mul_expression() #Subtract(2)
+  )*
+}
+
+void mul_expression() :
+{}
+{
+  unary_expression() (
+      "*" unary_expression() #Times(2)
+    | "/" unary_expression() #Divide(2)
+  )*
+}
+
+void unary_expression() :
+{}
+{
+    <NOT> unary_expression() #UnaryNot(1)
+  | "+"   unary_expression() #UnaryPlus(1)
+  | "-"   unary_expression() #UnaryMinus(1)
+  | primary_expression()
+}
+
+void primary_expression() :
+{}
+{
+    prefix_expression()
+  | LOOKAHEAD(3) literal()
+  | LOOKAHEAD(30) fn_invoke()
+  | LOOKAHEAD(30) dereference()
+  | "(" expression() ")"
+  | proto_invoke()
+}
+
+
+void prefix_expression() #PrefixExpression(1) :
 {Token operator;}
 {
   LOOKAHEAD(2)
@@ -503,133 +585,116 @@ void pre_operation() #PreOperation(1) :
   )
 }
 
-void expression() :
+
+void postfix_expression() #PostfixExpression(1) :
 {Token operator;}
 {
-                  LOOKAHEAD(2) or_expression() | post_operation()
+  LOOKAHEAD(2)
+  (
+	// identifier++
+  	identifier() operator = <PP>
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
+  |
+  (
+	// identifier--
+    identifier() operator = <MM>
+  	{jjtThis.shorthandOperator = operator.image;}
+  )
 }
+//void postfix_expression() #PostfixExpression(1) :
+//{Token t; Token operator;}
+//{
+//  LOOKAHEAD(2)
+//  (
+//	// identifier++
+//  	t = <IDENTIFIER> operator = <PP>
+//  	{jjtThis.tokenValue = t.image;
+//  	jjtThis.shorthandOperator = operator.image;}
+//  )
+//  |
+//  (
+//	// identifier--
+//    t = <IDENTIFIER> operator = <MM>
+//  	{jjtThis.tokenValue = t.image;
+//  	jjtThis.shorthandOperator = operator.image;}
+//  )
+//}
 
-void or_expression() : 
-{} 
-{ 
-			      and_expression() ( <OR> and_expression() #Or(2) )* 
-}
 
-void and_expression() : 
-{} 
-{ 
-			      compare_expression() ( <AND> compare_expression() #And(2) )*
-}
-
-void compare_expression() : 
-{} 
-{ 
-                              add_expression() [
-                                 <EQ> add_expression() #CompEqual(2)
-                               | <NE> add_expression() #CompNequal(2)
-                               | <GE> add_expression() #CompGTE(2)
-                               | <LE> add_expression() #CompLTE(2)
-                               | <GT> add_expression() #CompGT(2)
-                               | <LT> add_expression() #CompLT(2)
-                               ]
-}
-
-void add_expression() :
-{} 
+// https://github.com/javacc/javacc/blob/master/grammars/EcmaScript.jjt
+// Line 1715
+void postfix_operator() #PostfixExpression(1) :
+{Token operator;}
 {
-                              mul_expression() (
-                                  "+"  mul_expression() #Add(2)
-                                | "-"  mul_expression() #Subtract(2)
-                              )*
+    operator = <PP> {jjtThis.shorthandOperator = operator.image;}
+  | operator = <MM> {jjtThis.shorthandOperator = operator.image;}
 }
 
-void mul_expression() :
-{} 
-{ 
-			      			  unary_expression() ( 
-                                  "*" unary_expression() #Times(2)
-                                | "/" unary_expression() #Divide(2)
-                              )*
-}
-
-void unary_expression() :
-{}
-{
-                              <NOT> unary_expression() #UnaryNot(1)
-                            | "+"   unary_expression() #UnaryPlus(1)
-                            | "-"   unary_expression() #UnaryMinus(1)
-                            | primary_expression()
-}
-
-void primary_expression() :
-{}
-{
-                              LOOKAHEAD(3) literal()
-                            | LOOKAHEAD(30) fn_invoke()
-                            | LOOKAHEAD(30) dereference()
-                            | "(" expression() ")"
-                            | proto_invoke()
-                            | pre_operation()
-}
-
-void fn_invoke() #FnInvoke :
-{}
-{
-//							identifier() arglist()
-							dereference() arglist()
-}
 
 void literal() :
 {}
 {
-							  integer()
-                            | character()							  	
-							| rational()
-							| bool()
-				| fnval()
-				| valueObject()
-				| valueList()
+    integer()
+  | character()
+  | rational()
+  | bool()
+  | fnval()
+  | valueObject()
+  | valueList()
 }
 
-void identifier() #Identifier :
-{Token t;}
+
+void fn_invoke() #FnInvoke :
+{}
 {
-	t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+  dereference() arglist()
+//  identifier() arglist() // OG
 }
+
 
 /**
- * Dereference.
- * 
  * @author amrwc
  */
 void dereference() #Dereference :
 {Token t;}
 {
-	t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
-	{jjtThis.tokenValue = t.image;}
+  t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
+  {jjtThis.tokenValue = t.image;}
 }
+
+
+void identifier() #Identifier :
+{Token t;}
+{
+  t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+}
+
 
 void character() #Character :
 {Token t;}
 {
-	t = <STRING_LITERAL> {jjtThis.tokenValue = t.image;}
+  t = <STRING_LITERAL> {jjtThis.tokenValue = t.image;}
 }
+
 
 void integer() #Integer : 
 {Token t;} 
 { 
-	t = <INTEGER_LITERAL> {jjtThis.tokenValue = t.image;}
+  t = <INTEGER_LITERAL> {jjtThis.tokenValue = t.image;}
 }
+
 
 void rational() #Rational : 
 {Token t;} 
 { 
-	t = <FLOATING_POINT_LITERAL> {jjtThis.tokenValue = t.image;}
+  t = <FLOATING_POINT_LITERAL> {jjtThis.tokenValue = t.image;}
 }
+
 
 void bool() : 
 {} 
 { 
-			      <TRUE> #True
-                | <FALSE> #False
+    <TRUE> #True
+  | <FALSE> #False
 }
