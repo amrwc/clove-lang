@@ -37,10 +37,9 @@ log("six--: ", six) // 5
 log()
 
 
-// TODO:
-//let t1 = 10
-//let t2 = 90
-//log("t1: ", t1, " t2: ", t2)
-//t1 += t2++
-//log("t1 += t2++")
-//log("t1: ", t1, " t2: ", t2)
+let t1 = 10
+let t2 = 90
+log("t1: ", t1, ", t2: ", t2)
+t1 += t2++
+log("t1 += t2++")
+log("t1: ", t1, ", t2: ", t2)
