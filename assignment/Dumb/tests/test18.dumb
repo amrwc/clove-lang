@@ -53,8 +53,16 @@ write()
 let obj3 = {
 	fn1: function(a) {
 		return a + 1
+	},
+	nested: {
+		fn2: (x) => {
+			return x * 2
+		}
 	}
 }
-write("obj3.fn1(5): ", "REQUIRES SPECIAL ATTENTION")
-write(obj3.fn1(5)) // NOTE: This only works with 'dereference() arglist()' in fn_invoke() inside Dumb.jjt.
-//obj3.fn1(5) // NOTE: Now that we found a cheeky way, this call should also work, but it doesn't.
+write("obj3.fn1(5): ")
+write(obj3.fn1(5))
+write()
+
+write("obj3.nested.fn2(10)")
+write(obj3.nested.fn2(10))

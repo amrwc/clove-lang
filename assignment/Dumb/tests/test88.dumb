@@ -10,14 +10,17 @@ log("v3: ", v3, "     Should be: 30")
 log()
 
 
-
+let var1 = 12
+let var2 = 17
 // Order of operations:
-// 1. Add 1 to v1.
-// 2. Add v1 and v2 together.
-// 3. Subtract 1 from v1.
+// 1. Add 1 to var1.
+// 2. Add var1 and var2 together.
+// 3. Subtract 1 from var1.
+// NOTE: Somehow, the Parser thinks the 'var2--' expression is a Dereference.
+// NOTE: Right now, it blows up at postfix '--'.
+let var3 = ++var1 + var2--
 
-// NOTE: Somehow, the Parser thinks the 'v2--' expression is a Dereference.
-//let v3 = ++v1 + v2--
-//log("v1: ", v1, "     Should be: 13")
-//log("v2: ", v2, "     Should be: 16")
-//log("v3: ", v3, "     Should be: 29")
+log("let var3 = ++var1 + var2--")
+log("var1: ", var1, "     Should be: 13")
+log("var2: ", var2, "     Should be: 16")
+log("var3: ", var3, "     Should be: 29")

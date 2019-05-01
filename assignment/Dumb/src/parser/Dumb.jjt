@@ -237,19 +237,26 @@ ASTCode code() #Code :
 void statement() #Statement :
 {}
 {
-    definition()
-  | LOOKAHEAD(3) assignment()
+    LOOKAHEAD(call()) call()
+  | definition()
+  | LOOKAHEAD(assignment()) assignment()
   | fndef()
   | block()
   | ifstatement()
   | forloop()
   | whileloop()
   | write()
-  | LOOKAHEAD(2) call()
   | quit()
   | proto_invoke()
   | postfix_expression()
   | prefix_expression()
+}
+
+
+void call() #Call :
+{}
+{
+  dereference() arglist()
 }
 
 
@@ -375,14 +382,6 @@ void write() #Write :
 }
 
 
-void call() #Call :
-{}
-{
-  dereference() arglist()
-//  identifier() arglist() // OG
-}
-
-
 void quit() #Quit :
 {}
 {
@@ -495,9 +494,9 @@ void valueList() #ValueList :
 void expression() :
 {}
 {
-//  or_expression() // OG
+  or_expression() // OG
 //  or_expression() [ LOOKAHEAD(1) postfix_operator() #PostfixExpression(1) ]
-  or_expression() [ LOOKAHEAD(1) postfix_operator() ] // This works-ish
+//  or_expression() [ LOOKAHEAD(1) postfix_operator() ] // This works-ish
 //  LOOKAHEAD(2) or_expression() | postfix_expression()
 //  LOOKAHEAD(2) postfix_expression() | or_expression()
 //  expression_secondary() [ LOOKAHEAD(1) postfix_operator() ]
@@ -560,9 +559,9 @@ void primary_expression() :
 {}
 {
     prefix_expression()
-  | LOOKAHEAD(3) literal()
-  | LOOKAHEAD(30) fn_invoke()
-  | LOOKAHEAD(30) dereference()
+  | LOOKAHEAD(literal()) literal()
+  | LOOKAHEAD(fn_invoke()) fn_invoke()
+  | LOOKAHEAD(dereference()) dereference()
   | "(" expression() ")"
   | proto_invoke()
 }
@@ -649,7 +648,6 @@ void fn_invoke() #FnInvoke :
 {}
 {
   dereference() arglist()
-//  identifier() arglist() // OG
 }
 
 

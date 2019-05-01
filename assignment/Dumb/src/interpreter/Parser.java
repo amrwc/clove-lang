@@ -201,23 +201,27 @@ public class Parser implements DumbVisitor {
 	 */
 	public Object visit(ASTCall node, Object data) {
 		FunctionDefinition fndef;
-		if (node.optimised == null) { 
-			// Child 0 - identifier (fn name)
-			String fnname = getTokenOfChild(node, 0);
-			fndef = scope.findFunction(fnname);
+		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
+		// If there's more than 1 child in the left child, then it's not just an identifier.
+		if (leftNumChildren > 0) {
+			fndef = getValueFn(node);
+			node.optimised = fndef;
+		}
+
+		if (node.optimised == null) { 
+			String fnname = getTokenOfChild(node, 0); // Child 0 - identifier (fn name)
+			fndef = scope.findFunction(fnname);
 			if (fndef == null) fndef = findValueFn(fnname);
 
-			// Save it for next time
-			node.optimised = fndef;
+			node.optimised = fndef; // Save it for next time
 		} else
-			fndef = (FunctionDefinition)node.optimised;
+			fndef = (FunctionDefinition) node.optimised;
 
 		FunctionInvocation newInvocation = new FunctionInvocation(fndef);
-		// Child 1 - arglist
-		doChild(node, 1, newInvocation);
-		// Execute
-		scope.execute(newInvocation, this);
+		doChild(node, 1, newInvocation); // Child 1 - arglist
+		scope.execute(newInvocation, this); // Execute
+
 		return data;
 	}
 
@@ -230,44 +234,48 @@ public class Parser implements DumbVisitor {
 		FunctionDefinition fndef;
 		int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
-		// NOTE: This locates ValueFn inside of ValueObject.
-		// 		 Only works after modifying grammar to dereference() arglist(). 
-		// If there's more than 1 child in the left child, it's an object.
-		// NOTE: It needs to be added to FnCall as well when it works properly.
+		// If there's more than 1 child in the left child, then it's not just an identifier.
 		if (leftNumChildren > 0) {
-			Value value = doChild(node, 0); // Do the dereference.
-
-			ValueFn valueFunction = (ValueFn) value;
-			if (valueFunction == null)
-				throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
-
-//			fndef = scope.findFunctionInCurrentLevel(valueFunction.getName());
-			fndef = valueFunction.get();
-			if (fndef == null)
-				throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
-
+			fndef = getValueFn(node);
 			node.optimised = fndef;
 		}
 
 		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-
 			if (fndef == null) fndef = findValueFn(fnname);
 
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
 
-			// Save it for next time
-			node.optimised = fndef;
+			node.optimised = fndef; // Save it for next time
 		} else
-			fndef = (FunctionDefinition)node.optimised;
+			fndef = (FunctionDefinition) node.optimised;
 
 		FunctionInvocation newInvocation = new FunctionInvocation(fndef);
-		// Child 1 - arglist
-		doChild(node, 1, newInvocation);
-		// Execute
-		return scope.execute(newInvocation, this);
+		doChild(node, 1, newInvocation); // Child 1 - arglist
+
+		return scope.execute(newInvocation, this); // Execute and return the outcome.
+	}
+
+	/**
+	 * Retrieves ValueFn from a dereference and returns its FunctionDefinition.
+	 * 
+	 * @param node
+	 * @author amrwc
+	 */
+	private FunctionDefinition getValueFn(SimpleNode node) {
+		Value value = doChild(node, 0); // Do the dereference.
+
+		ValueFn valueFunction = (ValueFn) value;
+		if (valueFunction == null)
+			throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
+
+		FunctionDefinition fndef = valueFunction.get();
+		if (fndef == null)
+			throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
+
+		return fndef;
 	}
 
 	/**
@@ -478,13 +486,15 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Dereference a variable or parameter, and return its value.
+	 * Dereference a variable or parameter, and return its value.,
+	 * or call/invoke a function.
 	 * 
 	 * @author amrwc
 	 */
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
 
+		// Get the main variable's/parameter's name (token).
 		if (node.optimised == null) {
 			String name = node.tokenValue;
 			reference = scope.findReference(name);
@@ -499,6 +509,7 @@ public class Parser implements DumbVisitor {
 			int currChild = 0; // Keep track of how far it traversed.
 			Value value = reference.getValue();
 
+			// ...traverse through the chain of dereferences.
 			for (; currChild < numChildren; currChild++) {
 				if (value instanceof ValueList)
 					value = listDereference(node, value, currChild);
@@ -621,6 +632,7 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTPostfixExpression node, Object data) {
+		System.out.println("Inside ASTPostfixExpression"); // TODO:
 		return shortIncDec(node);
 	}
 
