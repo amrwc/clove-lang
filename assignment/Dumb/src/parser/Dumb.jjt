@@ -288,40 +288,12 @@ void assignment() #Assignment :
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
-//    LOOKAHEAD(2)
     (
 	  // identifier -= expression
       identifier() operator = <MEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
-//	  |
-//	  LOOKAHEAD(2)
-//	  (
-//		// identifier++
-//	  	identifier() operator = <PP>
-//	  	{jjtThis.shorthandOperator = operator.image;}
-//	  )
-//	  |
-//	  LOOKAHEAD(2)
-//	  (
-//		// identifier--
-//	    identifier() operator = <MM>
-//	  	{jjtThis.shorthandOperator = operator.image;}
-//	  )
-//	  |
-//	  LOOKAHEAD(2)
-//	  (
-//		// ++identifier
-//	    <PP> identifier()
-//	  	{jjtThis.shorthandOperator = "pre++";}
-//	  )
-//	  |
-//	  (
-//		// --identifier
-//	    <MM> identifier()
-//	  	{jjtThis.shorthandOperator = "pre--";}
-//	  )
-    )
+  )
 
 //	Previous implementation -- doesn't support shorthand operations.
 //	identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
@@ -358,7 +330,7 @@ void ifstatement() #IfStatement :
 void forloop() #ForLoop :
 {}
 {
-  <FOR> "(" definition() ";" expression() ";" assignment() ")" statement()
+  <FOR> "(" definition() ";" expression() ";" ( LOOKAHEAD(3) assignment() | expression() ) ")" statement()
 }
 
 
@@ -494,13 +466,7 @@ void valueList() #ValueList :
 void expression() :
 {}
 {
-  or_expression() // OG
-//  or_expression() [ LOOKAHEAD(1) postfix_operator() #PostfixExpression(1) ]
-//  or_expression() [ LOOKAHEAD(1) postfix_operator() ] // This works-ish
-//  LOOKAHEAD(2) or_expression() | postfix_expression()
-//  LOOKAHEAD(2) postfix_expression() | or_expression()
-//  expression_secondary() [ LOOKAHEAD(1) postfix_operator() ]
-//  or_expression [ LOOKAHEAD(1) postfix_expression() ]
+  or_expression()
 }
 
 void or_expression() :
@@ -559,6 +525,7 @@ void primary_expression() :
 {}
 {
     prefix_expression()
+  | LOOKAHEAD(2) postfix_expression()
   | LOOKAHEAD(literal()) literal()
   | LOOKAHEAD(fn_invoke()) fn_invoke()
   | LOOKAHEAD(dereference()) dereference()
@@ -600,34 +567,6 @@ void postfix_expression() #PostfixExpression(1) :
     identifier() operator = <MM>
   	{jjtThis.shorthandOperator = operator.image;}
   )
-}
-//void postfix_expression() #PostfixExpression(1) :
-//{Token t; Token operator;}
-//{
-//  LOOKAHEAD(2)
-//  (
-//	// identifier++
-//  	t = <IDENTIFIER> operator = <PP>
-//  	{jjtThis.tokenValue = t.image;
-//  	jjtThis.shorthandOperator = operator.image;}
-//  )
-//  |
-//  (
-//	// identifier--
-//    t = <IDENTIFIER> operator = <MM>
-//  	{jjtThis.tokenValue = t.image;
-//  	jjtThis.shorthandOperator = operator.image;}
-//  )
-//}
-
-
-// https://github.com/javacc/javacc/blob/master/grammars/EcmaScript.jjt
-// Line 1715
-void postfix_operator() #PostfixExpression(1) :
-{Token operator;}
-{
-    operator = <PP> {jjtThis.shorthandOperator = operator.image;}
-  | operator = <MM> {jjtThis.shorthandOperator = operator.image;}
 }
 
 
