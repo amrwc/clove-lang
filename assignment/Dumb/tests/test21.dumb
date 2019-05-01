@@ -55,3 +55,13 @@ log()
 log("#listProto3[1]->append(1300)")
 #listProto3[1]->append(1300)
 log("listProto3: ", listProto3)
+
+
+log()
+log()
+
+
+log("Invoke ValueFn inside of ValueList:")
+let listFn = [13, (x) => {return x * 10}, 77]
+log("listFn: ", listFn)
+log("listFn[1](7): ", listFn[1](7))
