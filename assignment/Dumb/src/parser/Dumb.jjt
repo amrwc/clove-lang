@@ -534,38 +534,38 @@ void primary_expression() :
 }
 
 
-void prefix_expression() #PrefixExpression(1) :
+void prefix_expression() #IncrementDecrement(1) :
 {Token operator;}
 {
   LOOKAHEAD(2)
   (
 	// ++identifier
   	operator = <PP> identifier()
-  	{jjtThis.shorthandOperator = operator.image;}
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
   |
   (
 	// --identifier
     operator = <MM> identifier()
-  	{jjtThis.shorthandOperator = operator.image;}
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
 }
 
 
-void postfix_expression() #PostfixExpression(1) :
+void postfix_expression() #IncrementDecrement(1) :
 {Token operator;}
 {
   LOOKAHEAD(2)
   (
 	// identifier++
   	identifier() operator = <PP>
-  	{jjtThis.shorthandOperator = operator.image;}
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
   )
   |
   (
 	// identifier--
     identifier() operator = <MM>
-  	{jjtThis.shorthandOperator = operator.image;}
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
   )
 }
 

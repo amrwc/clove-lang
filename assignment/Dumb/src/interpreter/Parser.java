@@ -627,39 +627,11 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Post-increment/decrement.
+	 * Increment/decrement.
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTPostfixExpression node, Object data) {
-		Display.Reference reference;
-
-		String name = getTokenOfChild(node, 0);
-		reference = scope.findReference(name);
-		if (reference == null)
-			throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
-
-		Value value = reference.getValue();
-		Value oldValue = value;
-		ValueInteger one = new ValueInteger(1);
-
-		switch (node.shorthandOperator) {
-			case "++":
-				reference.setValue(value.add(one));
-				break;
-			case "--":
-				reference.setValue(value.subtract(one));
-		}
-
-		return oldValue;
-	}
-
-	/**
-	 * Pre-increment/decrement.
-	 * 
-	 * @author amrwc
-	 */
-	public Object visit(ASTPrefixExpression node, Object data) {
+	public Object visit(ASTIncrementDecrement node, Object data) {
 		Display.Reference reference;
 
 		String name = getTokenOfChild(node, 0);
@@ -671,14 +643,22 @@ public class Parser implements DumbVisitor {
 		ValueInteger one = new ValueInteger(1);
 
 		switch (node.shorthandOperator) {
-			case "++":
+			case "pre++":
+				reference.setValue(value.add(one));
+				value =  reference.getValue();
+				break;
+			case "pre--":
+				reference.setValue(value.subtract(one));
+				value = reference.getValue();
+				break;
+			case "post++":
 				reference.setValue(value.add(one));
 				break;
-			case "--":
+			case "post--":
 				reference.setValue(value.subtract(one));
 		}
 
-		return reference.getValue();
+		return value;
 	}
 
 	// OR
