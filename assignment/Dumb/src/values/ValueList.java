@@ -21,11 +21,7 @@ public class ValueList extends ValueAbstract {
 
 	public int compare(Value v) {
 		ArrayList<Value> arr = ((ValueList) v).internalValue;
-
-		if (internalValue.equals(arr))
-			return 0;
-		else
-			return 1;
+		return internalValue.equals(arr) ? 0 : 1;
 	}
 
 	/**

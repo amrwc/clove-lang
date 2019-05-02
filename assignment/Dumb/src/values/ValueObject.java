@@ -73,7 +73,12 @@ public class ValueObject extends ValueAbstract {
 		internalValue.remove(name);
 	}
 
+	// Returns the key-value pairs in '{key: value}' notation.
 	public String toString() {
-		return internalValue.toString();
+		if (internalValue.size() == 0) return "{}";
+		String result = "{";
+		for (HashMap.Entry<String, Value> entry : internalValue.entrySet())
+			result += entry.getKey() + ": " + entry.getValue() + ", ";
+		return result.substring(0, result.length() - 2) + "}";
 	}
 }
