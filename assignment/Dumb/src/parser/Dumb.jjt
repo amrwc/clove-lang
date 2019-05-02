@@ -509,6 +509,7 @@ void mul_expression() :
   unary_expression() (
       "*" unary_expression() #Times(2)
     | "/" unary_expression() #Divide(2)
+    | "%" unary_expression() #Modulo(2)
   )*
 }
 

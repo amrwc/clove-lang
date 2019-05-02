@@ -1,0 +1,10 @@
+#!/bin/sh
+
+fileName="$1"							# Get the first command line argument.
+
+if [[ -n "$fileName" ]]; then			# If fileName is not empty...
+	echo "=== "$fileName" ==="
+	java -classpath ../bin Dumb < "$fileName"
+else
+	echo "ERROR: Specify the file name in the first argument."
+fi
