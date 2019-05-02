@@ -51,12 +51,14 @@ public class Parser implements DumbVisitor {
 	
 	// Execute a statement
 	public Object visit(ASTStatement node, Object data) {
-		return doChildren(node, data);	
+		return doChildren(node, data);
 	}
 
 	// Execute a block
 	public Object visit(ASTBlock node, Object data) {
-		return doChildren(node, data);	
+		Object result = doChildren(node, data);
+		removeDefinitions(node);
+		return result;
 	}
 
 	/**
@@ -379,7 +381,7 @@ public class Parser implements DumbVisitor {
 		removeDefinitions(node, (SimpleNode) node.jjtGetChild(0));
 		return data;
 	}
-	
+
 	/**
 	 * Execute a while loop.
 	 * 
@@ -439,28 +441,29 @@ public class Parser implements DumbVisitor {
 	private ArrayList<SimpleNode> collectDefinitions(SimpleNode node, SimpleNode init) {
 		ArrayList<SimpleNode> definitions = new ArrayList<SimpleNode>();
 
+		// Handle raw block() that occurs without any preceding statement such as for()/if().
+		if (node instanceof ASTBlock) {
+			for (int i = 0; i < node.jjtGetNumChildren(); i++) {
+				Node innerNode = node.jjtGetChild(i).jjtGetChild(0);
+				if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
+					definitions.add((SimpleNode) innerNode);
+			}
+			return definitions;
+		}
+
 		// If it's a for-loop including an initialisation node...
 		if (init != null && init instanceof ASTDefinition) definitions.add(init);
 
 		// Handle statement()/block() without children.
 		if (node.jjtGetNumChildren() == 0) return definitions;
 
-		// Collect the definitions from the statement()/block().
+		// Collect the possible single definition from the statement().
 		Node statement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
-		if (statement.jjtGetChild(0) instanceof ASTBlock) {
-			// statement() -> block() -> statement() -> definition()+/fndef()+
-			Node codeBlock = statement.jjtGetChild(0);
-			for (int i = 0; i < codeBlock.jjtGetNumChildren(); i++) {
-				Node innerNode = codeBlock.jjtGetChild(i).jjtGetChild(0);
-				if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
-					definitions.add((SimpleNode) innerNode);
-			}
-		} else {
-			// statement() -> definition()/fndef() -- there can only be one, since it's not a block.
-			Node innerNode = statement.jjtGetChild(0);
-			if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
-				definitions.add((SimpleNode) innerNode);
-		}
+
+		// statement() -> definition()/fndef() -- there can only be one, since it's not a block.
+		Node innerNode = statement.jjtGetChild(0);
+		if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFnDef)
+			definitions.add((SimpleNode) innerNode);
 
 		return definitions;
 	}
