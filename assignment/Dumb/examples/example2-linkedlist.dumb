@@ -1,0 +1,11 @@
+function Node(value) {
+	return {
+		val: value
+	}
+}
+
+let node = Node(77)
+log("1: ", node)
+
+node.next = {val: Node(node.val + 10)}
+log("2: ", node)

@@ -67,10 +67,6 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTValueObject node, Object data) {
-		// Already defined?
-		if (node.optimised != null)
-			return data;
-
 		ValueObject valueObject = new ValueObject();
 
 		// Add all the key-value pairs to the anonymous object.
@@ -82,8 +78,7 @@ public class Parser implements DumbVisitor {
 			valueObject.add(keyName, value);
 		}
 
-		node.optimised = valueObject;
-		return node.optimised;
+		return valueObject;
 	}
 	
 	/**
@@ -92,10 +87,6 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTValueList node, Object data) {
-		// Already defined?
-		if (node.optimised != null)
-			return data;
-
 		ValueList valueList = new ValueList();
 
 		// Add all the values to the list.
@@ -106,8 +97,7 @@ public class Parser implements DumbVisitor {
 			valueList.append(currentValue);
 		}
 
-		node.optimised = valueList;
-		return node.optimised;
+		return valueList;
 	}
 
 	/**
@@ -116,10 +106,6 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTFnVal node, Object data) {
-		// Already defined?
-		if (node.optimised != null)
-			return data;
-
 		FunctionDefinition currentFnDef = new FunctionDefinition(scope.getLevel() + 1);
 
 		// Child 0 -- function definition parameter list
@@ -130,13 +116,7 @@ public class Parser implements DumbVisitor {
 		if (node.fnHasReturn)
 			currentFnDef.setFunctionReturnExpression(getChild(node, 2));
 
-		ValueFn valueFunction = new ValueFn(currentFnDef);
-
-		// Preserve this definition for future reference, and so we don't define
-		// it every time this node is processed.
-		node.optimised = valueFunction;
-
-		return node.optimised;
+		return new ValueFn(currentFnDef);
 	}
 
 	// Function definition
@@ -570,7 +550,10 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTAssignment node, Object data) {
 		Display.Reference reference;
 		int numChildren = node.jjtGetNumChildren();
+
 		Value rightVal = doChild(node, numChildren - 1);
+		if (rightVal == null)
+			throw new ExceptionSemantic("Right value of the assignment cannot resolve to null.");
 
 		if (node.optimised == null) {
 			String name = getTokenOfChild(node, 0);
@@ -595,23 +578,13 @@ public class Parser implements DumbVisitor {
 		}
 
 		if (numChildren > 2) {
-			int currChild = 1; // Keep track of how far it traversed.
 			Value value = reference.getValue();
 
-			// Dereference
-			for (; currChild < numChildren - 2; currChild++) {
-				if (value instanceof ValueList)
-					value = listDereference(node, value, currChild);
-				else if (value instanceof ValueObject)
-					value = objectDereference(node, value, currChild);
-			}
-
-			// Assignment
 			if (value instanceof ValueList) {
-				int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
+				int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
 				((ValueList) value).set(index, rightVal);
 			} else if (value instanceof ValueObject) {
-				String keyName = getTokenOfChild(node, currChild);
+				String keyName = getTokenOfChild(node, numChildren - 2);
 				((ValueObject) value).set(keyName, rightVal);
 			}
 
