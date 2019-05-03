@@ -431,9 +431,7 @@ void returnexpr() #ReturnExpression :
 void valueObject() #ValueObject :
 {}
 {
-  "{" identifier() ":" expression() ( "," identifier() ":" expression() )* "}"
-//  "{" assignment() ( "," assignment() )* "}"
-//  "{" [ assignment() ( "," assignment() )* ] "}" // TBD
+  "{" [ identifier() ":" expression() ( "," identifier() ":" expression() )* ] "}"
 }
 
 
@@ -445,8 +443,7 @@ void valueObject() #ValueObject :
 void valueList() #ValueList :
 {}
 {
-  "[" literal() ( "," literal() )* "]"
-//  "[" [ literal() ( "," literal() )* ] "]" // TBD
+  "[" [ literal() ( "," literal() )* ] "]"
 }
 
 

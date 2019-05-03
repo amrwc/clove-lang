@@ -50,7 +50,7 @@ class FunctionInvocation {
 			: null;
 
 		// Clean up the definitions after the invocation is finished.
-		parser.removeDefinitions(function.getFunctionBody(), null);
+		parser.removeDefinitions(function.getFunctionBody());
 		return returnValue;
 	}
 
