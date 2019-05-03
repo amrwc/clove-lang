@@ -7,11 +7,11 @@ log("list: ", list)
 log()
 
 let sevens = 777
-log("let sevens = 777; #list->append(sevens, 888);")
-#list->append(sevens, 888)
+log("let sevens = 777; list->append(sevens, 888);")
+list->append(sevens, 888)
 log("list: ", list)
-log("listLen = #list->length()")
-let listLen = #list->length()
+log("listLen = list->length()")
+let listLen = list->length()
 log("listLen: ", listLen)
 
 
@@ -28,16 +28,16 @@ let obj = {
 log("obj: ", obj)
 log()
 
-log('#obj.nested->remove("num2")')
-#obj.nested->remove("num2")
+log('obj.nested->remove("num2")')
+obj.nested->remove("num2")
 log("obj: ", obj)
 log()
 
-log('#obj->tryRemove("itsNotHere")')
-#obj->tryRemove("itsNotHere") // No error, since it's just a try.
+log('obj->tryRemove("itsNotHere")')
+obj->tryRemove("itsNotHere") // No error, since it's just a try.
 log("obj: ", obj)
 log()
 
-log('#obj->tryRemove("num", "nested")')
-#obj->tryRemove("num", "nested") // Remove both.
+log('obj->tryRemove("num", "nested")')
+obj->tryRemove("num", "nested") // Remove both.
 log("obj: ", obj)

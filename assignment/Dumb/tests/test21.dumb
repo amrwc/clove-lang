@@ -19,7 +19,7 @@ let list3 = [100, 200, 300]
 log("list3: ", list3)
 list3[1] = 888
 log("list3[1] = 888")
-log("list3[1]: ", list3[1])
+log("list3: ", list3)
 log()
 
 
@@ -37,14 +37,14 @@ let testFn = (x) => {
 }
 
 for (let i = 0; i < 5; i = i + 1) {
-	#listProto->append(10 <= 2)
-	#listProto->append(2)
-	#listProto->append(listProto2)
-	#listProto->append("temp")
-	#listProto->append(temp)
-	#listProto->append(10 + 10 * 4)
-	#listProto->append(testFn(777))
-	#listProto->append(list3[0])
+	listProto->append(10 <= 2)
+	listProto->append(2)
+	listProto->append(listProto2)
+	listProto->append("temp")
+	listProto->append(temp)
+	listProto->append(10 + 10 * 4)
+	listProto->append(testFn(777))
+	listProto->append(list3[0])
 
 	log(listProto)
 	log()
@@ -52,8 +52,8 @@ for (let i = 0; i < 5; i = i + 1) {
 
 log()
 
-log("#listProto3[1]->append(1300)")
-#listProto3[1]->append(1300)
+log("listProto3[1]->append(1300)")
+listProto3[1]->append(1300)
 log("listProto3: ", listProto3)
 
 

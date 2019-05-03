@@ -188,7 +188,6 @@ TOKEN : /* SEPARATORS */
 | < MM: "--" >
 | < ARROW1: "=>" > // Used for arrow functions.
 | < ARROW2: "->" > // Used for prototype functions.
-| < HASH: "#" >    // Used for distinguishing prototype function operation in statement().
 }
 
 TOKEN : /* OPERATOR SYMBOLS */
@@ -247,7 +246,7 @@ void statement() #Statement :
   | whileloop()
   | write()
   | quit()
-  | proto_invoke()
+  | LOOKAHEAD(2) proto_invoke()
   | postfix_expression()
   | prefix_expression()
 }
@@ -294,11 +293,6 @@ void assignment() #Assignment :
   	  {jjtThis.shorthandOperator = operator.image;}
     )
   )
-
-//	Previous implementation -- doesn't support shorthand operations.
-//	identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
-
-//	identifier() "=" expression() #Assignment(2) // OG
 }
 
 
@@ -370,12 +364,7 @@ void quit() #Quit :
 void proto_invoke() #ProtoInvoke :
 {Token t;}
 {
-//  <HASH> dereference() <ARROW2> t = <IDENTIFIER> "("
-//    [ LOOKAHEAD(2) expression() | identifier()
-//    ( "," LOOKAHEAD(2) expression() | identifier() )* ]
-//  ")"
-//  {jjtThis.tokenValue = t.image;}
-  <HASH> dereference() <ARROW2> t = <IDENTIFIER> "("
+  dereference() <ARROW2> t = <IDENTIFIER> "("
     [ expression() ( "," expression() )* ]
   ")"
   {jjtThis.tokenValue = t.image;}
@@ -535,9 +524,9 @@ void primary_expression() :
   | LOOKAHEAD(2) postfix_expression()
   | LOOKAHEAD(literal()) literal()
   | LOOKAHEAD(fn_invoke()) fn_invoke()
+  | LOOKAHEAD(proto_invoke()) proto_invoke()
   | LOOKAHEAD(dereference()) dereference()
   | "(" expression() ")"
-  | proto_invoke()
 }
 
 
@@ -597,9 +586,6 @@ void fn_invoke() #FnInvoke :
 }
 
 
-/**
- * @author amrwc
- */
 void dereference() #Dereference :
 {Token t;}
 {
