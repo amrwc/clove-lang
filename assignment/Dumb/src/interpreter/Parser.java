@@ -288,14 +288,14 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTProtoInvoke node, Object data) {
 		Value value = doChild(node, 0);
 		String protoFunc = node.tokenValue;
-		Value protoArg = (node.jjtGetNumChildren() > 1)
-			? parseProtoArg((SimpleNode) node.jjtGetChild(1))
+		ArrayList<Value> protoArgs = (node.jjtGetNumChildren() > 1)
+			? parseProtoArgs((SimpleNode) node)
 			: null;
 
 		if (value instanceof ValueList) {
-			return ((ValueList) value).execProto(protoFunc, protoArg);
+			return ((ValueList) value).execProto(protoFunc, protoArgs);
 		} else if (value instanceof ValueObject) {
-			return ((ValueObject) value).execProto(protoFunc, protoArg);
+			return ((ValueObject) value).execProto(protoFunc, protoArgs);
 		} else {
 			throw new ExceptionSemantic("Variable \""
 				+ ((SimpleNode) node.jjtGetChild(0)).tokenValue
@@ -310,20 +310,12 @@ public class Parser implements DumbVisitor {
 	 * @param node -- proto_invoke() == ASTProtoInvoke
 	 * @author amrwc
 	 */
-	private Value parseProtoArg(SimpleNode node) {
-		Value value;
-
-		if (node instanceof ASTIdentifier) {
-			Display.Reference ref = scope.findReference(node.tokenValue);
-			if (ref == null) throw new ExceptionSemantic("Variable \"" + node.tokenValue + "\" doesn't exist.");
-			value = ref.getValue();
-		} else {
-			value = (Value) node.jjtAccept(this, null);
+	private ArrayList<Value> parseProtoArgs(SimpleNode node) {
+		ArrayList<Value> values = new ArrayList<Value>();
+		for (int i = 1; i < node.jjtGetNumChildren(); i++) {
+			values.add((Value) node.jjtGetChild(i).jjtAccept(this, null));
 		}
-
-		if (value == null)
-			throw new ExceptionSemantic("The prototype function's argument cannot evaluate to null.");
-		return value;
+		return values;
 	}
 
 	// Function invocation argument list.

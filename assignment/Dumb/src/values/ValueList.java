@@ -28,14 +28,14 @@ public class ValueList extends ValueAbstract {
 	 * Execute a prototype function.
 	 * 
 	 * @param protoFunc
-	 * @param protoArg
+	 * @param protoArgs
 	 * @return Value
 	 * @author amrwc
 	 */
-	public Value execProto(String protoFunc, Value protoArg) {
+	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "append":
-				append(protoArg);
+				protoArgs.forEach(arg -> append(arg));
 				break;
 			case "length":
 				return length();

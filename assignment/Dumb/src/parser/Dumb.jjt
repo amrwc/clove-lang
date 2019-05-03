@@ -370,8 +370,14 @@ void quit() #Quit :
 void proto_invoke() #ProtoInvoke :
 {Token t;}
 {
-  <HASH> dereference() <ARROW2> t = <IDENTIFIER>
-  "(" [ LOOKAHEAD(2) expression() | identifier() ] ")"
+//  <HASH> dereference() <ARROW2> t = <IDENTIFIER> "("
+//    [ LOOKAHEAD(2) expression() | identifier()
+//    ( "," LOOKAHEAD(2) expression() | identifier() )* ]
+//  ")"
+//  {jjtThis.tokenValue = t.image;}
+  <HASH> dereference() <ARROW2> t = <IDENTIFIER> "("
+    [ expression() ( "," expression() )* ]
+  ")"
   {jjtThis.tokenValue = t.image;}
 }
 

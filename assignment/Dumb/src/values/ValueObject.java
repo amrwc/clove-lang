@@ -1,5 +1,6 @@
 package values;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
@@ -27,17 +28,17 @@ public class ValueObject extends ValueAbstract {
 	 * Execute a prototype function.
 	 * 
 	 * @param protoFunc
-	 * @param protoArg
+	 * @param protoArgs
 	 * @return Value
 	 * @author amrwc
 	 */
-	public Value execProto(String protoFunc, Value protoArg) {
+	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "remove":
-				remove(protoArg.stringValue());
+				protoArgs.forEach(arg -> remove(arg.stringValue()));
 				break;
 			case "tryRemove":
-				tryRemove(protoArg.stringValue());
+				protoArgs.forEach(arg -> tryRemove(arg.stringValue()));
 				break;
 			default:
 				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueObject class.");
