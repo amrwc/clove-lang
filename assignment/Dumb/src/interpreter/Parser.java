@@ -297,7 +297,10 @@ public class Parser implements DumbVisitor {
 		} else if (value instanceof ValueObject) {
 			return ((ValueObject) value).execProto(protoFunc, protoArg);
 		} else {
-			throw new ExceptionSemantic(node.tokenValue + " does not support prototype functions.");
+			throw new ExceptionSemantic("Variable \""
+				+ ((SimpleNode) node.jjtGetChild(0)).tokenValue
+				+ "\" of type \"" + value.getClass().getCanonicalName()
+				+ "\" does not support prototype functions.");
 		}
 	}
 
