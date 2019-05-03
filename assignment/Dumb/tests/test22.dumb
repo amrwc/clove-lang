@@ -6,8 +6,9 @@ let list = [100, 200, 300, (x) => {return x}]
 log("list: ", list)
 log()
 
-log("#list->append(777)")
-#list->append(777)
+let sevens = 777
+log("let sevens = 777; #list->append(sevens, 888);")
+#list->append(sevens, 888)
 log("list: ", list)
 log("listLen = #list->length()")
 let listLen = #list->length()
@@ -27,10 +28,16 @@ let obj = {
 log("obj: ", obj)
 log()
 
-log('#obj->remove("num")')
-#obj->remove("num")
+log('#obj.nested->remove("num2")')
+#obj.nested->remove("num2")
 log("obj: ", obj)
+log()
 
 log('#obj->tryRemove("itsNotHere")')
 #obj->tryRemove("itsNotHere") // No error, since it's just a try.
+log("obj: ", obj)
+log()
+
+log('#obj->tryRemove("num", "nested")')
+#obj->tryRemove("num", "nested") // Remove both.
 log("obj: ", obj)
