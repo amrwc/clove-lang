@@ -2,8 +2,8 @@
 
 for file in *.dumb
 do
-	echo "============ $file ============"
-	java -classpath ../bin Dumb < $file
+	echo "============ "$file" ============"
+	java -classpath ../bin Dumb < "$file"
 	echo ""
 	echo ""
 done

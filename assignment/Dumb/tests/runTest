@@ -10,8 +10,8 @@ if [[ -n "$testNum" ]]; then			# If testNum is not empty...
 		file=test0$testNum.dumb			# Prepend the test number with 0.
 	fi
 
-	echo "=== $file ==="
-	java -classpath ../bin Dumb < $file
+	echo "=== "$file" ==="
+	java -classpath ../bin Dumb < "$file" "${@:2}" # "${@:2}" -- all arguments starting from 2.
 else
 	echo "ERROR: Specify the test number in the first argument."
 fi
