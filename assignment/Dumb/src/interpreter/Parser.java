@@ -614,7 +614,7 @@ public class Parser implements DumbVisitor {
 		switch (node.shorthandOperator) {
 			case "pre++":
 				reference.setValue(value.add(one));
-				value =  reference.getValue();
+				value = reference.getValue();
 				break;
 			case "pre--":
 				reference.setValue(value.subtract(one));
