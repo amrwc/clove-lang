@@ -56,3 +56,5 @@
 /DumbTreeConstants.java
 /ASTIfStatement.java
 /ASTModulo.java
+/ASTReadLine.java
+/ASTGetArgs.java

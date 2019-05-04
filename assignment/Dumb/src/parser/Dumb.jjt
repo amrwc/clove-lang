@@ -78,6 +78,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < FALSE: ("FALSE"|"FALSZ") >
 | < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
 | < LET: ("LET"|"VAR"|"ZADEKLARUJ"|"NOWE"|"NOWY") >
+| < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
 }
 
 TOKEN : /* LITERALS */
@@ -524,6 +525,7 @@ void primary_expression() :
   | LOOKAHEAD(proto_invoke()) proto_invoke()
   | LOOKAHEAD(dereference()) dereference()
   | "(" expression() ")"
+  | get_args()
 }
 
 
@@ -588,6 +590,18 @@ void dereference() #Dereference :
 {
   t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
   {jjtThis.tokenValue = t.image;}
+}
+
+
+/**
+ * Get ValueList of command-line arguments.
+ *
+ * @author amrwc
+ */
+void get_args() #GetArgs :
+{}
+{
+  <GETARGS> "(" ")"
 }
 
 
