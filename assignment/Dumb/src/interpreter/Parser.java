@@ -1,6 +1,11 @@
 package interpreter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 import interpreter.Display.Reference;
@@ -8,6 +13,11 @@ import parser.ast.*;
 import values.*;
 
 public class Parser implements DumbVisitor {
+	private String[] argv;
+
+	public Parser(String[] args) {
+		argv = args;
+	}
 	
 	// Scope display handler
 	private Display scope = new Display();
@@ -627,6 +637,19 @@ public class Parser implements DumbVisitor {
 				reference.setValue(value.subtract(one));
 		}
 
+		return value;
+	}
+
+	/**
+	 * Return command-line arguments as a ValueList
+	 * 
+	 * @returns {ValueList} args
+	 * @author amrwc
+	 */
+	public Object visit(ASTGetArgs node, Object data) {
+		ValueList value = new ValueList();
+		for (String arg: argv)
+			value.append(new ValueString(arg));
 		return value;
 	}
 
