@@ -5,22 +5,23 @@ import parser.ast.Dumb;
 import parser.ast.DumbVisitor;
 
 public class Interpreter {
-	
+
 	private static void usage() {
-		System.out.println("Usage: sili [-d1] < <source>");
-		System.out.println("          -d1 -- output AST");
+		System.out.println("\nUsage: Dumb [flags] < <file_name>\n"
+			+ "\nFlags:\n"
+			+ "\t-d1: debug; print the full AST.\n"
+			+ "\t-h, --help: print this message.\n");
 	}
-	
+
 	public static void main(String args[]) {
-		boolean debugAST = false;
-		if (args.length == 1) {
-			if (args[0].equals("-d1"))
-				debugAST = true;
-			else {
-				usage();
-				return;
-			}
+		boolean debugAST = args.length == 1 && args[0].equals("-d1");
+
+		// Print the help message.
+		if (args.length == 1 && (args[0].equals("-h") || args[0].equals("--help"))) {
+			usage();
+			return;
 		}
+
 		Dumb language = new Dumb(System.in);
 		try {
 			ASTCode parser = language.code();
@@ -28,7 +29,7 @@ public class Interpreter {
 			if (debugAST)
 				nodeVisitor = new ParserDebugger();
 			else
-				nodeVisitor = new Parser();
+				nodeVisitor = new Parser(args);
 			parser.jjtAccept(nodeVisitor, null);
 		} catch (Throwable e) {
 			System.out.println(e.getMessage());
