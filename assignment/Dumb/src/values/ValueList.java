@@ -43,6 +43,8 @@ public class ValueList extends ValueAbstract {
 				break;
 			case "copy":
 				return new ValueList(new ArrayList<Value>(internalValue));
+			case "indexOf":
+				return findIndex(protoArgs.get(0));
 			case "length":
 				return length();
 			case "shift":
@@ -58,7 +60,23 @@ public class ValueList extends ValueAbstract {
 		if (v == null) throw new ExceptionSemantic("The argument for ValueList.append() cannot be null.");
 		internalValue.add(v);
 	}
-	
+
+	/**
+	 * Find the index of a Value in the ValueList.
+	 * Returns -1 if it's not found.
+	 * 
+	 * @param {Value} v -- Value to be found
+	 * @return {ValueInteger} index of the Value in the ValueList
+	 */
+	private Value findIndex(Value v) {
+		String strVal = v.stringValue();
+		for (int i = 0; i < internalValue.size(); i++) {
+			if (internalValue.get(i).stringValue().equals(strVal))
+				return new ValueInteger(i);
+		}
+		return new ValueInteger(-1);
+	}
+
 	public Value get(int i) {
 		if (internalValue.size() <= i)
 			throw new ExceptionSemantic("The index " + i + " is out of bounds of the list with length "

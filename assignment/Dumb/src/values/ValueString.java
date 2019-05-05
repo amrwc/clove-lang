@@ -1,5 +1,9 @@
 package values;
 
+import java.util.ArrayList;
+
+import interpreter.ExceptionSemantic;
+
 public class ValueString extends ValueAbstract {
 	
 	private String internalValue;
@@ -12,9 +16,30 @@ public class ValueString extends ValueAbstract {
 	public ValueString(String b) {
 		internalValue = b;
 	}
+
+	/**
+	 * Execute a prototype function.
+	 * 
+	 * @param protoFunc
+	 * @param protoArgs
+	 * @return Value
+	 * @author amrwc
+	 */
+	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
+		switch (protoFunc) {
+			case "length":
+				return length();
+			default:
+				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueString class.");
+		}
+	}
+
+	private Value length() {
+		return new ValueInteger(internalValue.length());
+	}
 	
 	public String getName() {
-		return "string";
+		return "String";
 	}
 	
 	/** Convert this to a String. */

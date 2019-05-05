@@ -1,33 +1,72 @@
 /**
  * Vigenere cipher script -- encipher/decipher
  * a message knowing the keyword.
+ *
+ * NOTE: It only supports lowercase letters.
+ * 
+ * Example usage:
+ * ./run -e verysecretmessagetobeencrypted iamakeyword
  */
 
-let generateTable = (alphabet) => {
-	let a = alphabet->copy()
-	let table = {
-		a: a->copy()
-	}
-
-	for (let i = 1; i < 26; i++) {
-		let char = a->shift()
-    	a->append(char)
-    	table[alphabet[i]] = a->copy()
-	}
-
-	return table
+let alphabet = ['a','b','c','d','e','f','g','h', 'i','j','k','l','m',
+                'n','o','p','q','r','s','t','u','v','w','x','y','z']
+let charCode = {
+  a:97,b:98,c:99,d:100,e:101,f:102,g:103,h:104,i:105,j:106,k:107,l:108,m:109,n:110,
+  o:111,p:112,q:113,r: 114,s:115,t:116,u:117,v:118,w:119,x:120,y:121,z:122
 }
-
-let alphabet = ['a','b','c','d','e','f','g','h',
-				'i','j','k','l','m','n','o','p',
-				'q','r','s','t','u','v','w','x',
-				'y','z']
-// TODO: table is already defined, investigate why function definition leaks variables
-let alphabetTable = generateTable(alphabet)
-//log(alphabetTable)
 let args = get_args()
 
+/**
+ * Generate a table of shifted alphabets
+ *
+ * @param alphabet unchanged English alphabet
+ * @return anonymous object containing a shifted alphabet
+ * for each of the 26 letters
+ */
+let generateTable = (alphabet) => {
+  let a = alphabet->copy()
+  let table = {
+    a: a->copy()
+  }
 
-let message = args[0]
-//log(message)
-let keyword = args[1]
+  for (let i = 1; i < 26; i++) {
+    let char = a->shift()
+    a->append(char)
+    table[alphabet[i]] = a->copy()
+  }
+
+  return table
+}
+
+/**
+ * Encipher or decipher the message with the encryption key.
+ */
+let processMessage = () => {
+  let table = generateTable(alphabet)
+  let msg = args[1]
+  let msgLen = msg->length()
+  let key = args[2]
+  let keyLen = key->length()
+  let action = args[0]
+  let result = ''
+  let j = 0
+
+  if (action == '-e') {
+    for (let i = 0; i < msgLen; i++) {
+      if (j >= keyLen) j = 0
+      result += table[key[j]][charCode[msg[i]] - 97]
+      j++
+    }
+  } else if (action == '-d') {
+    for (let i = 0; i < msgLen; i++) {
+      if (j >= keyLen) j = 0
+      let plainCharIndex = table[key[j]]->indexOf(msg[i])
+      result += table.a[plainCharIndex]
+      j++
+    }
+  }
+
+  return result
+}
+
+log(processMessage())
