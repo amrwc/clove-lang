@@ -588,7 +588,10 @@ void fn_invoke() #FnInvoke :
 void dereference() #Dereference :
 {Token t;}
 {
-  t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
+  t = <IDENTIFIER> (
+    <DOT> identifier()
+  | "[" ( LOOKAHEAD(2) add_expression() | dereference() ) "]"
+  )*
   {jjtThis.tokenValue = t.image;}
 }
 
