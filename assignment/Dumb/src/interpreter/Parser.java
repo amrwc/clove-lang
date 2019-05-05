@@ -281,6 +281,8 @@ public class Parser implements DumbVisitor {
 			return ((ValueList) value).execProto(protoFunc, protoArgs);
 		} else if (value instanceof ValueObject) {
 			return ((ValueObject) value).execProto(protoFunc, protoArgs);
+		 }else if (value instanceof ValueString) {
+			return ((ValueString) value).execProto(protoFunc, protoArgs);
 		} else {
 			throw new ExceptionSemantic("Variable \""
 				+ ((SimpleNode) node.jjtGetChild(0)).tokenValue
@@ -496,6 +498,8 @@ public class Parser implements DumbVisitor {
 					value = listDereference(node, value, currChild);
 				else if (value instanceof ValueObject)
 					value = objectDereference(node, value, currChild);
+				else if (value instanceof ValueString)
+					value = stringDereference(node, value, currChild);
 			}
 
 			return value;
@@ -526,6 +530,18 @@ public class Parser implements DumbVisitor {
 			? getTokenOfChild(node, currChild)
 			: doChild(node, currChild).toString();
 		return valueObject.get(keyName);
+	}
+
+	/**
+	 * Dereference of a character in a ValueString.
+	 * 
+	 * @author amrwc
+	 */
+	private Value stringDereference(SimpleNode node, Value v, int currChild) {
+		ValueString valueString = (ValueString) v;
+		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
+		String str = "" + ((ValueString) valueString).stringValue().charAt(index);
+		return new ValueString(str);
 	}
 
 	/**
