@@ -522,7 +522,9 @@ public class Parser implements DumbVisitor {
 	 */
 	private Value objectDereference(SimpleNode node, Value v, int currChild) {
 		ValueObject valueObject = (ValueObject) v;
-		String keyName = getTokenOfChild(node, currChild);
+		var keyName = node.jjtGetChild(currChild) instanceof ASTIdentifier
+			? getTokenOfChild(node, currChild)
+			: doChild(node, currChild).toString();
 		return valueObject.get(keyName);
 	}
 
@@ -589,7 +591,9 @@ public class Parser implements DumbVisitor {
 				int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
 				((ValueList) value).set(index, rightVal);
 			} else if (value instanceof ValueObject) {
-				String keyName = getTokenOfChild(node, numChildren - 2);
+				String keyName = node.jjtGetChild(numChildren - 2) instanceof ASTIdentifier
+						? getTokenOfChild(node, numChildren - 2)
+						: doChild(node, numChildren - 2).toString();
 				((ValueObject) value).set(keyName, rightVal);
 			}
 

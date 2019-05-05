@@ -3,13 +3,31 @@
  * a message knowing the keyword.
  */
 
+let generateTable = (alphabet) => {
+	let a = alphabet->copy()
+	let table = {
+		a: a->copy()
+	}
+
+	for (let i = 1; i < 26; i++) {
+		let char = a->shift()
+    	a->append(char)
+    	table[alphabet[i]] = a->copy()
+	}
+
+	return table
+}
+
 let alphabet = ['a','b','c','d','e','f','g','h',
 				'i','j','k','l','m','n','o','p',
 				'q','r','s','t','u','v','w','x',
 				'y','z']
+// TODO: table is already defined, investigate why function definition leaks variables
+let alphabetTable = generateTable(alphabet)
+//log(alphabetTable)
 let args = get_args()
 
-let message = args[0]
-let keyword = args[1]
 
-log(message)
+let message = args[0]
+//log(message)
+let keyword = args[1]

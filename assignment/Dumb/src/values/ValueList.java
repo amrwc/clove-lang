@@ -14,7 +14,11 @@ public class ValueList extends ValueAbstract {
 	private ArrayList<Value> internalValue = new ArrayList<Value>();
 	
 	public ValueList() {}
-	
+
+	public ValueList(ArrayList<Value> valueList) {
+		internalValue = valueList;
+	}
+
 	public String getName() {
 		return "List";
 	}
@@ -37,8 +41,12 @@ public class ValueList extends ValueAbstract {
 			case "append":
 				protoArgs.forEach(arg -> append(arg));
 				break;
+			case "copy":
+				return new ValueList(new ArrayList<Value>(internalValue));
 			case "length":
 				return length();
+			case "shift":
+				return internalValue.remove(0);
 			default:
 				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList class.");
 		}
