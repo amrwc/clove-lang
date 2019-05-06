@@ -1,0 +1,12 @@
+// Test constants
+
+log("Constants:")
+log()
+
+log("const exampleConst = 10")
+const exampleConst = 10
+
+log("exampleConst = 1")
+exampleConst = 1
+
+log("exampleConst: ", exampleConst, "			Should be an error.")

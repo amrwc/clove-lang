@@ -126,6 +126,17 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 		return slotNumber;
 	}
 
+	/**
+	 * Define a constant.
+	 * 
+	 * @param name
+	 * @return slot number
+	 * @author amrwc
+	 */
+	int defineConstant(String name) {
+		return defineVariable("constant" + name);
+	}
+
 	/** Add an inner function definition. */
 	void addFunction(FunctionDefinition definition) {
 		functions.put(definition.getName(), definition);

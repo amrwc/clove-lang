@@ -73,6 +73,10 @@ class FunctionInvocation {
 	int defineVariable(String name) {
 		return function.defineVariable(name);
 	}
+
+	int defineConstant(String name) {
+		return function.defineConstant(name);
+	}
 	
 	/** Add a function definition. */
 	void addFunction(FunctionDefinition definition) {
