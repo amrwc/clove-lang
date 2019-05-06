@@ -550,18 +550,23 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTDefinition node, Object data) {
-		Display.Reference reference;
 		Node assignment = node.jjtGetChild(0);
 		String name = getTokenOfChild((SimpleNode) assignment, 0);
 
-		reference = scope.findReference(name);
-		if (reference == null)
-			reference = scope.defineVariable(name);
+		if (scope.findReference(name) == null && scope.findReference("constant" + name) == null) {
+			switch (node.defType) {
+				case "variable":
+					scope.defineVariable(name);
+					break;
+				case "constant":
+					scope.defineConstant(name);
+			}
+		}
 		else
-			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
+			throw new ExceptionSemantic(node.defType.toUpperCase()
+				+ " \"" + name + "\" already exists.");
 
-		// Do the assignment.
-		assignment.jjtAccept(this, data);
+		assignment.jjtAccept(this, data); // Do the assignment.
 		return data;
 	}
 
@@ -578,8 +583,13 @@ public class Parser implements DumbVisitor {
 		if (rightVal == null)
 			throw new ExceptionSemantic("Right value of the assignment cannot resolve to null.");
 
+		String name = getTokenOfChild(node, 0);
 		if (node.optimised == null) {
-			String name = getTokenOfChild(node, 0);
+			// Check for a constant.
+			reference = scope.findReference("constant" + name);
+			if (reference != null)
+				throw new ExceptionSemantic("\"" + name + "\" is a constant and cannot be changed.");
+
 			reference = scope.findReference(name);
 			if (reference == null)
 				throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
