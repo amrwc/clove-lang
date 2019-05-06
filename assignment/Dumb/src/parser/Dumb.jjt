@@ -78,6 +78,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < FALSE: ("FALSE"|"FALSZ") >
 | < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
 | < LET: ("LET"|"VAR"|"ZADEKLARUJ"|"NOWE"|"NOWY") >
+| < CONST: ("CONST"|"CONSTANT"|"STALA") >
 | < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
 }
 
@@ -268,7 +269,8 @@ void call() #Call :
 void definition() #Definition :
 {}
 {
-  <LET> assignment()
+  <LET> assignment() {jjtThis.defType = "variable";}
+| <CONST> assignment() {jjtThis.defType = "constant";}
 }
 
 

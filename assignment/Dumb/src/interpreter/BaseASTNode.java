@@ -29,4 +29,11 @@ public class BaseASTNode {
 	 * @author amrwc
 	 */
 	public String shorthandOperator = null;
+
+	/**
+	 * Stores definition type ("variable"|"constant")
+	 * 
+	 * @author amrwc
+	 */
+	public String defType = null;
 }

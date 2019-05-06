@@ -74,6 +74,10 @@ class Display {
 		return new Reference(currentLevel, display[currentLevel].defineVariable(name));
 	}
 
+	Reference defineConstant(String name) {
+		return new Reference(currentLevel, display[currentLevel].defineConstant(name));
+	}
+
 	/** Find a function.  Return null if it doesn't exist. */
 	FunctionDefinition findFunction(String name) {
 		int level = currentLevel;
