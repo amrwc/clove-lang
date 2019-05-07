@@ -270,7 +270,7 @@ void definition() #Definition :
 {}
 {
   <LET> assignment() {jjtThis.defType = "variable";}
-| <CONST> assignment() {jjtThis.defType = "constant";}
+| <CONST> const_init() {jjtThis.defType = "constant";}
 }
 
 
@@ -296,6 +296,13 @@ void assignment() #Assignment :
   	  {jjtThis.shorthandOperator = operator.image;}
     )
   )
+}
+
+
+void const_init() #ConstInit :
+{}
+{
+  identifier() "=" expression()
 }
 
 
