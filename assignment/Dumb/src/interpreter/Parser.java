@@ -605,14 +605,17 @@ public class Parser implements DumbVisitor {
 
 		String name = getTokenOfChild(node, 0);
 		if (node.optimised == null) {
-			// Check for a constant.
-			reference = scope.findReference("constant" + name);
-			if (reference != null)
-				throw new ExceptionSemantic("\"" + name + "\" is a constant and cannot be reassigned.");
-
 			reference = scope.findReference(name);
-			if (reference == null)
-				throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
+			if (reference == null) {
+				// Try finding a constant.
+				reference = scope.findReference("constant" + name);
+				if (reference == null)
+					throw new ExceptionSemantic("Variable or constant \"" + name + "\" is undefined.");
+
+				// If it's a constant but it's not a dereference into a const obj or list.
+				if (reference != null && numChildren <= 2)
+					throw new ExceptionSemantic("\"" + name + "\" is a constant and cannot be reassigned.");
+			}
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference) node.optimised;
