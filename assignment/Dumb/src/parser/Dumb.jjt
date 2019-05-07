@@ -239,7 +239,7 @@ void statement() #Statement :
 {}
 {
     LOOKAHEAD(call()) call()
-  | definition()
+  | LOOKAHEAD(3) definition()
   | LOOKAHEAD(assignment()) assignment()
   | fndef()
   | block()
@@ -251,6 +251,7 @@ void statement() #Statement :
   | LOOKAHEAD(2) proto_invoke()
   | postfix_expression()
   | prefix_expression()
+  | declaration()
 }
 
 
@@ -262,7 +263,20 @@ void call() #Call :
 
 
 /**
- * Definition using the <LET> keyword.
+ * Declaration of a variable using the <LET> keyword.
+ * 
+ * @author amrwc
+ */
+void declaration() #Declaration :
+{}
+{
+  <LET> identifier() {jjtThis.defType = "variable";}
+| <CONST> identifier() {jjtThis.defType = "constant";}
+}
+
+
+/**
+ * Definition using the <LET> or <CONST> keywords.
  * 
  * @author amrwc
  */

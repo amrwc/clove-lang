@@ -554,6 +554,23 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
+	 * Declaration of a variable.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTDeclaration node, Object data) {
+		if (node.defType == "constant")
+			throw new ExceptionSemantic("Constants must be initialised.");
+
+		String name = getTokenOfChild((SimpleNode) node, 0);
+		if (scope.findReference(name) != null)
+			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
+
+		scope.defineVariable(name);
+		return data;
+	}
+
+	/**
 	 * Definition using the <LET> keyword.
 	 * 
 	 * @author amrwc
@@ -579,6 +596,14 @@ public class Parser implements DumbVisitor {
 		return data;
 	}
 
+	/**
+	 * Initialise a constant.
+	 * 
+	 * NOTE: It's separated from assignment, to separate the concerns.
+	 *       This way constants can be safely defined and initialised.
+	 * 
+	 * @author amrwc
+	 */
 	public Object visit(ASTConstInit node, Object data) {
 		String name = getTokenOfChild(node, 0);
 		Display.Reference reference = scope.findReference("constant" + name);
