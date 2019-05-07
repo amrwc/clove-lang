@@ -172,12 +172,15 @@ public class Parser implements DumbVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	public FunctionDefinition findValueFn(String fnname) {
-		Reference value = scope.findReference(fnname);
-		if (value == null)
+	private FunctionDefinition findValueFn(String fnname) {
+		Reference reference = scope.findReference(fnname);
+		if (reference == null)
+			// Find a constant of the same name.
+			reference = scope.findReference("constant" + fnname);
+		if (reference == null)
 			throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 
-		ValueFn valueFunction = (ValueFn) value.getValue();
+		ValueFn valueFunction = (ValueFn) reference.getValue();
 		return valueFunction.get(); // Extract the FunctionDefinition stored in ValueFn.
 	}
 
@@ -395,9 +398,12 @@ public class Parser implements DumbVisitor {
 
 		Consumer<SimpleNode> removeDefinition = definition -> {
 			if (definition instanceof ASTDefinition) {
-				SimpleNode assignmentNode = (SimpleNode) definition.jjtGetChild(0);
-				String variableName = getTokenOfChild(assignmentNode, 0);
-				scope.removeVariable(variableName);
+				SimpleNode initNode = (SimpleNode) definition.jjtGetChild(0);
+				String variableName = getTokenOfChild(initNode, 0);
+				if (scope.findReference("constant" + variableName) != null)
+					scope.removeVariable("constant" + variableName);
+				else
+					scope.removeVariable(variableName);
 			} else if (definition instanceof ASTFnDef) {
 				String fnName = getTokenOfChild(definition, 0);
 				scope.removeFunction(fnName);
@@ -482,6 +488,9 @@ public class Parser implements DumbVisitor {
 			String name = node.tokenValue;
 			reference = scope.findReference(name);
 			if (reference == null)
+				// Find a constant of the same name.
+				reference = scope.findReference("constant" + name);
+			if (reference == null)
 				throw new ExceptionSemantic("Variable or parameter " + name + " is undefined.");
 			node.optimised = reference;
 		} else
@@ -550,8 +559,8 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTDefinition node, Object data) {
-		Node assignment = node.jjtGetChild(0);
-		String name = getTokenOfChild((SimpleNode) assignment, 0);
+		Node initialisation = node.jjtGetChild(0);
+		String name = getTokenOfChild((SimpleNode) initialisation, 0);
 
 		if (scope.findReference(name) == null && scope.findReference("constant" + name) == null) {
 			switch (node.defType) {
@@ -560,13 +569,25 @@ public class Parser implements DumbVisitor {
 					break;
 				case "constant":
 					scope.defineConstant(name);
+					
 			}
+			initialisation.jjtAccept(this, data); // Do the initialisation.
 		}
 		else
 			throw new ExceptionSemantic(node.defType.toUpperCase()
 				+ " \"" + name + "\" already exists.");
 
-		assignment.jjtAccept(this, data); // Do the assignment.
+		return data;
+	}
+
+	public Object visit(ASTConstInit node, Object data) {
+		String name = getTokenOfChild(node, 0);
+		Display.Reference reference = scope.findReference("constant" + name);
+		Value rightVal = doChild(node, 1);
+		if (rightVal == null)
+			throw new ExceptionSemantic("Right value of the constant's initialisation cannot resolve to null.");
+
+		reference.setValue(rightVal);
 		return data;
 	}
 
@@ -588,7 +609,7 @@ public class Parser implements DumbVisitor {
 			// Check for a constant.
 			reference = scope.findReference("constant" + name);
 			if (reference != null)
-				throw new ExceptionSemantic("\"" + name + "\" is a constant and cannot be changed.");
+				throw new ExceptionSemantic("\"" + name + "\" is a constant and cannot be reassigned.");
 
 			reference = scope.findReference(name);
 			if (reference == null)
