@@ -30,7 +30,7 @@ const args = get_args()
  */
 const generateTable = (alphabet) => {
   let a = alphabet->copy()
-  let table = {
+  const table = {
     a: a->copy()
   }
 
