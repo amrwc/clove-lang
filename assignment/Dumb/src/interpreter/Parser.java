@@ -574,8 +574,7 @@ public class Parser implements DumbVisitor {
 			initialisation.jjtAccept(this, data); // Do the initialisation.
 		}
 		else
-			throw new ExceptionSemantic(node.defType.toUpperCase()
-				+ " \"" + name + "\" already exists.");
+			throw new ExceptionSemantic("Variable or constant \"" + name + "\" already exists.");
 
 		return data;
 	}
