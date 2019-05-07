@@ -8,6 +8,4 @@ const exampleConst = 10
 log("exampleConst: ", exampleConst)
 
 log("exampleConst = 1")
-exampleConst = 1
-
-log("exampleConst: ", exampleConst, "			Should be an error.")
+exampleConst = 1 // Should error
