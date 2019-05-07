@@ -2,9 +2,14 @@
  * Vigenere cipher script -- encipher/decipher
  * a message knowing the keyword.
  *
+ * It is a port of the author's JavaScript app
+ * doing the same thing; available here:
+ * https://github.com/amrwc/ciphers/tree/master/vigenere
+ *
  * NOTE: It only supports lowercase letters.
  * 
- * Example usage:
+ * It takes 3 command-line arguments: action,
+ * message, keyword. Example usage:
  * ./run -e verysecretmessagetobeencrypted iamakeyword
  */
 
