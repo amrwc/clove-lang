@@ -1,5 +1,12 @@
 package interpreter;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -571,7 +578,7 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Definition using the <LET> keyword.
+	 * Definition using the <LET> and <CONST> keywords.
 	 * 
 	 * @author amrwc
 	 */
@@ -586,7 +593,6 @@ public class Parser implements DumbVisitor {
 					break;
 				case "constant":
 					scope.defineConstant(name);
-					
 			}
 			initialisation.jjtAccept(this, data); // Do the initialisation.
 		}
@@ -726,6 +732,52 @@ public class Parser implements DumbVisitor {
 		return value;
 	}
 
+	/**
+	 * Send an HTTP request and return a response.
+	 * 
+	 * @returns HTTP response
+	 * @author amrwc
+	 */
+	public Object visit(ASTHttp node, Object data) {
+		String method = doChild(node, 0).toString();
+		String url = doChild(node, 1).toString();
+
+		switch (method.toLowerCase()) {
+			case "get":
+				String res = httpGetReq(url);
+				return new ValueString(res);
+			default:
+				throw new ExceptionSemantic("Http node doesn't support \"" + method + "\" method.");
+		}
+	}
+
+	/**
+	 * Send an HTTP GET request.
+	 * 
+	 * @read https://docs.oracle.com/javase/tutorial/networking/urls/readingWriting.html
+	 * @param destUrl -- destination URL
+	 * @returns {ValueString} stringified response
+	 * @author amrwc
+	 */
+	private String httpGetReq(String destUrl) {
+		String inputLine;
+		StringBuilder strBuild = new StringBuilder();
+
+		try {
+			URL url = new URL(destUrl);
+			URLConnection conn = url.openConnection();
+			InputStreamReader inStreamReader = new InputStreamReader(conn.getInputStream());
+			BufferedReader in = new BufferedReader(inStreamReader);
+			while ((inputLine = in.readLine()) != null)
+			    strBuild.append(inputLine);
+			in.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return strBuild.toString();
+	}
+	
 	// OR
 	public Object visit(ASTOr node, Object data) {
 		return doChild(node, 0).or(doChild(node, 1));
