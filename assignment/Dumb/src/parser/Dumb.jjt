@@ -80,6 +80,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < LET: ("LET"|"VAR"|"ZADEKLARUJ"|"NOWE"|"NOWY") >
 | < CONST: ("CONST"|"CONSTANT"|"STALA") >
 | < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
+| < HTTP: "HTTP" >
 }
 
 TOKEN : /* LITERALS */
@@ -238,20 +239,21 @@ ASTCode code() #Code :
 void statement() #Statement :
 {}
 {
-    LOOKAHEAD(call()) call()
-  | LOOKAHEAD(3) definition()
-  | LOOKAHEAD(assignment()) assignment()
-  | fndef()
-  | block()
-  | ifstatement()
-  | forloop()
-  | whileloop()
-  | write()
-  | quit()
-  | LOOKAHEAD(2) proto_invoke()
-  | postfix_expression()
-  | prefix_expression()
-  | declaration()
+  LOOKAHEAD(call()) call()
+| LOOKAHEAD(3) definition()
+| LOOKAHEAD(assignment()) assignment()
+| fndef()
+| block()
+| ifstatement()
+| forloop()
+| whileloop()
+| write()
+| quit()
+| LOOKAHEAD(2) proto_invoke()
+| postfix_expression()
+| prefix_expression()
+| declaration()
+| http()
 }
 
 
@@ -259,19 +261,6 @@ void call() #Call :
 {}
 {
   dereference() arglist()
-}
-
-
-/**
- * Declaration of a variable using the <LET> keyword.
- * 
- * @author amrwc
- */
-void declaration() #Declaration :
-{}
-{
-  <LET> identifier() {jjtThis.defType = "variable";}
-| <CONST> identifier() {jjtThis.defType = "constant";}
 }
 
 
@@ -471,6 +460,32 @@ void valueList() #ValueList :
 }
 
 
+/**
+ * Declaration of a variable using the <LET> keyword.
+ * 
+ * @author amrwc
+ */
+void declaration() #Declaration :
+{}
+{
+  <LET> identifier() {jjtThis.defType = "variable";}
+| <CONST> identifier() {jjtThis.defType = "constant";}
+}
+
+
+/**
+ * Sends an HTTP request. Available methods:
+ * GET
+ * 
+ * @author amrwc
+ */
+void http() #Http :
+{}
+{
+  <HTTP> "(" character() "," (character()|identifier()) ")"
+}
+
+
 
 
 
@@ -549,6 +564,7 @@ void primary_expression() :
   | LOOKAHEAD(dereference()) dereference()
   | "(" expression() ")"
   | get_args()
+  | http()
 }
 
 

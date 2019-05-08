@@ -1,0 +1,7 @@
+// Test HTTP
+
+let res = http("GET", "http://example.com")
+
+log()
+log()
+log("res: ", res)
