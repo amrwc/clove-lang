@@ -20,7 +20,7 @@ public class ValueList extends ValueAbstract {
 	}
 
 	public String getName() {
-		return "List";
+		return "ValueList";
 	}
 
 	public int compare(Value v) {
@@ -43,6 +43,8 @@ public class ValueList extends ValueAbstract {
 				break;
 			case "copy":
 				return new ValueList(new ArrayList<Value>(internalValue));
+			case "getClass":
+				return new ValueString(getName());
 			case "indexOf":
 				return findIndex(protoArgs.get(0));
 			case "length":

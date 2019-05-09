@@ -27,6 +27,8 @@ public class ValueString extends ValueAbstract {
 	 */
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
+			case "getClass":
+				return new ValueString(getName());
 			case "length":
 				return length();
 			default:
@@ -39,7 +41,7 @@ public class ValueString extends ValueAbstract {
 	}
 	
 	public String getName() {
-		return "String";
+		return "ValueString";
 	}
 	
 	/** Convert this to a String. */

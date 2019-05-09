@@ -1,14 +1,14 @@
 package interpreter;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import interpreter.Display.Reference;
 import parser.ast.*;
@@ -521,6 +521,12 @@ public class Parser implements DumbVisitor {
 			return value;
 		}
 
+////		System.out.println("HELLO THERE " + reference.getValue());
+//		ValueObject bob = new ValueObject(reference.getValue());
+//		System.out.println("hmm1");
+////		System.out.println("OMG: " + bob.get("userId"));
+//		System.out.println("hmm2");
+
 		return reference.getValue();
 	}
 
@@ -741,10 +747,23 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTHttp node, Object data) {
 		String method = doChild(node, 0).toString();
 		String url = doChild(node, 1).toString();
+		String option = null;
+		if (node.jjtGetNumChildren() > 2)
+			option = doChild(node, 2).toString();
 
 		switch (method.toLowerCase()) {
 			case "get":
 				String res = httpGetReq(url);
+				if (option.equals("json")) {
+//					return new ValueObject(res);
+					JSONObject json;
+					try {
+						json = new JSONObject(res);
+						return new ValueObject(json);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				}
 				return new ValueString(res);
 			default:
 				throw new ExceptionSemantic("Http node doesn't support \"" + method + "\" method.");
@@ -769,7 +788,7 @@ public class Parser implements DumbVisitor {
 			InputStreamReader inStreamReader = new InputStreamReader(conn.getInputStream());
 			BufferedReader in = new BufferedReader(inStreamReader);
 			while ((inputLine = in.readLine()) != null)
-			    strBuild.append(inputLine);
+			    strBuild.append(inputLine.strip());
 			in.close();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -777,7 +796,7 @@ public class Parser implements DumbVisitor {
 
 		return strBuild.toString();
 	}
-	
+
 	// OR
 	public Object visit(ASTOr node, Object data) {
 		return doChild(node, 0).or(doChild(node, 1));
