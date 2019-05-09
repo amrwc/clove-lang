@@ -1,7 +1,7 @@
 // Test HTTP
 
-let res = http("GET", "http://example.com")
+let res = http("GET", "https://jsonplaceholder.typicode.com/posts/1", "json")
 
 log()
 log()
-log("res: ", res)
+log("res: ", res->getClass())
