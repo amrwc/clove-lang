@@ -1,7 +1,25 @@
-// Test HTTP
+// Test HTTP requests
 
-let res = http("GET", "https://jsonplaceholder.typicode.com/posts/1", "json")
+const getReqRes = http("GET", "https://jsonplaceholder.typicode.com/posts/1")
 
 log()
 log()
-log("res: ", res)
+log("getReqRes: ", getReqRes)
+
+
+
+const postContent = "title=Very long title&body=Lorem ipsum&userId=1"
+const postReqRes = http("POST", "https://jsonplaceholder.typicode.com/posts/", postContent)
+
+log()
+log()
+log("postReqRes: ", postReqRes)
+
+
+
+const putContent = "title=foo&body=bar&userId=1"
+const putReqRes = http("PUT", "https://jsonplaceholder.typicode.com/posts/1", putContent)
+
+log()
+log()
+log("putReqRes: ", putReqRes)
