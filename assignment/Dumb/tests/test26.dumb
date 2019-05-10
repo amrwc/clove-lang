@@ -4,4 +4,4 @@ let res = http("GET", "https://jsonplaceholder.typicode.com/posts/1", "json")
 
 log()
 log()
-log("res: ", res->getClass())
+log("res: ", res)

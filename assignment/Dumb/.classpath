@@ -6,6 +6,5 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/ayylmao/Documents/school/LDI/ass2/assignment/Dumb/java-json.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
