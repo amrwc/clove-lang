@@ -7,5 +7,7 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/ayylmao/Documents/school/LDI/ass2/assignment/Dumb/java-json.jar"/>
+	<classpathentry kind="lib" path="/Users/ayylmao/Documents/school/LDI/ass2/assignment/Dumb/jackson-core-0.67.0.7.jar"/>
+	<classpathentry kind="lib" path="/Users/ayylmao/Documents/school/LDI/ass2/assignment/Dumb/jackson-databind-0.67.0.7.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,12 +1,16 @@
 package values;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import interpreter.ExceptionSemantic;
 
@@ -21,11 +25,18 @@ public class ValueObject extends ValueAbstract {
 	public ValueObject() {}
 
 //	public ValueObject(String json) {
-//		HashMap<String, Value> result =
-//			new ObjectMapper().readValue(json, HashMap.class);
-//		
-//		Map<String, MyPojo> typedMap =
-//			mapper.readValue(jsonStream, new TypeReference<Map<String, MyPojo>>() {});
+//		Map<String, Object> result = null;
+//		ObjectMapper objMapper = new ObjectMapper();
+//		try {
+//			result = objMapper.readValue(json, Map.class);
+//		} catch (IOException e) {
+//			System.out.println("HMMMMMMMM2");
+//			e.printStackTrace();
+//		}
+//		System.out.println(result);
+////		internalValue = result;
+////		Map<String, MyPojo> typedMap =
+////			mapper.readValue(jsonStream, new TypeReference<Map<String, MyPojo>>() {});
 //	}
 
 	public ValueObject(JSONObject json) {
@@ -37,7 +48,6 @@ public class ValueObject extends ValueAbstract {
 	}
 
 //	public ValueObject(String jsonString) {
-//		System.out.println("??? ");
 //		JSONObject json;
 //		try {
 //			json = new JSONObject(jsonString);

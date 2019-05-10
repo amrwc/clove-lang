@@ -1,6 +1,7 @@
 package interpreter;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
@@ -9,6 +10,9 @@ import java.util.function.Consumer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 
 import interpreter.Display.Reference;
 import parser.ast.*;
@@ -755,10 +759,15 @@ public class Parser implements DumbVisitor {
 			case "get":
 				String res = httpGetReq(url);
 				if (option.equals("json")) {
-//					return new ValueObject(res);
+//					try {
+//						return new ValueObject(res);
+//					} catch (Exception e) {
+//						e.printStackTrace();
+//					}
 					JSONObject json;
 					try {
 						json = new JSONObject(res);
+						System.out.println("help: " + json);
 						return new ValueObject(json);
 					} catch (JSONException e) {
 						e.printStackTrace();
