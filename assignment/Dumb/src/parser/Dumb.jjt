@@ -482,7 +482,7 @@ void declaration() #Declaration :
 void http() #Http :
 {}
 {
-  <HTTP> "(" character() "," (character()|identifier()) ("," character())* ")"
+  <HTTP> "(" character() "," (character()|identifier()) ("," (character()|dereference()))* ")"
 }
 
 
