@@ -7,9 +7,6 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import interpreter.Display.Reference;
 import parser.ast.*;
 import values.*;
@@ -747,23 +744,10 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTHttp node, Object data) {
 		String method = doChild(node, 0).toString();
 		String url = doChild(node, 1).toString();
-		String option = null;
-		if (node.jjtGetNumChildren() > 2)
-			option = doChild(node, 2).toString();
 
 		switch (method.toLowerCase()) {
 			case "get":
 				String res = httpGetReq(url);
-				if (option.equals("json")) {
-//					return new ValueObject(res);
-					JSONObject json;
-					try {
-						json = new JSONObject(res);
-						return new ValueObject(json);
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
-				}
 				return new ValueString(res);
 			default:
 				throw new ExceptionSemantic("Http node doesn't support \"" + method + "\" method.");

@@ -2,11 +2,6 @@ package values;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import interpreter.ExceptionSemantic;
 
@@ -20,33 +15,6 @@ public class ValueObject extends ValueAbstract {
 
 	public ValueObject() {}
 
-//	public ValueObject(String json) {
-//		HashMap<String, Value> result =
-//			new ObjectMapper().readValue(json, HashMap.class);
-//		
-//		Map<String, MyPojo> typedMap =
-//			mapper.readValue(jsonStream, new TypeReference<Map<String, MyPojo>>() {});
-//	}
-
-	public ValueObject(JSONObject json) {
-		try {
-			internalValue = jsonToMap(json);
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
-	}
-
-//	public ValueObject(String jsonString) {
-//		System.out.println("??? ");
-//		JSONObject json;
-//		try {
-//			json = new JSONObject(jsonString);
-//			internalValue = jsonToMap(json);
-//		} catch (JSONException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 	public ValueObject(HashMap<String, Value> valueObject) {
 		internalValue = valueObject;
 	}
@@ -58,96 +26,6 @@ public class ValueObject extends ValueAbstract {
 	public int compare(Value v) {
 		HashMap<String, Value> map = ((ValueObject) v).internalValue;
 		return internalValue.equals(map) ? 0 : 1;
-	}
-
-	/**
-	 * Create a new ValueObject from a JSON string.
-	 * 
-	 * @source https://stackoverflow.com/a/10514534/10620237
-	 * @param {String} s -- JSON string
-	 * @returns HashMap<String, Value>
-	 */
-//	private HashMap<String, Value> parseString(String str) {
-//		HashMap<String, Value> map = new HashMap<String, Value>();
-//		for (final String entry : str.split(",")) {
-//		    final String[] parts = entry.split(":");
-//		    assert(parts.length == 2) : "Invalid entry: " + entry;
-//		    map.put(parts[0], new ValueString(parts[1]));
-//		}
-//		return map;
-//	}
-
-	/**
-	 * @read https://stackoverflow.com/a/24012023/10620237
-	 * @author https://stackoverflow.com/users/2915208/vikas-gupta
-	 */
-	public static HashMap<String, Value> jsonToMap(JSONObject json) throws JSONException {
-	    HashMap<String, Value> retMap = new HashMap<String, Value>();
-
-	    if(json != JSONObject.NULL)
-	        retMap = toMap(json);
-
-	    return retMap;
-	}
-
-	/**
-	 * @read https://stackoverflow.com/a/24012023/10620237
-	 * @author https://stackoverflow.com/users/2915208/vikas-gupta
-	 */
-	public static HashMap<String, Value> toMap(JSONObject object) throws JSONException {
-		HashMap<String, Value> map = new HashMap<String, Value>();
-		Iterator<String> keysItr = object.keys();
-
-		while(keysItr.hasNext()) {
-			String key = keysItr.next();
-			Object jsonValue = object.get(key);
-			Value value = null;
-
-			if(jsonValue instanceof JSONArray) {
-				value = new ValueList(toList((JSONArray) jsonValue));
-			}
-
-			else if(jsonValue instanceof JSONObject) {
-				value = new ValueObject(toMap((JSONObject) jsonValue));
-			}
-
-			else {
-				value = new ValueString(jsonValue.toString());
-			}
-
-			map.put(key, value);
-		}
-
-		return map;
-	}
-
-	/**
-	 * @read https://stackoverflow.com/a/24012023/10620237
-	 * @author https://stackoverflow.com/users/2915208/vikas-gupta
-	 */
-	public static ArrayList<Value> toList(JSONArray array) throws JSONException {
-		ArrayList<Value> list = new ArrayList<Value>();
-
-		for(int i = 0; i < array.length(); i++) {
-			Object jsonValue = array.get(i);
-			Value value = null;
-
-			if(jsonValue instanceof JSONArray) {
-				value = new ValueList(toList((JSONArray) jsonValue));
-			}
-
-			else if(jsonValue instanceof JSONObject) {
-				value = new ValueObject(toMap((JSONObject) jsonValue));
-			}
-
-			else {
-				value = new ValueString(jsonValue.toString());
-			}
-
-			list.add(value);
-		}
-
-		return list;
 	}
 
 	/**
