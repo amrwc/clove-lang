@@ -1,7 +1,11 @@
 package interpreter;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -744,10 +748,17 @@ public class Parser implements DumbVisitor {
 	public Object visit(ASTHttp node, Object data) {
 		String method = doChild(node, 0).toString();
 		String url = doChild(node, 1).toString();
+		String res = null;
 
-		switch (method.toLowerCase()) {
-			case "get":
-				String res = httpGetReq(url);
+		switch (method.toUpperCase()) {
+			case "GET":
+				res = httpGetReq(url);
+				return new ValueString(res);
+			case "POST":
+				res = httpPostPutReq(url, doChild(node, 2).toString(), "POST");
+				return new ValueString(res);
+			case "PUT":
+				res = httpPostPutReq(url, doChild(node, 2).toString(), "PUT");
 				return new ValueString(res);
 			default:
 				throw new ExceptionSemantic("Http node doesn't support \"" + method + "\" method.");
@@ -780,6 +791,51 @@ public class Parser implements DumbVisitor {
 
 		return strBuild.toString();
 	}
+
+	/**
+	 * @read https://stackoverflow.com/a/29561084/10620237
+	 * @param requestURL
+	 * @param postDataParams
+	 * @return
+	 * @author https://stackoverflow.com/users/4552938/fahim
+	 */
+	private String httpPostPutReq(String requestURL, String postDataParams, String method) {
+		URL url;
+		String response = "";
+
+		try {
+			url = new URL(requestURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(15000);
+			conn.setConnectTimeout(15000);
+			conn.setRequestMethod(method);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+
+			OutputStream os = conn.getOutputStream();
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
+			writer.write(postDataParams);
+
+			writer.flush();
+			writer.close();
+			os.close();
+			int responseCode = conn.getResponseCode();
+
+			if (responseCode == 200 || responseCode == 201) {
+				String line;
+				BufferedReader br = new BufferedReader(
+					new InputStreamReader(conn.getInputStream()));
+				while ((line=br.readLine()) != null)
+                    response+=line;
+			}
+			else
+				response = "" + responseCode;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return response;
+    }
 
 	// OR
 	public Object visit(ASTOr node, Object data) {
