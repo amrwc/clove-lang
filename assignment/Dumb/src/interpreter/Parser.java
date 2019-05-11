@@ -1,13 +1,10 @@
 package interpreter;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
@@ -746,96 +743,90 @@ public class Parser implements DumbVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTHttp node, Object data) {
-		String method = doChild(node, 0).toString();
+		String method = doChild(node, 0).toString().toUpperCase();
 		String url = doChild(node, 1).toString();
+		String body = null;
 		String res = null;
 
-		switch (method.toUpperCase()) {
+		// If there's an attempt to send a request other than GET
+		// without the request body...
+		if (node.jjtGetNumChildren() < 3 && !method.equals("GET"))
+			throw new ExceptionSemantic("The \"" + method
+				+ "\" HTTP method requires a request body.");
+		// ...otherwise, get the request body.
+		else if (!method.equals("GET"))
+			body = doChild(node, 2).toString();
+
+		switch (method) {
 			case "GET":
-				res = httpGetReq(url);
+				res = doHttpReq("GET", url);
 				return new ValueString(res);
 			case "POST":
-				res = httpPostPutReq(url, doChild(node, 2).toString(), "POST");
-				return new ValueString(res);
 			case "PUT":
-				res = httpPostPutReq(url, doChild(node, 2).toString(), "PUT");
+				res = doHttpReq(method, url, body);
 				return new ValueString(res);
 			default:
-				throw new ExceptionSemantic("Http node doesn't support \"" + method + "\" method.");
+				throw new ExceptionSemantic("The http function doesn't support \""
+					+ method + "\" method.");
 		}
 	}
 
 	/**
-	 * Send an HTTP GET request.
+	 * Sends an HTTP request and returns its stringified response.
 	 * 
 	 * @read https://docs.oracle.com/javase/tutorial/networking/urls/readingWriting.html
-	 * @param destUrl -- destination URL
+	 * @param method
+	 * @param requestURL
+	 * @param data
 	 * @returns {ValueString} stringified response
 	 * @author amrwc
 	 */
-	private String httpGetReq(String destUrl) {
-		String inputLine;
-		StringBuilder strBuild = new StringBuilder();
-
-		try {
-			URL url = new URL(destUrl);
-			URLConnection conn = url.openConnection();
-			InputStreamReader inStreamReader = new InputStreamReader(conn.getInputStream());
-			BufferedReader in = new BufferedReader(inStreamReader);
-			while ((inputLine = in.readLine()) != null)
-			    strBuild.append(inputLine.strip());
-			in.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return strBuild.toString();
-	}
-
-	/**
-	 * @read https://stackoverflow.com/a/29561084/10620237
-	 * @param requestURL
-	 * @param postDataParams
-	 * @return
-	 * @author https://stackoverflow.com/users/4552938/fahim
-	 */
-	private String httpPostPutReq(String requestURL, String postDataParams, String method) {
+	private String doHttpReq(String method, String requestURL, String data) {
 		URL url;
 		String response = "";
 
 		try {
 			url = new URL(requestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-			conn.setReadTimeout(15000);
-			conn.setConnectTimeout(15000);
-			conn.setRequestMethod(method);
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
 
-			OutputStream os = conn.getOutputStream();
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(os, "UTF-8"));
-			writer.write(postDataParams);
+			if (!method.equals("GET")) {
+				if (data == null)
+					throw new ExceptionSemantic("The \"" + method
+						+ "\" method's request body cannot evaluate to null.");
 
-			writer.flush();
-			writer.close();
-			os.close();
+				conn.setReadTimeout(15000);
+				conn.setConnectTimeout(15000);
+				conn.setRequestMethod(method);
+				conn.setDoOutput(true);
+
+				OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+				out.write(data);
+				out.flush();
+				out.close();
+			}
 			int responseCode = conn.getResponseCode();
 
 			if (responseCode == 200 || responseCode == 201) {
 				String line;
 				BufferedReader br = new BufferedReader(
 					new InputStreamReader(conn.getInputStream()));
-				while ((line=br.readLine()) != null)
-                    response+=line;
+				response += responseCode + "\n";
+				while ((line = br.readLine()) != null)
+                    response += line.strip();
+				br.close();
 			}
 			else
-				response = "" + responseCode;
+				response += responseCode;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		return response;
-    }
+	}
+
+	private String doHttpReq(String method, String requestURL) {
+		return doHttpReq(method, requestURL, null);
+	}
 
 	// OR
 	public Object visit(ASTOr node, Object data) {
