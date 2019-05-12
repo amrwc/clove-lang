@@ -81,6 +81,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < CONST: ("CONST"|"CONSTANT"|"STALA") >
 | < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
 | < HTTP: "HTTP" >
+| < FILE: ("FILE"|"PLIK") >
 }
 
 TOKEN : /* LITERALS */
@@ -254,6 +255,7 @@ void statement() #Statement :
 | prefix_expression()
 | declaration()
 | http()
+| file()
 }
 
 
@@ -468,14 +470,14 @@ void valueList() #ValueList :
 void declaration() #Declaration :
 {}
 {
-  <LET> identifier() {jjtThis.defType = "variable";}
+  <LET>   identifier() {jjtThis.defType = "variable";}
 | <CONST> identifier() {jjtThis.defType = "constant";}
 }
 
 
 /**
  * Sends an HTTP request. Available methods:
- * GET
+ * GET, POST, PUT, DELETE
  * 
  * @author amrwc
  */
@@ -483,9 +485,24 @@ void http() #Http :
 {}
 {
   <HTTP> "("
-         (character()|dereference())
-     "," (character()|dereference())
-    ("," (character()|dereference()))*
+          ( character() | dereference() )
+      "," ( character() | dereference() )
+    ( "," ( character() | dereference() ) )*
+  ")"
+}
+
+
+/**
+ * Creates a new file and writes to it.
+ * 
+ * @author amrwc
+ */
+void file() #File :
+{}
+{
+  <FILE> "("
+        ( character() | dereference() ) // File path
+    "," ( character() | dereference() ) // Content
   ")"
 }
 

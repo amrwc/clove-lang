@@ -1,11 +1,19 @@
 package interpreter;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 
 import interpreter.Display.Reference;
@@ -835,6 +843,24 @@ public class Parser implements DumbVisitor {
 
 	private String doHttpReq(String method, String requestURL) {
 		return doHttpReq(method, requestURL, null);
+	}
+
+	/**
+	 * @read https://stackoverflow.com/a/23221771/10620237
+	 */
+	public Object visit(ASTFile node, Object data) {
+		Charset utf8 = StandardCharsets.UTF_8;
+		List<String> lines = Arrays.asList("1st line", "2nd line");
+
+		try {
+		    Files.write(Paths.get("file5.txt"), lines, utf8);
+		    Files.write(Paths.get("file6.txt"), lines, utf8,
+		            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+		} catch (IOException e) {
+		    e.printStackTrace();
+		}
+
+		return data;
 	}
 
 	// OR
