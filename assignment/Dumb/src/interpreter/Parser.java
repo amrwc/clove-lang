@@ -748,23 +748,22 @@ public class Parser implements DumbVisitor {
 		String body = null;
 		String res = null;
 
-		// If there's an attempt to send a request other than GET
-		// without the request body...
-		if (node.jjtGetNumChildren() < 3 && !method.equals("GET"))
-			throw new ExceptionSemantic("The \"" + method
-				+ "\" HTTP method requires a request body.");
-		// ...otherwise, get the request body.
-		else if (!method.equals("GET"))
-			body = doChild(node, 2).toString();
-
 		switch (method) {
 			case "GET":
-				res = doHttpReq("GET", url);
+			case "DELETE": {
+				res = doHttpReq(method, url);
 				return new ValueString(res);
+			}
 			case "POST":
-			case "PUT":
+			case "PUT": {
+				if (node.jjtGetNumChildren() < 3)
+					throw new ExceptionSemantic("The \"" + method
+						+ "\" HTTP method needs a request body.");
+				else
+					body = doChild(node, 2).toString();
 				res = doHttpReq(method, url, body);
 				return new ValueString(res);
+			}
 			default:
 				throw new ExceptionSemantic("The http function doesn't support \""
 					+ method + "\" method.");
@@ -789,20 +788,30 @@ public class Parser implements DumbVisitor {
 			url = new URL(requestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-			if (!method.equals("GET")) {
-				if (data == null)
+			switch(method) {
+				case "GET":
+				case "DELETE":
+					break;
+				case "POST":
+				case "PUT": {
+					if (data == null)
+						throw new ExceptionSemantic("The \"" + method
+							+ "\" method's request body cannot evaluate to null.");
+	
+					conn.setReadTimeout(15000);
+					conn.setConnectTimeout(15000);
+					conn.setRequestMethod(method);
+					conn.setDoOutput(true);
+	
+					OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+					out.write(data);
+					out.flush();
+					out.close();
+					break;
+				}
+				default:
 					throw new ExceptionSemantic("The \"" + method
-						+ "\" method's request body cannot evaluate to null.");
-
-				conn.setReadTimeout(15000);
-				conn.setConnectTimeout(15000);
-				conn.setRequestMethod(method);
-				conn.setDoOutput(true);
-
-				OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-				out.write(data);
-				out.flush();
-				out.close();
+						+ "\" method is not supported by the http function.");
 			}
 			int responseCode = conn.getResponseCode();
 
@@ -810,9 +819,9 @@ public class Parser implements DumbVisitor {
 				String line;
 				BufferedReader br = new BufferedReader(
 					new InputStreamReader(conn.getInputStream()));
-				response += responseCode + "\n";
+				response += responseCode;
 				while ((line = br.readLine()) != null)
-                    response += line.strip();
+                    response += "\n" + line.strip();
 				br.close();
 			}
 			else
