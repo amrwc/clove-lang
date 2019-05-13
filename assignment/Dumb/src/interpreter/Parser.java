@@ -11,9 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 
 import interpreter.Display.Reference;
@@ -856,6 +858,7 @@ public class Parser implements DumbVisitor {
 	 * @param (child0) {String} option ("create"/"overwrite"|"open"/"append")
 	 * @param (child1) {String/ValueString} path
 	 * @param (child2) {String/Value} content
+	 * @returns path to the file
 	 * @author amrwc
 	 */
 	public Object visit(ASTFile node, Object data) {
@@ -888,6 +891,37 @@ public class Parser implements DumbVisitor {
 		}
 
 		return new ValueString(path);
+	}
+
+	/**
+	 * Returns a random value between min inclusive and max exclusive.
+	 * 
+	 * @param (child0) {int/float/ValueInteger/ValueRational} min
+	 * @param (child1) {int/float/ValueInteger/ValueRational} max
+	 * @returns random value in range
+	 * @author amrwc
+	 */
+	public Object visit(ASTRandom node, Object data) {
+		Value min = doChild(node, 0);
+		Value max = doChild(node, 1);
+
+		if (min instanceof ValueRational || max instanceof ValueRational) {
+			double minDouble = min.doubleValue();
+			double maxDouble = max.doubleValue();
+			double result = ThreadLocalRandom.current().nextDouble(minDouble, maxDouble);
+			return new ValueRational(result);
+		}
+		
+		else if (min instanceof ValueInteger && max instanceof ValueInteger) {
+			long minLong = min.longValue();
+			long maxLong = max.longValue();
+			long result = ThreadLocalRandom.current().nextLong(minLong, maxLong);
+			return new ValueInteger(result);
+		}
+
+		else
+			throw new ExceptionSemantic("The random() function requires the arguments"
+					+ "to be either of ValueInteger or ValueRational type.");
 	}
 
 	// OR

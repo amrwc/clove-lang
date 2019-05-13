@@ -82,6 +82,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
 | < HTTP: "HTTP" >
 | < FILE: ("FILE"|"PLIK") >
+| < RANDOM: ("RANDOM"|"LOSUJ") >
 }
 
 TOKEN : /* LITERALS */
@@ -591,6 +592,7 @@ void primary_expression() :
   | get_args()
   | http()
   | file()
+  | random()
 }
 
 
@@ -670,6 +672,24 @@ void get_args() #GetArgs :
 {}
 {
   <GETARGS> "(" ")"
+}
+
+
+/**
+ * Get a random value between min inclusive and max exclusive.
+ *
+ * Example usage:
+ * const rand = random(1, 50)
+ *
+ * @author amrwc
+ */
+void random() #Random :
+{}
+{
+  <RANDOM> "("
+        add_expression() // Min value
+    "," add_expression() // Max value
+  ")"
 }
 
 

@@ -6,7 +6,8 @@ const obj = {
 		subkey1: "word",
 		subkey2: "number"
 	},
-	key3: ["listItem1", 23, ["nestedListItem"]]
+	key3: ["listItem1", 23, ["nestedListItem"]],
+	key4: () => {return "word2"}
 }
 
 let path = file("overwrite", "./fileFuncTest.txt", obj)
