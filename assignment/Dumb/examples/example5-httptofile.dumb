@@ -1,0 +1,11 @@
+/**
+ * Makes an HTTP GET request and writes
+ * the response to a file.
+ */
+
+const url = "https://jsonplaceholder.typicode.com/posts?userId=1"
+const response = http("GET", url)
+
+const path = "example5-httptofile.json"
+file("overwrite", path, response.body)
+log("Successfully written the response's body to the file: ", path)

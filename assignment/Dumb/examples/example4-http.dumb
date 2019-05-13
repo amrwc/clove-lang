@@ -1,0 +1,20 @@
+/**
+ * Makes a couple of HTTP requests and logs
+ * the responses.
+ */
+
+let url
+let body
+let response
+
+// POST request.
+url = "https://jsonplaceholder.typicode.com/posts"
+body = "title=Example title&body=Lorem ipsum&userId=1"
+response = http("POST", url, body)
+log("POST request response: ", response.code, response.body)
+log()
+
+// GET request.
+url = "https://jsonplaceholder.typicode.com/posts/1"
+response = http("GET", url)
+log("GET request response: ", response.code, response.body)
