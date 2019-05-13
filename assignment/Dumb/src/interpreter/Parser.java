@@ -751,20 +751,18 @@ public class Parser implements DumbVisitor {
 	/**
 	 * Sends an HTTP request and returns the response.
 	 * 
-	 * @returns HTTP response
+	 * @returns {ValueObject} HTTP response code and body
 	 * @author amrwc
 	 */
 	public Object visit(ASTHttp node, Object data) {
 		String method = doChild(node, 0).toString().toUpperCase();
 		String url = doChild(node, 1).toString();
 		String body = null;
-		String res = null;
 
 		switch (method) {
 			case "GET":
 			case "DELETE": {
-				res = doHttpReq(method, url);
-				return new ValueString(res);
+				return doHttpReq(method, url);
 			}
 			case "POST":
 			case "PUT": {
@@ -773,8 +771,7 @@ public class Parser implements DumbVisitor {
 						+ "\" HTTP method needs a request body.");
 				else
 					body = doChild(node, 2).toString();
-				res = doHttpReq(method, url, body);
-				return new ValueString(res);
+				return doHttpReq(method, url, body);
 			}
 			default:
 				throw new ExceptionSemantic("The http function doesn't support \""
@@ -783,18 +780,22 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Sends an HTTP request and returns its stringified response.
+	 * Sends an HTTP request and returns its response
+	 * in a ValueObject.
 	 * 
 	 * @read https://docs.oracle.com/javase/tutorial/networking/urls/readingWriting.html
 	 * @param method
 	 * @param requestURL
 	 * @param data
-	 * @returns {ValueString} stringified response
+	 * @returns {ValueObject} response code and body
 	 * @author amrwc
 	 */
-	private String doHttpReq(String method, String requestURL, String data) {
+	private ValueObject doHttpReq(String method, String requestURL, String data) {
 		URL url;
-		String response = "";
+		String responseBody = "";
+		ValueObject res = new ValueObject();
+		res.add("code", null);
+		res.add("body", null);
 
 		try {
 			url = new URL(requestURL);
@@ -826,26 +827,26 @@ public class Parser implements DumbVisitor {
 						+ "\" method is not supported by the http function.");
 			}
 			int responseCode = conn.getResponseCode();
+			res.set("code", new ValueInteger(responseCode));
 
 			if (responseCode == 200 || responseCode == 201) {
 				String line;
 				BufferedReader br = new BufferedReader(
 					new InputStreamReader(conn.getInputStream()));
-				response += responseCode;
 				while ((line = br.readLine()) != null)
-                    response += "\n" + line.strip();
+                    responseBody += line.strip() + "\n";
 				br.close();
 			}
-			else
-				response += responseCode;
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			res.set("body", new ValueString(responseBody));
 		}
 
-		return response;
+		return res;
 	}
 
-	private String doHttpReq(String method, String requestURL) {
+	private ValueObject doHttpReq(String method, String requestURL) {
 		return doHttpReq(method, requestURL, null);
 	}
 
