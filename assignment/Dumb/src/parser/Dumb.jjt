@@ -485,9 +485,9 @@ void http() #Http :
 {}
 {
   <HTTP> "("
-          ( character() | dereference() )
-      "," ( character() | dereference() )
-    ( "," ( character() | dereference() ) )*
+          ( character() | dereference() )    // Method ("GET"|"POST"|"PUT"|"DELETE")
+      "," ( character() | dereference() )    // Url
+    ( "," ( character() | dereference() ) )* // Request body
   ")"
 }
 
@@ -495,13 +495,17 @@ void http() #Http :
 /**
  * Creates a new file and writes to it.
  * 
+ * Usage:
+ * file("open", "file.txt", "content")
+ * 
  * @author amrwc
  */
 void file() #File :
 {}
 {
   <FILE> "("
-        ( character() | dereference() ) // File path
+          character()                   // Option ("create"/"overwrite"|"open"/"append")
+    "," ( character() | dereference() ) // File path
     "," ( character() | dereference() ) // Content
   ")"
 }
@@ -586,6 +590,7 @@ void primary_expression() :
   | "(" expression() ")"
   | get_args()
   | http()
+  | file()
 }
 
 

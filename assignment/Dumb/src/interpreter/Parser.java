@@ -846,21 +846,48 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
+	 * Writes text content to a file.
+	 * 
+	 * Example usage:
+	 * file("append", "file.txt", content)
+	 * ...where content can be any Value type.
+	 * 
 	 * @read https://stackoverflow.com/a/23221771/10620237
+	 * @param (child0) {String} option ("create"/"overwrite"|"open"/"append")
+	 * @param (child1) {String/ValueString} path
+	 * @param (child2) {String/Value} content
+	 * @author amrwc
 	 */
 	public Object visit(ASTFile node, Object data) {
+		String option = doChild(node, 0).toString();
+		String path = doChild(node, 1).toString();
+		Value content = doChild(node, 2);
+
+		// Transform the content to an Iterable.
+		List<String> lines = Arrays.asList(content.toString());
 		Charset utf8 = StandardCharsets.UTF_8;
-		List<String> lines = Arrays.asList("1st line", "2nd line");
 
 		try {
-		    Files.write(Paths.get("file5.txt"), lines, utf8);
-		    Files.write(Paths.get("file6.txt"), lines, utf8,
-		            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+			switch (option) {
+				case "create":
+				case "overwrite":
+					Files.write(Paths.get(path), lines, utf8);
+					break;
+				case "open":
+				case "append":
+					Files.write(Paths.get(path), lines, utf8,
+			            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+					break;
+				default:
+					throw new ExceptionSemantic("There is no \"" + option
+						+ "\" option in the file function.");
+			}
 		} catch (IOException e) {
+			System.err.println("Problem writing to the \"" + path + "\" file.");
 		    e.printStackTrace();
 		}
 
-		return data;
+		return new ValueString(path);
 	}
 
 	// OR
