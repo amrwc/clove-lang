@@ -1,0 +1,35 @@
+/**
+ * Creates a linked-list and writes it to a file.
+ */
+
+// Node constructor.
+function Node(value) {
+	return {
+		val: value
+	}
+}
+
+let node = Node(random(0, 65000)) // Initialise a node.
+let firstNode = node // Store the reference to the first node.
+
+// Create a linked-list of random length.
+const len = random(10, 1000)
+for (let i = 0; i < len; i++) {
+	node.next = Node(random(0, 65000))
+	node = node.next
+}
+
+node = firstNode // Get to the start of the list.
+let listValues = ""
+listValues += node.val
+
+for (let i = 0; i < len; i++) {
+	node = node.next
+	listValues += "->"
+	listValues += node.val
+}
+
+// Write the values from the list to a file.
+const path = "example3-filewrite-output.txt"
+file("append", path, listValues)
+log("Successfully written to the file: ", path)

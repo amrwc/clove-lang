@@ -1,4 +1,10 @@
-// Test File write
+/**
+ * Test File write
+ *
+ * NOTE: It can only create a single subdirectory
+ * (anything nested deeper than 1 directory will
+ * casue an error).
+ */
 
 const obj = {
 	key1: 10,

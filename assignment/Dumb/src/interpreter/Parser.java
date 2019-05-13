@@ -1,7 +1,6 @@
 package interpreter;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
@@ -9,6 +8,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
@@ -744,7 +744,7 @@ public class Parser implements DumbVisitor {
 			args.append(new ValueString(arg));
 		if (args.size() == 0)
 			System.out.println("Warning: The program asked for command-line arguments, "
-					+ "but none were passed in.");
+				+ "but none were passed in.");
 		return args;
 	}
 
@@ -865,34 +865,39 @@ public class Parser implements DumbVisitor {
 	 */
 	public Object visit(ASTFile node, Object data) {
 		String option = doChild(node, 0).toString();
-		String path = doChild(node, 1).toString();
+		String pathStr = doChild(node, 1).toString();
+		Path path = Paths.get(pathStr);
+		Path parentDir = path.getParent();
 		Value content = doChild(node, 2);
 
-		// Transform the content to an Iterable.
-		List<String> lines = Arrays.asList(content.toString());
+		// Transform the content to an Iterable; end it with a new line.
+		List<String> lines = Arrays.asList(content.toString(), "");
 		Charset utf8 = StandardCharsets.UTF_8;
 
 		try {
+			if (parentDir != null && Files.notExists(parentDir)) 
+				Files.createDirectory(parentDir);
+
 			switch (option) {
 				case "create":
 				case "overwrite":
-					Files.write(Paths.get(path), lines, utf8);
+					Files.write(path, lines, utf8);
 					break;
 				case "open":
 				case "append":
-					Files.write(Paths.get(path), lines, utf8,
-			            StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+					Files.write(path, lines, utf8,
+						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
 					break;
 				default:
 					throw new ExceptionSemantic("There is no \"" + option
 						+ "\" option in the file function.");
 			}
-		} catch (IOException e) {
-			System.err.println("Problem writing to the \"" + path + "\" file.");
+		} catch (Exception e) {
+			System.err.println("Problem writing to the \"" + pathStr + "\" file.");
 		    e.printStackTrace();
 		}
 
-		return new ValueString(path);
+		return new ValueString(pathStr);
 	}
 
 	/**
