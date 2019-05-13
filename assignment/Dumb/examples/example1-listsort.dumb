@@ -4,8 +4,10 @@
 
 let temp
 function sortList(list) {
-	for (let j = 0; j < list->length(); j++) {
-		//let swapped = false
+	let swapped = true // Optimisation to not run the outer loop until the end.
+	let j = 0
+	while (swapped == true && j++ < list->length()) {
+		swapped = false
 		for (let i = 0; i < list->length() - 1; i++) {
 			if (list[i] > list[i + 1]) {
 				temp = list[i]
@@ -14,9 +16,6 @@ function sortList(list) {
 				swapped = true
 			}
 		}
-		//log(swapped)
-		//if (swapped == false)
-		//	break
 	}
 }
 
