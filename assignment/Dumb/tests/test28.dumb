@@ -1,0 +1,22 @@
+// Test the randomiser
+
+let randInt = random(0, 10)
+while (randInt != 0) {
+	randInt = random(0, 10)
+	log("Random number between 0 and 10: ", randInt)
+}
+log()
+
+
+let randFloat = random(0.7, 0.8)
+while (randFloat < 0.77) {
+	randFloat = random(0.7, 0.8)
+	log("Random number between 0.7 and 0.8: ", randFloat)
+}
+log()
+
+
+const min = 10
+const max = 15.5
+const random2 = random(min, max)
+log("Random number between ", min, " and ", max, ": ", random2) 

@@ -316,4 +316,9 @@ public class ParserDebugger implements DumbVisitor {
 		dump(node, data);
 		return null;
 	}
+
+	public Object visit(ASTRandom node, Object data) {
+		dump(node, data);
+		return null;
+	}
 }
