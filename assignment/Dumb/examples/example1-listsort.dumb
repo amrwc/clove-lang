@@ -1,0 +1,32 @@
+/**
+ * Bubble sort of a list of integers.
+ */
+
+let temp
+function sortList(list) {
+	for (let j = 0; j < list->length(); j++) {
+		//let swapped = false
+		for (let i = 0; i < list->length() - 1; i++) {
+			if (list[i] > list[i + 1]) {
+				temp = list[i]
+				list[i] = list[i + 1]
+				list[i + 1] = temp
+				swapped = true
+			}
+		}
+		//log(swapped)
+		//if (swapped == false)
+		//	break
+	}
+}
+
+
+// Generate a list of random integers between 1 and 1000.
+const list = []
+for (let i = 0; i < 10; i++) {
+	list->append(random(1, 1001))
+}
+log(list)
+
+sortList(list)
+log(list)
