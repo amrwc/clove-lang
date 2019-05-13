@@ -733,20 +733,23 @@ public class Parser implements DumbVisitor {
 	}
 
 	/**
-	 * Return command-line arguments as a ValueList
+	 * Returns command-line arguments as a ValueList.
 	 * 
 	 * @returns {ValueList} args
 	 * @author amrwc
 	 */
 	public Object visit(ASTGetArgs node, Object data) {
-		ValueList value = new ValueList();
+		ValueList args = new ValueList();
 		for (String arg: argv)
-			value.append(new ValueString(arg));
-		return value;
+			args.append(new ValueString(arg));
+		if (args.size() == 0)
+			System.out.println("Warning: The program asked for command-line arguments, "
+					+ "but none were passed in.");
+		return args;
 	}
 
 	/**
-	 * Send an HTTP request and return a response.
+	 * Sends an HTTP request and returns the response.
 	 * 
 	 * @returns HTTP response
 	 * @author amrwc
