@@ -1,23 +1,30 @@
 /**
- * Working example of the data structures code
- * snippet from the language specification document.
+ * Demonstrates an example of a compound data structure
+ * -- a class-like object.
  */
 
-const Maths = {
-  multiply: (x, y) => {return x * y},
-  divide:   (x, y) => {return x / y},
-  modulo:   (x, y) => {return x % y},
-  square:   (x)    => {return x * x},
-  power:    (x, y) => {
-    let res = x
-    for (let i = 1; i < y; i++)
-      res *= x
-    return res
+const Car = {
+  cars: [],
+
+  get: (carInstance, index) => { return carInstance.cars[index] },
+
+  set: (carInstance, brand, year, colour) => {
+    carInstance.cars->append({
+      brand: brand,
+      year: year,
+      colour: colour
+    })
   }
 }
 
-log("Maths.multiply(7, 6):  ", Maths.multiply(7, 6))
-log("Maths.divide(73, 5):   ", Maths.divide(73, 5))
-log("Maths.modulo(73, 5):   ", Maths.modulo(73, 5))
-log("Maths.square(18):      ", Maths.square(18))
-log("Maths.power(2, 6):     ", Maths.power(2, 6))
+log("const vehicle = Car")
+const vehicle = Car
+
+log('vehicle.set(vehicle, "Toyota", "2002", "red")')
+vehicle.set(vehicle, "Toyota", "2002", "red")
+log('vehicle.set(vehicle, "Fiat", "1992", "blue")')
+vehicle.set(vehicle, "Fiat", "1992", "blue")
+log()
+
+log("vehicle.get(vehicle, 0):	", vehicle.get(vehicle, 0))
+log("vehicle.get(vehicle, 1):	", vehicle.get(vehicle, 1))
