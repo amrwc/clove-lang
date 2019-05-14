@@ -1,10 +1,10 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[
   a4paper, % Set the paper size -- the document class only affects plainTeX.
-  % top=2.0cm,
-  % right=2.0cm,
-  % bottom=2.5cm,
-  % left=3.0cm
+  top=2.0cm,
+  right=2.0cm,
+  bottom=2.0cm,
+  left=2.0cm
 ]{geometry}
 
 
@@ -52,6 +52,8 @@
 % https://tex.stackexchange.com/a/283202
 \usepackage[shortcuts]{extdash}
 
+
+
 \begin{document}
 \begin{center}
   \Huge {Dumb-lang}\\[0.25cm]
@@ -59,43 +61,70 @@
   b.morawiec1@unimail.derby.ac.uk}\par
 \end{center}
 
-Dumb (Sili$^2$) is a Java-based, interpreted, general-purpose programming language. Syntactically and feature-wise it resembles JavaScript.\par
+\noindent Dumb (Sili$^2$) is a Java-based, interpreted, dynamically typed, general-purpose programming language. Syntactically and feature-wise it resembles JavaScript.\par
 
-\section{Syntax}
-Many parts of the language are conventional, such as for-loops, while-loops, if-statements, or function declarations.\par
+Many parts of the language are conventional and are identical to some other languages, such as for-loops, while-loops, if-statements, or variable and function declarations.\par
 
-Many keywords included in the language that are, for instance, required to use the aforementioned functionalities can be expressed in several ways \==~the language contains translations of the commonly used keywords into Polish, and can be easily expanded with any other languages by altering the grammar slightly. This enables users who are not well-versed in English to start programming and familiarise themselves with the programming concepts more easily.
+Many keywords included in the language that are, for instance, required to use the aforementioned functionalities can be expressed in several ways \==~Dumb-lang contains Polish translations of commonly used keywords, and can be easily expanded with other languages by altering the grammar slightly. This enables users who are not well-versed in English to start programming and familiarise themselves with the programming concepts more easily.
 
-\subsection{Function definitions}
-The language allows the user to define functions in multiple ways:
 
-\subsubsection{Traditional, JavaScript-esque `function' keyword}
-function square(val) {
-  return val * val
-}
-const tenSquared = square(10)
 
-\subsubsection{Value functions}
-let square = fn(val) {
-  return val * val
-}
-const tenSquared = square(10)
+\subsection*{Data types}
+% Dumb-lang supports the following data types:
 
-\subsection{Prototype functions}
+% \begin{itemize}
+%   \itemsep-0.25em
+%   \item integers,
+%   \item rational numbers,
+%   \item strings,
+%   \item booleans,
+%   \item anonymous objects,
+%   \item lists, and
+%   \item anonymous functions.
+% \end{itemize}
+
+Dumb-lang supports the following data types: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions.\par
+
+The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous functions are unique in that they just act as containers for function definitions as opposed to being a standalone implementation of a type \==~this way they can be easily passed around as values.
+
+
+
+\subsection*{Declarations and definitions}
+Declarations and definitions in Dumb are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. In the code snippet below, there are examples of some common declarations and definitions.
+
+\import{./code-snippets/}{declarations-and-definitions.tex}
+
+
+
+\subsection*{Prototype functions}
+The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation.
+
 \import{./code-snippets/}{prototype-functions.tex}
 
 
 
+\subsection*{Data structures}
+The supported data types allow for creating compound data structures. The code below demonstrates an example usage of anonymous objects and functions to imitate a class-like structure.
 
-\section{Features}
+\import{./code-snippets/}{data-structures.tex}
+
+
+
+
+
+
+
+
+
+\section*{Features}
 Dumb-lang has some useful built-in features, a couple of which allow for interaction with the outside world. This section introduces them in detail.
 
-\subsection{random()}
+% \subsection*{random()}
 
-\subsection{file()}
+\subsection*{file()}
 
 
-\subsection{http()}
+\subsection*{http()}
 
 
 \end{document}

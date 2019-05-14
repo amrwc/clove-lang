@@ -1,0 +1,25 @@
+\vspace{-2.5em}
+\begin{center}
+\begin{minipage}[t]{1\textwidth}
+\begin{listing}[H]
+\begin{spacing}{0.6}
+\begin{minted}[frame=single]{JavaScript}
+const Car = {
+  cars: [],
+  get: (carInstance, index) => { return carInstance.cars[index] },
+  set: (carInstance, brand, year, colour) => {
+    carInstance.cars->append({
+      brand: brand,
+      year: year,
+      colour: colour
+    })
+  }
+}
+const vehicle = Car
+vehicle.set(vehicle, "Toyota", "2002", "red")
+log(vehicle.get(vehicle, 0)) // {colour: red, year: 2002, brand: Toyota}
+\end{minted}
+\end{spacing}
+\end{listing}
+\end{minipage}
+\end{center}
