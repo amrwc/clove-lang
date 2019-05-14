@@ -1,0 +1,11 @@
+# Ignore all...
+*
+
+# ...except for:
+!.gitignore
+!*.tex
+!code-snippets
+!code-snippets/*
+
+# Prevent '__latexindent_temp.tex' from being included
+__*

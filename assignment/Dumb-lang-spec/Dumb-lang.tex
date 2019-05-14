@@ -1,0 +1,101 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[
+  a4paper, % Set the paper size -- the document class only affects plainTeX.
+  % top=2.0cm,
+  % right=2.0cm,
+  % bottom=2.5cm,
+  % left=3.0cm
+]{geometry}
+
+
+%----------------------------------
+% LINE SPACING, POSITION SETTING
+%----------------------------------
+\usepackage{setspace}
+\usepackage{graphicx}
+
+%----------------------------------
+% CHARACTERS, LANGUAGE, AND FORMATTING PRESETS
+%----------------------------------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[british]{babel}
+
+%----------------------------------
+% MINTED: SOURCE CODE LISTINGS
+%----------------------------------
+\usepackage[draft=true,section]{minted} % TODO: Remove draft option for coloured syntax highlighting.
+
+% REMOVE SYNTAX ERROR HIGHLIGHTING
+% https://tex.stackexchange.com/a/343506
+\makeatletter
+\AtBeginEnvironment{minted}{\dontdofcolorbox}
+\def\dontdofcolorbox{\renewcommand\fcolorbox[4][]{##4}}
+\makeatother
+
+%----------------------------------
+% MISC
+%----------------------------------
+% PREVENT PAGE BREAK AROUND \include{}
+% Usage: \include*{filename} % Remember, no extension!
+% https://stackoverflow.com/a/1210233/10620237
+\usepackage{newclude}
+
+% Nested input.
+% https://tex.stackexchange.com/a/60227
+\usepackage{import}
+
+%----------------------------------
+% PREVENT LINE BREAK ON en-dash -- NOTE: It must be the very last package!
+%   Usage: \==~
+%----------------------------------
+% https://tex.stackexchange.com/a/283202
+\usepackage[shortcuts]{extdash}
+
+\begin{document}
+\begin{center}
+  \Huge {Dumb-lang}\\[0.25cm]
+  \small {Bartlomiej Adam Morawiec\\
+  b.morawiec1@unimail.derby.ac.uk}\par
+\end{center}
+
+Dumb (Sili$^2$) is a Java-based, interpreted, general-purpose programming language. Syntactically and feature-wise it resembles JavaScript.\par
+
+\section{Syntax}
+Many parts of the language are conventional, such as for-loops, while-loops, if-statements, or function declarations.\par
+
+Many keywords included in the language that are, for instance, required to use the aforementioned functionalities can be expressed in several ways \==~the language contains translations of the commonly used keywords into Polish, and can be easily expanded with any other languages by altering the grammar slightly. This enables users who are not well-versed in English to start programming and familiarise themselves with the programming concepts more easily.
+
+\subsection{Function definitions}
+The language allows the user to define functions in multiple ways:
+
+\subsubsection{Traditional, JavaScript-esque `function' keyword}
+function square(val) {
+  return val * val
+}
+const tenSquared = square(10)
+
+\subsubsection{Value functions}
+let square = fn(val) {
+  return val * val
+}
+const tenSquared = square(10)
+
+\subsection{Prototype functions}
+\import{./code-snippets/}{prototype-functions.tex}
+
+
+
+
+\section{Features}
+Dumb-lang has some useful built-in features, a couple of which allow for interaction with the outside world. This section introduces them in detail.
+
+\subsection{random()}
+
+\subsection{file()}
+
+
+\subsection{http()}
+
+
+\end{document}
