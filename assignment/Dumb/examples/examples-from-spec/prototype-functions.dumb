@@ -1,0 +1,18 @@
+/**
+ * Demonstrates prototype functions.
+ */
+
+const list1 = [13, "foo", ["bar", "baz"]]
+log("list1: ", list1)
+
+const nestedBar = list1[2]->shift() // bar
+log("const nestedBar = list1[2]->shift()")
+log("nestedBar: ", nestedBar, ", list1: ", list1)
+log()
+
+
+const obj = { ten: 10, twenty: 20 }
+log("obj: ", obj)
+obj->remove("ten")
+log('obj->remove("ten")')
+log("obj: ", obj)

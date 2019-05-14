@@ -298,7 +298,7 @@ public class Parser implements DumbVisitor {
 			return ((ValueList) value).execProto(protoFunc, protoArgs);
 		} else if (value instanceof ValueObject) {
 			return ((ValueObject) value).execProto(protoFunc, protoArgs);
-		 }else if (value instanceof ValueString) {
+		} else if (value instanceof ValueString) {
 			return ((ValueString) value).execProto(protoFunc, protoArgs);
 		} else {
 			throw new ExceptionSemantic("Variable \""

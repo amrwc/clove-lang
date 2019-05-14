@@ -1,6 +1,5 @@
 /**
- * Working example of the declarations and definitions
- * code snippet from the language specification document.
+ * Demonstrates declarations and definitions.
  */
 
 let foo // Variable declaration
