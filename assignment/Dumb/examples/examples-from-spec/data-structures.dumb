@@ -1,0 +1,23 @@
+/**
+ * Working example of the data structures code
+ * snippet from the language specification document.
+ */
+
+const Maths = {
+  multiply: (x, y) => {return x * y},
+  divide:   (x, y) => {return x / y},
+  modulo:   (x, y) => {return x % y},
+  square:   (x)    => {return x * x},
+  power:    (x, y) => {
+    let res = x
+    for (let i = 1; i < y; i++)
+      res *= x
+    return res
+  }
+}
+
+log("Maths.multiply(7, 6):  ", Maths.multiply(7, 6))
+log("Maths.divide(73, 5):   ", Maths.divide(73, 5))
+log("Maths.modulo(73, 5):   ", Maths.modulo(73, 5))
+log("Maths.square(18):      ", Maths.square(18))
+log("Maths.power(2, 6):     ", Maths.power(2, 6))

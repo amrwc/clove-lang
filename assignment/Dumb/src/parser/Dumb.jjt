@@ -200,6 +200,8 @@ TOKEN : /* OPERATOR SYMBOLS */
   < ASSIGN: "=" >
 | < PEQ: "+=" >
 | < MEQ: "-=" >
+| < TEQ: "*=" >
+| < DEQ: "/=" >
 | < UEQ: "@=" >
 | < EQ: "==" >
 | < GT: ">" >
@@ -296,9 +298,23 @@ void assignment() #Assignment :
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
+    LOOKAHEAD(2)
     (
 	  // identifier -= expression
       identifier() operator = <MEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    LOOKAHEAD(2)
+    (
+	  // identifier *= expression
+      identifier() operator = <TEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    (
+	  // identifier /= expression
+      identifier() operator = <DEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
   )

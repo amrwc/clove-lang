@@ -1,6 +1,11 @@
+/**
+ * Working example of the declarations and definitions
+ * code snippet from the language specification document.
+ */
+
 let foo // Variable declaration
-let num = 77 // 'let' and 'var' keywords are equivalent
-var str = "bar"
+let num = 77
+var str = "bar" // 'let' and 'var' keywords are equivalent
 const pi = 3.14 // Constant definition
 let flag = false
 
@@ -12,11 +17,11 @@ const square1 = fn(val) {return val * val} // There are 4 'function' aliases
 const square2 = (val) => {return val * val} // Arrow function
 
 let emptyList = []
-let list = [str, pi, "baz", square1] // List definition
+let list = ["foo", "bar", "baz", 2000] // List definition
 let emptyObject = {}
-let obj = { // Object definition
+let object = { // Object definition
   key: "value",
-  square2: square2
+  foo: 12
 }
 
 
@@ -37,9 +42,9 @@ log()
 log("emptyList: ", emptyList)
 log("list: ", list)
 log("emptyObject: ", emptyObject)
-log("obj: ", obj)
+log("object: ", object)
 
 log()
 
-log("list[1] * list[1] + list[3](20): ", list[1] * list[1] + list[3](20))
-log("obj.square2(10): ", obj.square2(10))
+log("list[0] + list[1] + list[3]: ", list[0] + list[1] + list[3])
+log("object.foo: ", object.foo)
