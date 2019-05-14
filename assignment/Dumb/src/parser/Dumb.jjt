@@ -459,7 +459,7 @@ void valueObject() #ValueObject :
 void valueList() #ValueList :
 {}
 {
-  "[" [ literal() ( "," literal() )* ] "]"
+  "[" [ expression() ( "," expression() )* ] "]"
 }
 
 
