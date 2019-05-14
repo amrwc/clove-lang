@@ -1,0 +1,45 @@
+let foo // Variable declaration
+let num = 77 // 'let' and 'var' keywords are equivalent
+var str = "bar"
+const pi = 3.14 // Constant definition
+let flag = false
+
+function sumAndDouble(param1, param2) {
+  let sum = param1 + param2
+  return sum * 2
+}
+const square1 = fn(val) {return val * val} // There are 4 'function' aliases
+const square2 = (val) => {return val * val} // Arrow function
+
+let emptyList = []
+let list = [str, pi, "baz", square1] // List definition
+let emptyObject = {}
+let obj = { // Object definition
+  key: "value",
+  square2: square2
+}
+
+
+log("foo: ", foo)
+log("num: ", num)
+log("str: ", str)
+log("pi: ", pi)
+log("flag: ", flag)
+
+log()
+
+log("sumAndDouble(2, 5): ", sumAndDouble(2, 5))
+log("square1(5): ", square1(5))
+log("square2(7): ", square2(7))
+
+log()
+
+log("emptyList: ", emptyList)
+log("list: ", list)
+log("emptyObject: ", emptyObject)
+log("obj: ", obj)
+
+log()
+
+log("list[1] * list[1] + list[3](20): ", list[1] * list[1] + list[3](20))
+log("obj.square2(10): ", obj.square2(10))
