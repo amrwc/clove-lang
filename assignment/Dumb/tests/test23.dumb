@@ -53,3 +53,15 @@ b2 = b1++ + b1++
 log("b2 = b1++ + b1++")
 log("b2: ", b2)
 log("b1: ", b1)
+log()
+
+
+let mult = 10
+log("mult: ", mult)
+mult *= mult
+log("mult *= mult: ", mult)
+
+let div = 10
+log("div: ", div)
+div /= div
+log("div /= div: ", div)

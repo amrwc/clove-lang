@@ -673,6 +673,12 @@ public class Parser implements DumbVisitor {
 					break;
 				case "-=":
 					reference.setValue(value.subtract(rightVal));
+					break;
+				case "*=":
+					reference.setValue(value.mult(rightVal));
+					break;
+				case "/=":
+					reference.setValue(value.div(rightVal));
 			}
 			return data;
 		}
