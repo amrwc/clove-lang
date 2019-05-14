@@ -1,0 +1,31 @@
+\vspace{-2.5em}
+\begin{center}
+\begin{minipage}[t]{1\textwidth}
+\begin{listing}[H]
+\begin{spacing}{0.6}
+\begin{minted}[frame=single]{JavaScript}
+let foo // Variable declaration
+let num = 77
+var str = "bar" // 'let' and 'var' keywords are equivalent
+const pi = 3.14 // Constant definition
+let flag = false
+
+function sumAndDouble(param1, param2) {
+  let sum = param1 + param2
+  return sum * 2
+}
+const square1 = fn(val) {return val * val} // There are 4 'function' aliases
+const square2 = (val) => {return val * val} // Arrow function
+
+let emptyList = []
+let list = ["foo", "bar", "baz", 2000] // List definition
+let emptyObject = {}
+let object = { // Object definition
+  key: "value",
+  foo: 12
+}
+\end{minted}
+\end{spacing}
+\end{listing}
+\end{minipage}
+\end{center}
