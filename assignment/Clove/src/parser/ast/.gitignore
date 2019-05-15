@@ -62,3 +62,9 @@
 /ASTDereference.java
 /ASTFnDef.java
 /ASTIfStatement.java
+/ASTFunctionDefinition.java
+/ASTValueFunction.java
+/ASTArgumentList.java
+/ASTFunctionInvocation.java
+/ASTFunctionBody.java
+/ASTParameterList.java
