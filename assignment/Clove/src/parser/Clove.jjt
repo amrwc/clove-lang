@@ -236,6 +236,7 @@ ASTCode code() #Code :
 
 
 
+
 /***********************************************
  *                 Statements                  *
  ***********************************************/
@@ -246,11 +247,11 @@ void statement() #Statement :
   LOOKAHEAD(call()) call()
 | LOOKAHEAD(3) definition()
 | LOOKAHEAD(assignment()) assignment()
-| fndef()
+| function_definition()
 | block()
-| ifstatement()
-| forloop()
-| whileloop()
+| if_statement()
+| for_loop()
+| while_loop()
 | write()
 | quit()
 | LOOKAHEAD(2) proto_invoke()
@@ -265,7 +266,7 @@ void statement() #Statement :
 void call() #Call :
 {}
 {
-  dereference() arglist()
+  dereference() argument_list()
 }
 
 
@@ -321,19 +322,12 @@ void assignment() #Assignment :
 }
 
 
-void const_init() #ConstInit :
+void function_definition() #FunctionDefinition :
 {}
 {
-  identifier() "=" expression()
-}
-
-
-void fndef() #FnDef :
-{}
-{
-  <FUNCTION> identifier() parmlist() "{" 
-    fnbody()
-    [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ] 
+  <FUNCTION> identifier() parameter_list() "{" 
+    function_body()
+    [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ] 
   "}"
 }
 
@@ -345,7 +339,7 @@ void block() #Block :
 }
 
 
-void ifstatement() #IfStatement :
+void if_statement() #IfStatement :
 {}
 {
   <IF> "(" expression() ")" statement() 
@@ -353,14 +347,14 @@ void ifstatement() #IfStatement :
 }
 
 
-void forloop() #ForLoop :
+void for_loop() #ForLoop :
 {}
 {
   <FOR> "(" definition() ";" expression() ";" ( LOOKAHEAD(3) assignment() | expression() ) ")" statement()
 }
 
 
-void whileloop() #WhileLoop :
+void while_loop() #WhileLoop :
 {}
 {
   <WHILE> "(" expression() ")" statement()
@@ -403,79 +397,39 @@ void proto_invoke() #ProtoInvoke :
 }
 
 
-/**
- * Anonymous function.
- * 
- * @author amrwc
- */
-void fnval() #FnVal :
-{}
+void prefix_expression() #IncrementDecrement(1) :
+{Token operator;}
 {
+  LOOKAHEAD(2)
   (
-    <FUNCTION> parmlist() "{"
-      fnbody()
-      [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-  	"}"
+	// ++identifier
+  	operator = <PP> identifier()
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
   |
-  ( // Arrow function:
-    parmlist() <ARROW1> "{"
-      fnbody()
-      [ <RETURN> returnexpr() {jjtThis.fnHasReturn = true;} ]
-  	"}"
+  (
+	// --identifier
+    operator = <MM> identifier()
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
 }
 
 
-void arglist() #ArgList :
-{}
+void postfix_expression() #IncrementDecrement(1) :
+{Token operator;}
 {
-  "(" [ expression() ] ( "," expression() )* ")"
-}
-
-
-void parmlist() #Parmlist :
-{}
-{
-  "(" [ identifier() ( "," identifier() )* ] ")"
-}
-
-
-void fnbody() #FnBody :
-{}
-{
-  ( statement() )* 
-}
-
-
-void returnexpr() #ReturnExpression :
-{}
-{
-  expression()
-}
-
-
-/**
- * Anonymous object declaration.
- * 
- * @author amrwc
- */
-void valueObject() #ValueObject :
-{}
-{
-  "{" [ identifier() ":" expression() ( "," identifier() ":" expression() )* ] "}"
-}
-
-
-/**
- * List declaration.
- * 
- * @author amrwc
- */
-void valueList() #ValueList :
-{}
-{
-  "[" [ expression() ( "," expression() )* ] "]"
+  LOOKAHEAD(2)
+  (
+	// identifier++
+  	identifier() operator = <PP>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
+  |
+  (
+	// identifier--
+    identifier() operator = <MM>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
 }
 
 
@@ -525,6 +479,56 @@ void file() #File :
     "," ( character() | dereference() ) // File path
     "," ( character() | dereference() ) // Content
   ")"
+}
+
+
+
+
+
+
+/***********************************************
+ *               Sub-statements                *
+ ***********************************************/
+
+void identifier() #Identifier :
+{Token t;}
+{
+  t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+}
+
+
+void const_init() #ConstInit :
+{}
+{
+  identifier() "=" expression()
+}
+
+
+void argument_list() #ArgumentList :
+{}
+{
+  "(" [ expression() ] ( "," expression() )* ")"
+}
+
+
+void parameter_list() #ParameterList :
+{}
+{
+  "(" [ identifier() ( "," identifier() )* ] ")"
+}
+
+
+void function_body() #FunctionBody :
+{}
+{
+  ( statement() )* 
+}
+
+
+void return_expression() #ReturnExpression :
+{}
+{
+  expression()
 }
 
 
@@ -601,50 +605,14 @@ void primary_expression() :
     prefix_expression()
   | LOOKAHEAD(2) postfix_expression()
   | LOOKAHEAD(literal()) literal()
-  | LOOKAHEAD(fn_invoke()) fn_invoke()
+  | LOOKAHEAD(function_invocation()) function_invocation()
   | LOOKAHEAD(proto_invoke()) proto_invoke()
   | LOOKAHEAD(dereference()) dereference()
-  | "(" expression() ")"
   | get_args()
   | http()
   | file()
   | random()
-}
-
-
-void prefix_expression() #IncrementDecrement(1) :
-{Token operator;}
-{
-  LOOKAHEAD(2)
-  (
-	// ++identifier
-  	operator = <PP> identifier()
-  	{jjtThis.shorthandOperator = "pre" + operator.image;}
-  )
-  |
-  (
-	// --identifier
-    operator = <MM> identifier()
-  	{jjtThis.shorthandOperator = "pre" + operator.image;}
-  )
-}
-
-
-void postfix_expression() #IncrementDecrement(1) :
-{Token operator;}
-{
-  LOOKAHEAD(2)
-  (
-	// identifier++
-  	identifier() operator = <PP>
-  	{jjtThis.shorthandOperator = "post" + operator.image;}
-  )
-  |
-  (
-	// identifier--
-    identifier() operator = <MM>
-  	{jjtThis.shorthandOperator = "post" + operator.image;}
-  )
+  | "(" expression() ")"
 }
 
 
@@ -655,16 +623,16 @@ void literal() :
   | character()
   | rational()
   | bool()
-  | fnval()
-  | valueObject()
-  | valueList()
+  | value_function()
+  | value_object()
+  | value_list()
 }
 
 
-void fn_invoke() #FnInvoke :
+void function_invocation() #FunctionInvocation :
 {}
 {
-  dereference() arglist()
+  dereference() argument_list()
 }
 
 
@@ -709,10 +677,18 @@ void random() #Random :
 }
 
 
-void identifier() #Identifier :
-{Token t;}
-{
-  t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+
+
+
+
+/***********************************************
+ *                 Literals                    *
+ ***********************************************/
+
+void integer() #Integer : 
+{Token t;} 
+{ 
+  t = <INTEGER_LITERAL> {jjtThis.tokenValue = t.image;}
 }
 
 
@@ -720,13 +696,6 @@ void character() #Character :
 {Token t;}
 {
   t = <STRING_LITERAL> {jjtThis.tokenValue = t.image;}
-}
-
-
-void integer() #Integer : 
-{Token t;} 
-{ 
-  t = <INTEGER_LITERAL> {jjtThis.tokenValue = t.image;}
 }
 
 
@@ -742,4 +711,52 @@ void bool() :
 { 
     <TRUE> #True
   | <FALSE> #False
+}
+
+
+/**
+ * Anonymous function.
+ * 
+ * @author amrwc
+ */
+void value_function() #ValueFunction :
+{}
+{
+  (
+    <FUNCTION> parameter_list() "{"
+      function_body()
+      [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+  |
+  ( // Arrow function:
+    parameter_list() <ARROW1> "{"
+      function_body()
+      [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+}
+
+
+/**
+ * Anonymous object declaration.
+ * 
+ * @author amrwc
+ */
+void value_object() #ValueObject :
+{}
+{
+  "{" [ identifier() ":" expression() ( "," identifier() ":" expression() )* ] "}"
+}
+
+
+/**
+ * List declaration.
+ * 
+ * @author amrwc
+ */
+void value_list() #ValueList :
+{}
+{
+  "[" [ expression() ( "," expression() )* ] "]"
 }

@@ -1,0 +1,17 @@
+/**
+ * Demonstrates use of higher-order functions.
+ */
+
+function repeat(n, action) {
+  for (let i = 0; i < n; i++)
+    action(i)
+}
+
+repeat(10, (param) => {log(param)})
+log()
+
+const list = []
+repeat(8, (n) => {
+  list->append(n)
+})
+log(list)
