@@ -95,7 +95,7 @@ public class ValueList extends ValueAbstract {
 		internalValue.set(i, v);
 	}
 
-	// To be used in Dumb-lang because it resolves to a Value.
+	// To be used in Clove-lang because it resolves to a Value.
 	private Value length() {
 		return new ValueInteger((long) internalValue.size());
 	}

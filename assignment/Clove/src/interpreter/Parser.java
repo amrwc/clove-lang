@@ -21,7 +21,7 @@ import interpreter.Display.Reference;
 import parser.ast.*;
 import values.*;
 
-public class Parser implements DumbVisitor {
+public class Parser implements CloveVisitor {
 	private String[] argv;
 
 	public Parser(String[] args) {
@@ -63,7 +63,7 @@ public class Parser implements DumbVisitor {
 		return data;
 	}
 	
-	// Execute a Dumb program
+	// Execute a Clove program
 	public Object visit(ASTCode node, Object data) {
 		return doChildren(node, data);	
 	}

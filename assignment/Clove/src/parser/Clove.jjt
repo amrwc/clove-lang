@@ -30,10 +30,10 @@ options {
   JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
-PARSER_BEGIN(Dumb)
+PARSER_BEGIN(Clove)
 package parser.ast;
-public class Dumb {}
-PARSER_END(Dumb)
+public class Clove {}
+PARSER_END(Clove)
 
 /*
  *
