@@ -92,14 +92,14 @@ Many keywords included in the language can be expressed in several ways \==~Clov
 %   \item anonymous functions.
 % \end{itemize}
 
-Clove-lang supports the following data types: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
+The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
 
 All the types evaluate to values that, in most cases, are treated the same way \==~they can be passed around, nested (if the type allows) and returned from functions. It applies to both literals and assigned/dereferenced values.
 
 
 
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. In the code snippet below, there are examples of some common declarations and definitions\footnote{This and more demonstrative code snippets are available in the `demonstrations' directory.}.
+Declarations and definitions in Clove are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: with JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. Examples of some common declarations and definitions below\footnote{More code snippets are available in the `demonstrations' directory. For example programs, go to `examples'.}.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
