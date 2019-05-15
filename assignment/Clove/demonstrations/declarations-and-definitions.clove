@@ -2,23 +2,23 @@
  * Demonstrates declarations and definitions.
  */
 
-let foo // Variable declaration
-let num = 77
-var str = "bar" // 'let' and 'var' keywords are equivalent
-const pi = 3.14 // Constant definition
+let foo                                     // Variable declaration
+let num = 77                                // Variable definition
+var str = "bar"                             // 'let' and 'var' are equivalent
+const pi = 3.14                             // Constant definition
 let flag = false
 
-function sumAndDouble(param1, param2) {
+function sumAndDouble(param1, param2) {     // Function definition
   let sum = param1 + param2
   return sum * 2
 }
-const square1 = fn(val) {return val * val} // There are 4 'function' aliases
+const square1 = fn(val) {return val * val}  // Value-function definition
 const square2 = (val) => {return val * val} // Arrow function
 
-let emptyList = []
-let list = ["foo", "bar", "baz", 2000] // List definition
-let emptyObject = {}
-let object = { // Object definition
+let emptyList = []                          // List declaration
+let list = ["foo", "bar", "baz", 2000]      // List definition
+let emptyObject = {}                        // Anonymous object declaration
+let object = {                              // Anonymous object definition
   key: "value",
   foo: 12
 }
