@@ -9,7 +9,8 @@ let response
 url = "https://jsonplaceholder.typicode.com/posts/1"
 response = http("GET", url)
 
-log("GET request response: ", response.code, response.body)
+log("GET request response: ", response.code)
+log(response.body)
 log()
 log()
 
@@ -19,7 +20,8 @@ url = "https://reqres.in/api/users/2"
 body = "name=John Doe&job=director"
 response = http("POST", url, body)
 
-log("POST request response: ", response.code, response.body)
+log("POST request response: ", response.code)
+log(response.body)
 log()
 log()
 
@@ -29,7 +31,8 @@ url = "https://reqres.in/api/users/2"
 body = "name=John Doe&job=janitor"
 response = http("PUT", url, body)
 
-log("PUT request response: ", response.code, response.body)
+log("PUT request response: ", response.code)
+log(response.body)
 log()
 log()
 
@@ -38,4 +41,5 @@ log()
 url = "https://jsonplaceholder.typicode.com/posts/1"
 response = http("DELETE", url)
 
-log("DELETE request response: ", response.code, response.body)
+log("DELETE request response: ", response.code)
+log(response.body)

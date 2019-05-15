@@ -4,7 +4,7 @@ fileName="$1"							# Get the first command line argument.
 
 if [[ -n "$fileName" ]]; then			# If fileName is not empty...
 	echo "=== "$fileName" ==="
-	java -classpath ../bin Dumb < "$fileName" "${@:2}" # "${@:2}" -- all arguments starting from 2.
+	java -classpath ../bin Clove < "$fileName" "${@:2}" # "${@:2}" -- all arguments starting from 2.
 else
 	echo "ERROR: Specify the file name in the first argument."
 fi

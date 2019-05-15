@@ -1,13 +1,13 @@
 package interpreter;
 
 import parser.ast.ASTCode;
-import parser.ast.Dumb;
-import parser.ast.DumbVisitor;
+import parser.ast.Clove;
+import parser.ast.CloveVisitor;
 
 public class Interpreter {
 
 	private static void usage() {
-		System.out.println("\nUsage: Dumb [flags] < <file_name>\n"
+		System.out.println("\nUsage: Clove [flags] < <file_name>\n"
 			+ "\nFlags:\n"
 			+ "\t-d1: debug; print the full AST.\n"
 			+ "\t-h, --help: print this message.\n");
@@ -22,10 +22,10 @@ public class Interpreter {
 			return;
 		}
 
-		Dumb language = new Dumb(System.in);
+		Clove language = new Clove(System.in);
 		try {
 			ASTCode parser = language.code();
-			DumbVisitor nodeVisitor;
+			CloveVisitor nodeVisitor;
 			if (debugAST)
 				nodeVisitor = new ParserDebugger();
 			else

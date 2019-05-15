@@ -1,9 +1,9 @@
 #!/bin/sh
 
-for file in *.dumb
+for file in *.clove
 do
 	echo "============ "$file" ============"
-	java -classpath ../bin Dumb < "$file"
+	java -classpath ../bin Clove < "$file"
 	echo ""
 	echo ""
 done

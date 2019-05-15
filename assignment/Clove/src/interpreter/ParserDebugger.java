@@ -2,7 +2,7 @@ package interpreter;
 
 import parser.ast.*;
 
-public class ParserDebugger implements DumbVisitor {
+public class ParserDebugger implements CloveVisitor {
 	
 	private int indent = 0;
 	
@@ -28,7 +28,7 @@ public class ParserDebugger implements DumbVisitor {
 		return data;
 	}
 	
-	// Execute a Dumb program
+	// Execute a Clove program
 	public Object visit(ASTCode node, Object data) {
 		dump(node, data);
 		return data;
