@@ -1,0 +1,9 @@
+/**
+ * Demonstrates a constant's immutability.
+ */
+
+const list = [7, 8, 9]
+log(list)
+list->append(10)
+log(list)
+list = ["something", "else"] // Error, since it's a constant

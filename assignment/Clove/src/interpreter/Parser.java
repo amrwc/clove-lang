@@ -23,13 +23,11 @@ import values.*;
 
 public class Parser implements CloveVisitor {
 	private String[] argv;
+	private Display scope = new Display(); // Scope display handler
 
 	public Parser(String[] args) {
 		argv = args;
 	}
-
-	// Scope display handler
-	private Display scope = new Display();
 
 	// Get the ith child of a given node.
 	private static SimpleNode getChild(SimpleNode node, int childIndex) {
