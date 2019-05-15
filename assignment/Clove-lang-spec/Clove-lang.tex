@@ -1,11 +1,20 @@
 \documentclass[12pt,a4paper]{article}
 \usepackage[
   a4paper, % Set the paper size -- the document class only affects plainTeX.
-  top=2.0cm,
+  top=1.0cm,
   right=2.0cm,
-  bottom=2.0cm,
+  bottom=1.0cm,
   left=2.0cm
 ]{geometry}
+\pagenumbering{gobble} % Disable page numbering
+
+%----------------------------------
+% FOOTNOTE
+%   - bottom -- push to the bottom of a page
+%   - hang -- flushes the footnote marker to the left margin of the page
+%   - flushmargin -- flushes the text to the left margin as well
+%----------------------------------
+\usepackage[bottom,hang,flushmargin]{footmisc}
 
 
 %----------------------------------
@@ -56,16 +65,16 @@
 
 \begin{document}
 \begin{center}
-  \Huge {Clove-lang}\\[0.25cm]
-  \small {Bartlomiej Adam Morawiec\\
-  b.morawiec1@unimail.derby.ac.uk}\par
+  \Huge {Clove-lang}
 \end{center}
 
-\noindent Clove (Sili$^2$) is a Java-based, interpreted, dynamically typed, general-purpose programming language. Syntactically and feature-wise it resembles JavaScript.\par
+\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily an imperative language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned.\par
 
-Many parts of the language are conventional and are identical to some other languages, such as for-loops, while-loops, if-statements, or variable and function declarations.\par
+% \import{./code-snippets/}{constants.tex}
 
-Many keywords included in the language that are, for instance, required to use the aforementioned functionalities can be expressed in several ways \==~Clove-lang contains Polish translations of commonly used keywords, and can be easily expanded with other languages by altering the grammar slightly. This enables users who are not well-versed in English to start programming and familiarise themselves with the programming concepts more easily.
+Parts of the language, such as for-loops, while-loops, if-statements, or variable and function declarations, are conventional and identical to some other languages (namely, JavaScript). Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens (both have numerous aliases).\par
+
+Many keywords included in the language can be expressed in several ways \==~Clove-lang contains Polish translations of commonly used keywords, and can easily be expanded with other languages by slightly altering the grammar. This enables users not knowing English to start programming and familiarise themselves with the programming concepts more easily.
 
 
 
@@ -83,14 +92,14 @@ Many keywords included in the language that are, for instance, required to use t
 %   \item anonymous functions.
 % \end{itemize}
 
-Clove-lang supports the following data types: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions.\par
+Clove-lang supports the following data types: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
 
-The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous functions are unique in that they just act as containers for function definitions as opposed to being a standalone implementation of a type \==~this way they can be easily passed around as values.
+All the types evaluate to values that, in most cases, are treated the same way \==~they can be passed around, nested (if the type allows) and returned from functions. It applies to both literals and assigned/dereferenced values.
 
 
 
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. In the code snippet below, there are examples of some common declarations and definitions.
+Declarations and definitions in Clove are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. In the code snippet below, there are examples of some common declarations and definitions\footnote{This and more demonstrative code snippets are available in the `demonstrations' directory.}.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
