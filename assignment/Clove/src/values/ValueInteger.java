@@ -48,8 +48,20 @@ public class ValueInteger extends ValueAbstract {
 		return new ValueInteger(internalValue * v.longValue());
 	}
 
+	/**
+	 * @read https://stackoverflow.com/a/9898528/10620237
+	 * @author amrwc
+	 */
 	public Value div(Value v) {
-		return new ValueInteger(internalValue / v.longValue());
+		var res = (v instanceof ValueRational)
+			? internalValue / v.doubleValue()
+			: internalValue / (double) v.longValue();
+
+		// Try returning ValueInteger if the outcome can be parsed to int/long.
+		if ((res == Math.floor(res)) && !Double.isInfinite(res))
+		    return new ValueInteger((long) Math.floor(res));
+		else
+			return new ValueRational(res);
 	}
 
 	public Value mod(Value v) {

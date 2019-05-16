@@ -146,8 +146,9 @@ public class Parser implements CloveVisitor {
 		if (rightVal == null)
 			throw new ExceptionSemantic("Right value of the assignment cannot resolve to null.");
 
-		String name = getTokenOfChild(node, 0);
+		// Get the reference of the parent value.
 		if (node.optimised == null) {
+			String name = getTokenOfChild(node, 0);
 			reference = scope.findReference(name);
 			if (reference == null) {
 				// Try finding a constant.
@@ -163,43 +164,111 @@ public class Parser implements CloveVisitor {
 		} else
 			reference = (Display.Reference) node.optimised;
 
-		if (node.shorthandOperator != null) {
-			Value value = reference.getValue();
-
-			switch (node.shorthandOperator) {
-				case "+=":
-					reference.setValue(value.add(rightVal));
-					break;
-				case "-=":
-					reference.setValue(value.subtract(rightVal));
-					break;
-				case "*=":
-					reference.setValue(value.mult(rightVal));
-					break;
-				case "/=":
-					reference.setValue(value.div(rightVal));
-			}
-			return data;
-		}
-
+		// If it's not a normal dereference of a variable...
 		if (numChildren > 2) {
 			Value value = reference.getValue();
+			int currChild = 1; // Keep track how far it traversed.
 
+			// -2 := the parent of the rightmost value to the left
+			// of the assignment operator.
+			final int limit = numChildren - 2;
+
+			// ...traverse through the dereference to find the parent of
+			// the rightmost value to the left of the assignment operator...
+			for (; currChild < limit; currChild++) {
+				if (value instanceof ValueList)
+					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueObject)
+					value = objectDereference(node, value, currChild);
+			}
+
+			// Handle a shorthand operator on a dereferenced variable.
+			if (node.shorthandOperator != null) {
+				// If the shorthand operator is present, get the rightmost
+				// value of the dereference (the deepest dereference of Lvalue).
+				Value val = null;
+				if (value instanceof ValueList)
+					val = listDereference(node, value, currChild);
+				else if (value instanceof ValueObject)
+					val = objectDereference(node, value, currChild);
+				else if (value instanceof ValueString)
+					val = stringDereference(node, value, currChild);
+
+				// Update the Rvalue that will be assigned.
+				rightVal = 
+					doShorthandNested(node.shorthandOperator, val, rightVal);
+			}
+
+			// ...and reassign the value of the list...
 			if (value instanceof ValueList) {
 				int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
 				((ValueList) value).set(index, rightVal);
-			} else if (value instanceof ValueObject) {
+			}
+			// ...or an object's key.
+			else if (value instanceof ValueObject) {
 				String keyName = node.jjtGetChild(numChildren - 2) instanceof ASTIdentifier
 						? getTokenOfChild(node, numChildren - 2)
 						: doChild(node, numChildren - 2).toString();
 				((ValueObject) value).set(keyName, rightVal);
 			}
-
-			return data;
 		}
 
-		reference.setValue(rightVal);
+		// Handle a shorthand operator on a normal variable.
+		else {
+			if (node.shorthandOperator != null) {
+				Value value = reference.getValue();
+				doShorthand(node.shorthandOperator, reference, value, rightVal);
+				return data;
+			}
+
+			// Assignment of a normal variable (no dereference).
+			reference.setValue(rightVal);
+		}
+
 		return data;
+	}
+
+	/**
+	 * Executes a shorthand reassignment on a normal variable
+	 * -- no dereference needed.
+	 * 
+	 * @param operator -- shorthand operator to be executed
+	 * @param ref -- variable reference
+	 * @param val -- base value (operand)
+	 * @param rightVal -- second operand
+	 * @author amrwc
+	 */
+	private void doShorthand(String operator, Display.Reference ref,
+		Value val, Value rightVal) {
+		switch (operator) {
+			case "+=":
+				ref.setValue(val.add(rightVal));
+				break;
+			case "-=":
+				ref.setValue(val.subtract(rightVal));
+				break;
+			case "*=":
+				ref.setValue(val.mult(rightVal));
+				break;
+			case "/=":
+				ref.setValue(val.div(rightVal));
+		}
+	}
+
+	private Value doShorthandNested(String operator, Value val, Value rightVal) {
+		switch (operator) {
+			case "+=":
+				return val.add(rightVal);
+			case "-=":
+				return val.subtract(rightVal);
+			case "*=":
+				return val.mult(rightVal);
+			case "/=":
+				return val.div(rightVal);
+			default:
+				throw new ExceptionSemantic("Operator \"" + operator
+					+ "\" cannot be used on " + val + " and " + rightVal + ".");
+		}
 	}
 
 	// Function definition

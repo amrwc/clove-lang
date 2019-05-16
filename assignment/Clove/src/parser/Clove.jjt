@@ -286,36 +286,41 @@ void definition() #Definition :
 void assignment() #Assignment :
 {Token operator;}
 {
-  LOOKAHEAD(2)
+  LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "=")
   (
-    identifier() ( <DOT> identifier() | "[" add_expression() "]" )* "=" expression()
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+    "=" expression()
   )
   |
   (
-    LOOKAHEAD(2)
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "+=")
     (
 	  // identifier += expression
-      identifier() operator = <PEQ> expression()
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <PEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
-    LOOKAHEAD(2)
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "-=")
     (
 	  // identifier -= expression
-      identifier() operator = <MEQ> expression()
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <MEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
-    LOOKAHEAD(2)
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "*=")
     (
 	  // identifier *= expression
-      identifier() operator = <TEQ> expression()
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <TEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
     (
 	  // identifier /= expression
-      identifier() operator = <DEQ> expression()
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <DEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
   )
