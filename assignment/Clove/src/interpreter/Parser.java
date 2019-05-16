@@ -196,7 +196,7 @@ public class Parser implements CloveVisitor {
 
 				// Update the Rvalue that will be assigned.
 				rightVal = 
-					doShorthandNested(node.shorthandOperator, val, rightVal);
+					doShorthand(node.shorthandOperator, val, rightVal);
 			}
 
 			// ...and reassign the value of the list...
@@ -213,11 +213,13 @@ public class Parser implements CloveVisitor {
 			}
 		}
 
-		// Handle a shorthand operator on a normal variable.
+		// Normal variable (1 child in L-value).
 		else {
+			// Handle a shorthand operator on a normal variable.
 			if (node.shorthandOperator != null) {
 				Value value = reference.getValue();
-				doShorthand(node.shorthandOperator, reference, value, rightVal);
+				Value result = doShorthand(node.shorthandOperator, value, rightVal);
+				reference.setValue(result);
 				return data;
 			}
 
@@ -229,8 +231,7 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Executes a shorthand reassignment on a normal variable
-	 * -- no dereference needed.
+	 * Executes a shorthand reassignment between L-value and R-value.
 	 * 
 	 * @param operator -- shorthand operator to be executed
 	 * @param ref -- variable reference
@@ -238,24 +239,7 @@ public class Parser implements CloveVisitor {
 	 * @param rightVal -- second operand
 	 * @author amrwc
 	 */
-	private void doShorthand(String operator, Display.Reference ref,
-		Value val, Value rightVal) {
-		switch (operator) {
-			case "+=":
-				ref.setValue(val.add(rightVal));
-				break;
-			case "-=":
-				ref.setValue(val.subtract(rightVal));
-				break;
-			case "*=":
-				ref.setValue(val.mult(rightVal));
-				break;
-			case "/=":
-				ref.setValue(val.div(rightVal));
-		}
-	}
-
-	private Value doShorthandNested(String operator, Value val, Value rightVal) {
+	private Value doShorthand(String operator, Value val, Value rightVal) {
 		switch (operator) {
 			case "+=":
 				return val.add(rightVal);
