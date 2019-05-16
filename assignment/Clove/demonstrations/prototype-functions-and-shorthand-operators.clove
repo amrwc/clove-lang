@@ -1,5 +1,6 @@
 /**
- * Demonstrates use of prototype functions.
+ * Demonstrates use of prototype functions
+ * and shorthand operators.
  */
 
 const list1 = [13, "foo", ["bar", "baz"]]
