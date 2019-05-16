@@ -68,13 +68,13 @@
   \Huge {Clove-lang}
 \end{center}
 
-\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily an imperative language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned.\par
+\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned.\par
 
 % \import{./code-snippets/}{constants.tex}
 
-Parts of the language, such as for-loops, while-loops, if-statements, or variable and function declarations, are conventional and identical to some other languages (namely, JavaScript). Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens (both have numerous aliases).\par
+Parts of the language, such as for-loops, while-loops, if-statements, or variable and function declarations, are conventional and identical to some other languages (namely, JavaScript). Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens.\par
 
-Many keywords included in the language can be expressed in several ways \==~Clove-lang contains Polish translations of commonly used keywords, and can easily be expanded with other languages by slightly altering the grammar. This enables users not knowing English to start programming and familiarise themselves with the programming concepts more easily.
+Many keywords included in the language can be expressed in several ways \==~Clove-lang contains Polish translations of commonly used keywords, and can easily be expanded by slightly altering the grammar. This enables users not knowing English to start programming and familiarise themselves with the programming concepts more easily.
 
 
 
@@ -92,23 +92,23 @@ Many keywords included in the language can be expressed in several ways \==~Clov
 %   \item anonymous functions.
 % \end{itemize}
 
-The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array} \==~it is implemented using \emph{ArrayList} in Java. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
+The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
 
-All the types evaluate to values that, in most cases, are treated the same way \==~they can be passed around, nested (if the type allows) and returned from functions. It applies to both literals and assigned/dereferenced values.
+All the types evaluate to values that, in most cases, are treated the same way \==~they can be passed around, nested (in case of compound types), evaluated, and returned from functions. It applies to both literals and assigned/dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number.
 
 
 
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript and use the same keywords. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: with JavaScript-esque \emph{function} keyword, or as an anonymous, value-function. Examples of some common declarations and definitions below\footnote{More code snippets are available in the `demonstrations' directory. For example programs, go to `examples'.}.
+Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous, value-function. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in the `demonstrations' and `examples' directories.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' in this example. Variables in function invocations or any other blocks are defined in their corresponding scope and removed subsequently.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
 
 
-\subsection*{Prototype functions}
-The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation.
+\subsection*{Prototype functions and shorthand operators}
+The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Clove supports a few shorthand operators for assignment and incrementation/decrementation. Examples shown below.
 
-\import{./code-snippets/}{prototype-functions.tex}
+\import{./code-snippets/}{prototype-functions-and-shorthand-operators.tex}
 
 
 
