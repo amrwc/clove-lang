@@ -13,6 +13,18 @@ log()
 
 const obj = { ten: 10, twenty: 20 }
 log("obj: ", obj)
-obj->remove("ten")
 log('obj->remove("ten")')
+obj->remove("ten")
+log("obj: ", obj)
+log()
+
+
+log("list1[0] += 7")
+list1[0] += 7
+log("list1: ", list1)
+log()
+
+
+log("obj.twenty /= 7")
+obj.twenty /= 7
 log("obj: ", obj)
