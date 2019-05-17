@@ -244,22 +244,22 @@ ASTCode code() #Code :
 void statement() #Statement :
 {}
 {
-  LOOKAHEAD(call()) call()
-| LOOKAHEAD(3) definition()
-| LOOKAHEAD(assignment()) assignment()
-| function_definition()
-| block()
-| if_statement()
-| for_loop()
-| while_loop()
-| write()
-| quit()
-| LOOKAHEAD(2) proto_invoke()
-| postfix_expression()
-| prefix_expression()
-| declaration()
-| http()
-| file()
+    LOOKAHEAD(call()) call()
+  | LOOKAHEAD(3) definition()
+  | LOOKAHEAD(assignment()) assignment()
+  | function_definition()
+  | block()
+  | if_statement()
+  | for_loop()
+  | while_loop()
+  | write()
+  | quit()
+  | LOOKAHEAD(postfix_expression()) postfix_expression()
+  | proto_invoke()
+  | prefix_expression()
+  | declaration()
+  | http()
+  | file()
 }
 
 
@@ -386,6 +386,26 @@ void quit() #Quit :
 }
 
 
+void postfix_expression() #IncrementDecrement :
+{Token operator;}
+{
+  LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "++")
+  (
+	// dereference++
+  	identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+  	operator = <PP>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
+  |
+  (
+	// dereference--
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+    operator = <MM>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
+}
+
+
 /**
  * Invoke a prototype function.
  * It can be a statement() or a primary_expression().
@@ -402,38 +422,22 @@ void proto_invoke() #ProtoInvoke :
 }
 
 
-void prefix_expression() #IncrementDecrement(1) :
+void prefix_expression() #IncrementDecrement :
 {Token operator;}
 {
-  LOOKAHEAD(2)
+  LOOKAHEAD("++" identifier() (<DOT> identifier() | "[" add_expression() "]")*)
   (
-	// ++identifier
-  	operator = <PP> identifier()
+	// ++dereference
+  	operator = <PP>
+  	identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
   	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
   |
   (
-	// --identifier
-    operator = <MM> identifier()
+	// --dereference
+    operator = <MM>
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
   	{jjtThis.shorthandOperator = "pre" + operator.image;}
-  )
-}
-
-
-void postfix_expression() #IncrementDecrement(1) :
-{Token operator;}
-{
-  LOOKAHEAD(2)
-  (
-	// identifier++
-  	identifier() operator = <PP>
-  	{jjtThis.shorthandOperator = "post" + operator.image;}
-  )
-  |
-  (
-	// identifier--
-    identifier() operator = <MM>
-  	{jjtThis.shorthandOperator = "post" + operator.image;}
   )
 }
 
@@ -608,7 +612,7 @@ void primary_expression() :
 {}
 {
     prefix_expression()
-  | LOOKAHEAD(2) postfix_expression()
+  | LOOKAHEAD(postfix_expression()) postfix_expression()
   | LOOKAHEAD(literal()) literal()
   | LOOKAHEAD(function_invocation()) function_invocation()
   | LOOKAHEAD(proto_invoke()) proto_invoke()

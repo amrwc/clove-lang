@@ -167,7 +167,7 @@ public class Parser implements CloveVisitor {
 		// If it's not a normal dereference of a variable...
 		if (numChildren > 2) {
 			Value value = reference.getValue();
-			int currChild = 1; // Keep track how far it traversed.
+			int currChild = 1; // Keep track of how far it traversed.
 
 			// -2 := the parent of the rightmost value to the left
 			// of the assignment operator.
@@ -494,33 +494,118 @@ public class Parser implements CloveVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTIncrementDecrement node, Object data) {
-		Display.Reference reference;
-
+		Display.Reference ref;
 		String name = getTokenOfChild(node, 0);
-		reference = scope.findReference(name);
-		if (reference == null)
-			throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
-
-		Value value = reference.getValue();
+		int numChildren = node.jjtGetNumChildren();
 		ValueInteger one = new ValueInteger(1);
 
-		switch (node.shorthandOperator) {
-			case "pre++":
-				reference.setValue(value.add(one));
-				value = reference.getValue();
-				break;
-			case "pre--":
-				reference.setValue(value.subtract(one));
-				value = reference.getValue();
-				break;
-			case "post++":
-				reference.setValue(value.add(one));
-				break;
-			case "post--":
-				reference.setValue(value.subtract(one));
+		// Try finding a variable or a constant.
+		if ((ref = scope.findReference(name)) == null)
+			ref = scope.findReference("constant" + name);
+		if (ref == null)
+			throw new ExceptionSemantic("Variable \"" + name + "\" is undefined.");
+
+		Value value = ref.getValue();
+
+		// If it's a compound value...
+		if (numChildren > 1) {
+			int currChild = 0; // Keep track how far it traversed.
+
+			// -2 := the parent of the rightmost value to the left
+			// of the assignment operator.
+			final int limit = numChildren - 2;
+
+			// ...traverse through the dereference to find the parent of
+			// the rightmost value...
+			for (; currChild < limit; currChild++) {
+				if (value instanceof ValueList)
+					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueObject)
+					value = objectDereference(node, value, currChild);
+			}		
+
+			// ...and reassign the value of the compound value...
+			switch (node.shorthandOperator) {
+				case "pre++":
+					return doIncDecNested(node, numChildren, value, "pre++");
+				case "pre--":
+					return doIncDecNested(node, numChildren, value, "pre--");
+				case "post++":
+					return doIncDecNested(node, numChildren, value, "post++");
+				case "post--":
+					return doIncDecNested(node, numChildren, value, "post--");
+				default:
+					throw new ExceptionSemantic("Operator \"" + node.shorthandOperator
+						+ "\" cannot be used on " + value + " and " + one + ".");
+			}
 		}
 
-		return value;
+		// Handle a normal variable.
+		switch (node.shorthandOperator) {
+			case "pre++":
+				ref.setValue(value.add(one));
+				return ref.getValue();
+			case "pre--":
+				ref.setValue(value.subtract(one));
+				return ref.getValue();
+			case "post++":
+				ref.setValue(value.add(one));
+				return value;
+			case "post--":
+				ref.setValue(value.subtract(one));
+				return value;
+			default:
+				throw new ExceptionSemantic("Operator \"" + node.shorthandOperator
+					+ "\" cannot be used on " + value + " and " + one + ".");
+		}
+	}
+
+	/**
+	 * Reassigns the rightmost value and returns the new or
+	 * old value depending on pre/post-fix operator.
+	 * 
+	 * @param node
+	 * @param numChildren
+	 * @param value -- value to be changed
+	 * @param operation -- "post++"/"post--"/"pre++"/"pre--"
+	 * @returns updated value or old value
+	 */
+	private Value doIncDecNested(SimpleNode node, int numChildren, Value value,
+		String operation) {
+		Value old = null;
+		ValueInteger one = new ValueInteger(1);
+
+		if (value instanceof ValueList) {
+			int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+
+			old = ((ValueList) value).get(index);
+
+			if (operation.contains("++"))
+				((ValueList) value).set(index, old.add(one));
+			else
+				((ValueList) value).set(index, old.subtract(one));
+
+			if (operation.equals("pre++") || operation.equals("pre--"))
+				return ((ValueList) value).get(index);
+		}
+
+		else if (value instanceof ValueObject) {
+			String keyName = node.jjtGetChild(numChildren - 1) instanceof ASTIdentifier
+					? getTokenOfChild(node, numChildren - 1)
+					: doChild(node, numChildren - 1).toString();
+
+			old = ((ValueObject) value).get(keyName);
+
+			if (operation.contains("++"))
+				((ValueObject) value).set(keyName, old.add(one));
+			else
+				((ValueObject) value).set(keyName, old.subtract(one));
+
+			if (operation.equals("pre++") || operation.equals("pre--"))
+				return ((ValueObject) value).get(keyName);
+		}
+
+		return old;
 	}
 
 	/**
