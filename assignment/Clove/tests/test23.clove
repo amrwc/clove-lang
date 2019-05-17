@@ -76,11 +76,21 @@ log()
 
 
 
-const list = [10, 20, [30, 40]]
+const list = [10, 20, [30, 40, [50, 60]]]
 log("list: ", list)
 log()
 
+log("1st-level list:")
 log("	list[0]++: ", list[0]++)
+log("	list: ", list)
+log()
+
+log("	--list[1]: ", --list[1])
+log("	list: ", list)
+log()
+
+log("nested list:")
+log("	++list[2][2][1]: ", ++list[2][2][1])
 log("	list: ", list)
 log()
 
@@ -96,7 +106,11 @@ const obj = {
   twenty: 20,
   nested: {
     thirty: 30,
-    forty: 40
+    forty: 40,
+    nested2: {
+      fifty: 50,
+      sixty: 60
+    }
   }
 }
 log("obj: ", obj)
@@ -119,18 +133,20 @@ log()
 log('	--obj.twenty: ', --obj.twenty)
 log("	obj: ", obj)
 
+
+
 log()
 log()
+log()
+
+
 
 log("nested square-notation:")
 log('	obj["nested"]["forty"]++: ', obj["nested"]["forty"]++)
 log("	obj: ", obj)
 log()
 
-
-
-
-
-
-
-
+log("nested dot-notation:")
+log('	obj.nested.nested2.fifty++: ', obj.nested.nested2.fifty++)
+log("	obj: ", obj)
+log()

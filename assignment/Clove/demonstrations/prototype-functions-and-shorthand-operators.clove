@@ -3,12 +3,12 @@
  * and shorthand operators.
  */
 
-const list1 = [13, "foo", ["bar", "baz"]]
-log("list1: ", list1)
+const list = [13, "foo", ["bar", "baz"]]
+log("list: ", list)
 
-const nestedBar = list1[2]->shift() // bar
-log("const nestedBar = list1[2]->shift()")
-log("nestedBar: ", nestedBar, ", list1: ", list1)
+const nestedBar = list[2]->shift() // bar
+log("const nestedBar = list[2]->shift()")
+log("nestedBar: ", nestedBar, ", list: ", list)
 log()
 
 
@@ -20,12 +20,24 @@ log("obj: ", obj)
 log()
 
 
-log("list1[0] += 7")
-list1[0] += 7
-log("list1: ", list1)
+log("list[0] += 7")
+list[0] += 7
+log("list: ", list)
 log()
 
 
 log("obj.twenty /= 7")
 obj.twenty /= 7
+log("obj: ", obj)
+log()
+
+
+log("list[2][0]++")
+list[2][0]++
+log("list: ", list)
+log()
+
+
+log('--obj["twenty"]')
+--obj["twenty"]
 log("obj: ", obj)
