@@ -519,10 +519,10 @@ public class Parser implements CloveVisitor {
 			// the rightmost value...
 			for (; currChild < limit; currChild++) {
 				if (value instanceof ValueList)
-					value = listDereference(node, value, currChild);
+					value = listDereference(node, value, currChild + 1);
 				else if (value instanceof ValueObject)
-					value = objectDereference(node, value, currChild);
-			}		
+					value = objectDereference(node, value, currChild + 1);
+			}
 
 			// ...and reassign the value of the compound value...
 			switch (node.shorthandOperator) {
@@ -576,7 +576,7 @@ public class Parser implements CloveVisitor {
 		ValueInteger one = new ValueInteger(1);
 
 		if (value instanceof ValueList) {
-			int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+			int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
 
 			old = ((ValueList) value).get(index);
 
