@@ -677,6 +677,8 @@ public class Parser implements CloveVisitor {
 		try {
 			url = new URL(requestURL);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setReadTimeout(15000);
+			conn.setConnectTimeout(15000);
 
 			switch(method) {
 				case "GET":
@@ -688,8 +690,6 @@ public class Parser implements CloveVisitor {
 						throw new ExceptionSemantic("The \"" + method
 							+ "\" method's request body cannot evaluate to null.");
 	
-					conn.setReadTimeout(15000);
-					conn.setConnectTimeout(15000);
 					conn.setRequestMethod(method);
 					conn.setDoOutput(true);
 	
