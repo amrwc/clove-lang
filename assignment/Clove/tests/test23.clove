@@ -16,8 +16,7 @@ log()
 
 let eight = 8
 log("eight: ", eight)
-log("eight++")
-eight++
+log("eight++: ", eight++)
 log("eight: ", eight) // 9
 log()
 
@@ -33,8 +32,7 @@ log()
 
 let six = 6
 log("six: ", six)
-log("six--")
-six--
+log("six--: ", six--)
 log("six: ", six) // 5
 log()
 
@@ -137,7 +135,6 @@ log("	obj: ", obj)
 
 log()
 log()
-log()
 
 
 
@@ -149,4 +146,36 @@ log()
 log("nested dot-notation:")
 log('	obj.nested.nested2.fifty++: ', obj.nested.nested2.fifty++)
 log("	obj: ", obj)
+log()
+
+
+
+log()
+log()
+log()
+
+
+
+log("mixed lists/objects:")
+const obj2 = {
+  ten: 10,
+  list: [20, 30],
+  obj: {
+    forty: 40,
+    list: [50, 60, {seventy: 70}]
+  }
+}
+log("	obj2: ", obj2)
+log()
+
+log("	obj2.list[1]++: ", obj2.list[1]++)
+log("	obj2: ", obj2)
+log()
+
+log('	--obj2["list"][0]: ', --obj2["list"][0])
+log("	obj2: ", obj2)
+log()
+
+log('	++obj2.obj["list"][2].seventy: ', ++obj2.obj["list"][2].seventy)
+log("	obj2: ", obj2)
 log()
