@@ -146,6 +146,11 @@ public class ParserDebugger implements CloveVisitor {
 		return null;
 	}
 
+	public Object visit(ASTArrayInit node, Object data) {
+		dump(node, data);
+		return null;
+	}
+
 	// Function argument list
 	public Object visit(ASTArgumentList node, Object data) {
 		dump(node, data);
@@ -335,7 +340,7 @@ public class ParserDebugger implements CloveVisitor {
 		return data;
 	}
 
-	public Object visit(ASTValueList node, Object data) {
+	public Object visit(ASTValueListOrArray node, Object data) {
 		dump(node, data);
 		return data;
 	}

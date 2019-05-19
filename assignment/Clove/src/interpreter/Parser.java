@@ -818,6 +818,32 @@ public class Parser implements CloveVisitor {
 		return data;
 	}
 
+	public Object visit(ASTArrayInit node, Object data) {
+		String name = getTokenOfChild(node, 0);
+		Display.Reference reference = scope.findReference(name);
+		// If the array is being defined as a constant...
+		if (reference == null)
+			reference = scope.findReference("constant" + name);
+
+		// Get the array's initial length.
+		Value capacity = doChild(node, 1);
+		// Initialise an empty array with the specified length.
+		ValueArray valueArray = new ValueArray((int) capacity.longValue());
+
+		// Add all the values to the array.
+		int keyCount = node.jjtGetNumChildren();
+		Value currentValue;
+		// i := 2 -- the values start from the third child.
+		for (int i = 2; i < keyCount; i++) {
+			currentValue = doChild(node, i);
+			valueArray.append(currentValue);
+		}
+
+		reference.setValue(valueArray);
+		return data;
+//		return valueArray; //??? TODO:
+	}
+
 	// Function invocation argument list.
 	public Object visit(ASTArgumentList node, Object data) {
 		FunctionInvocation newInvocation = (FunctionInvocation)data;
@@ -1001,6 +1027,8 @@ public class Parser implements CloveVisitor {
 			for (; currChild < numChildren; currChild++) {
 				if (value instanceof ValueList)
 					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueArray)
+					value = arrayDereference(node, value, currChild);
 				else if (value instanceof ValueObject)
 					value = objectDereference(node, value, currChild);
 				else if (value instanceof ValueString)
@@ -1020,6 +1048,17 @@ public class Parser implements CloveVisitor {
 	 */
 	private Value listDereference(SimpleNode node, Value v, int currChild) {
 		ValueList valueList = (ValueList) v;
+		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
+		return valueList.get(index);
+	}
+
+	/**
+	 * Dereference of an array.
+	 * 
+	 * @author amrwc
+	 */
+	private Value arrayDereference(SimpleNode node, Value v, int currChild) {
+		ValueArray valueList = (ValueArray) v;
 		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
 		return valueList.get(index);
 	}
@@ -1177,11 +1216,11 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * List declaration.
+	 * List/array declaration.
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTValueList node, Object data) {
+	public Object visit(ASTValueListOrArray node, Object data) {
 		ValueList valueList = new ValueList();
 
 		// Add all the values to the list.
