@@ -19,5 +19,6 @@ const obj = {
 const path = file("overwrite", "./fileFuncTest.txt", obj)
 log('Successfully written to a file "', path, '".')
 
-file("append", path, "777")
+const option = "append"
+file(option, path, "777")
 log('Successfully appended to a file "', path, '".')
