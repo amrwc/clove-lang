@@ -70,8 +70,6 @@
 
 \noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned; otherwise, all values are mutable. Variables' types are recognised dynamically by their literals.\par
 
-% \import{./code-snippets/}{constants.tex}
-
 Common statements and expressions, such as loops, if-statements, variable and function declarations/calls/invocations are conventional and similar to other languages, namely JavaScript. Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens.\par
 
 Many keywords included in the language can be expressed in a bunch of ways \==~Clove-lang contains Polish translations of commonly used keywords. This set of translations can easily be expanded by slightly altering the token part of the grammar. The translations enable users not knowing English to start programming and familiarise themselves with programming concepts more easily.
@@ -79,19 +77,6 @@ Many keywords included in the language can be expressed in a bunch of ways \==~C
 
 
 \subsection*{Data types}
-% Clove-lang supports the following data types:
-
-% \begin{itemize}
-%   \itemsep-0.25em
-%   \item integers,
-%   \item rational numbers,
-%   \item strings,
-%   \item booleans,
-%   \item anonymous objects,
-%   \item lists, and
-%   \item anonymous functions.
-% \end{itemize}
-
 The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
 
 All the types evaluate to values that are treated similarly \==~they can be passed around, nested (into compound types), evaluated, and returned from functions. It applies to both literals and dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number.
@@ -112,6 +97,8 @@ The string, list and anonymous object value-types have built-in prototype functi
 
 
 
+% Take some space above the heading after a code-block.
+\vspace{-1.5em}
 \subsection*{Data structures}
 The supported data types allow for creating compound data structures. The code below demonstrates an example usage of anonymous objects and functions to imitate a class-like structure.
 
@@ -119,21 +106,27 @@ The supported data types allow for creating compound data structures. The code b
 
 
 
-
-
-
-
-
-
-\section*{Built-in functions}
+\vspace{-1.5em}
+\subsection*{Built-in functions}
 Clove-lang has some useful built-in features, a couple of which interact with the outside world.
 
+\paragraph*{get\_args()}
+Returns a list of command-line arguments passed into the program.
+
+\vspace{-0.75em}
+\paragraph*{random()}
+Returns a random integer or a rational number in a given range. \mintinline{JavaScript}{random(0, 3.14)} would return a random rational number in the 0 <= x < 3.14 range \==~it recognises a floating-point number in the second argument, therefore the result will also be a float.
+
+\vspace{-0.75em}
 \paragraph*{file()}
 It takes three arguments: writing option, path, content. The function's behaviour depends on the first argument which specifies whether the new content should be appended to the file, or replace the old one. If the path does not exist, it will be created, although it is limited to one subdirectory.
 
+\vspace{-0.75em}
 \paragraph*{http()}
 This function supports four main HTTP requests: GET, POST, PUT, and DELETE, one of which has to be specified in the first argument. The second argument is the resource's URL, and the third, optional argument is the request body (only applicable to POST and PUT requests) which is a string of url-encoded pairs, or an anonymous object.
 
 \import{./code-snippets/}{http-request-and-file-writing.tex}
+
+
 
 \end{document}
