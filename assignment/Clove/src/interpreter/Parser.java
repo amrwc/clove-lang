@@ -643,11 +643,20 @@ public class Parser implements CloveVisitor {
 			}
 			case "POST":
 			case "PUT": {
-				if (node.jjtGetNumChildren() < 3)
+				if (node.jjtGetNumChildren() < 3) {
 					throw new ExceptionSemantic("The \"" + method
 						+ "\" HTTP method needs a request body.");
-				else
-					body = doChild(node, 2).toString();
+				} else {
+					var tryBody = doChild(node, 2); // String/ValueObject
+
+					// If the third (request body) argument is an anonymous object...
+					if (tryBody instanceof ValueObject) {
+						// ...turn the key-value pairs into url-encoded pairs.
+						body = ((ValueObject) tryBody).toUrlString();
+					} else {
+						body = tryBody.toString();
+					}
+				}
 				return doHttpReq(method, url, body);
 			}
 			default:

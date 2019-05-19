@@ -1,0 +1,13 @@
+/**
+ * Demonstrates built-in file() and http()
+ * functions.
+ */
+
+const url = "https://reqres.in/api/users/2"
+const body = { // Equivalent to: "name=John Doe&job=director"
+  name: "John Doe",
+  job: "director"
+}
+const response = http("POST", url, body)
+const path = file("overwrite", "./subdir/file-writing-demo.txt", response.body)
+log("Successfully written the response to '", path, "'.")
