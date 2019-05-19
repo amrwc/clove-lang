@@ -246,6 +246,7 @@ void statement() #Statement :
 {
     LOOKAHEAD(call()) call()
   | LOOKAHEAD(3) definition()
+  //| LOOKAHEAD(definition()) definition()
   | LOOKAHEAD(assignment()) assignment()
   | function_definition()
   | block()
@@ -278,7 +279,7 @@ void call() #Call :
 void definition() #Definition :
 {}
 {
-  <LET> assignment() {jjtThis.defType = "variable";}
+  <LET> ( LOOKAHEAD(3) array_init() | assignment() ) {jjtThis.defType = "variable";}
 | <CONST> const_init() {jjtThis.defType = "constant";}
 }
 
@@ -450,8 +451,12 @@ void prefix_expression() #IncrementDecrement :
 void declaration() #Declaration :
 {}
 {
-  <LET>   identifier() {jjtThis.defType = "variable";}
-| <CONST> identifier() {jjtThis.defType = "constant";}
+  <LET> identifier() [ "[" add_expression() "]" ]
+  {jjtThis.defType = "variable";}
+
+  // This will give an error since constants have to be initialised.
+| <CONST> identifier() [ "[" add_expression() "]" ]
+  {jjtThis.defType = "constant";}
 }
 
 
@@ -506,10 +511,19 @@ void identifier() #Identifier :
 }
 
 
-void const_init() #ConstInit :
+void const_init() :
 {}
 {
-  identifier() "=" expression()
+  LOOKAHEAD(2)
+  identifier() "=" expression() #ConstInit(2)
+| array_init()
+}
+
+
+void array_init() #ArrayInit :
+{}
+{
+  identifier() "[" add_expression() "]" "=" "[" expression() ( "," expression() )* "]"
 }
 
 
@@ -760,11 +774,11 @@ void value_object() #ValueObject :
 
 
 /**
- * List declaration.
+ * List/array declaration.
  * 
  * @author amrwc
  */
-void value_list() #ValueList :
+void value_list() #ValueListOrArray :
 {}
 {
   "[" [ expression() ( "," expression() )* ] "]"

@@ -1,0 +1,16 @@
+// Test ValueArray
+
+
+
+const bob[10] = [10, 20, [30]]
+
+log(bob[2][0])
+
+
+//let arr[10] = [10, 20, "foo", "bar"]
+
+//let arr2[20]
+//const arr3[30] // Should error since it's a constant
+
+//arr2->append(10)
+//arr3->append(10)
