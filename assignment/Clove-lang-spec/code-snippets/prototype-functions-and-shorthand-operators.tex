@@ -4,14 +4,15 @@
 \begin{listing}[H]
 \begin{spacing}{0.6}
 \begin{minted}[frame=single]{JavaScript}
-const list1 = [13, "foo", ["bar", "baz"]]
-const nestedBar = list1[2]->shift()       // bar
-
+const list = [13, "foo", ["bar", "baz"]]
+const nestedBar = list[2]->shift()        // bar
 const obj = { ten: 10, twenty: 20 }
-obj->remove("ten")
+obj->remove("ten")                        // { twenty: 20 }
 
-list1[0] += 7                             // 20
-obj.twenty /= 7                           // 2.857
+list[0] += 7                              // [20, "foo", ["baz"]]
+obj.twenty /= 7                           // { twenty: 2.857142857142857 }
+list[2][0]++                              // [20, "foo", ["baz1"]]
+--obj["twenty"]                           // { twenty: 1.857142857142857 }
 \end{minted}
 \end{spacing}
 \end{listing}
