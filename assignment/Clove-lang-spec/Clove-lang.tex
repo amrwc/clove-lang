@@ -2,9 +2,9 @@
 \usepackage[
   a4paper, % Set the paper size -- the document class only affects plainTeX.
   top=1.0cm,
-  right=2.0cm,
+  right=1.5cm,
   bottom=1.0cm,
-  left=2.0cm
+  left=1.5cm
 ]{geometry}
 \pagenumbering{gobble} % Disable page numbering
 
@@ -68,13 +68,13 @@
   \Huge {Clove-lang}
 \end{center}
 
-\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned.\par
+\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned; otherwise, all values are mutable. Variables' types are recognised dynamically by their literals.\par
 
 % \import{./code-snippets/}{constants.tex}
 
-Parts of the language, such as for-loops, while-loops, if-statements, or variable and function declarations, are conventional and identical to some other languages (namely, JavaScript). Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens.\par
+Common statements and expressions, such as loops, if-statements, variable and function declarations/calls/invocations are conventional and similar to other languages, namely JavaScript. Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens.\par
 
-Many keywords included in the language can be expressed in several ways \==~Clove-lang contains Polish translations of commonly used keywords, and can easily be expanded by slightly altering the grammar. This enables users not knowing English to start programming and familiarise themselves with the programming concepts more easily.
+Many keywords included in the language can be expressed in a bunch of ways \==~Clove-lang contains Polish translations of commonly used keywords. This set of translations can easily be expanded by slightly altering the token part of the grammar. The translations enable users not knowing English to start programming and familiarise themselves with programming concepts more easily.
 
 
 
@@ -92,21 +92,21 @@ Many keywords included in the language can be expressed in several ways \==~Clov
 %   \item anonymous functions.
 % \end{itemize}
 
-The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} range respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
+The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
 
-All the types evaluate to values that, in most cases, are treated the same way \==~they can be passed around, nested (in case of compound types), evaluated, and returned from functions. It applies to both literals and assigned/dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number.
+All the types evaluate to values that are treated similarly \==~they can be passed around, nested (into compound types), evaluated, and returned from functions. It applies to both literals and dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number.
 
 
 
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their respective empty literals must be used. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous, value-function. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in the `demonstrations' and `examples' directories.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' in this example. Variables in function invocations or any other blocks are defined in their corresponding scope and removed subsequently.
+Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their empty literals must be used. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous value-function. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in the `demonstrations' and `examples' directories.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' scope in this example. Variables in function invocations or any other blocks are defined in their corresponding scope (are inaccessible from the outside) and removed after the block is finished.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
 
 
 \subsection*{Prototype functions and shorthand operators}
-The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Clove supports a few shorthand operators for assignment and incrementation/decrementation. Examples shown below.
+The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Clove supports a few shorthand operators for reassignment and incrementation/decrementation. Examples shown below.
 
 \import{./code-snippets/}{prototype-functions-and-shorthand-operators.tex}
 
@@ -125,15 +125,15 @@ The supported data types allow for creating compound data structures. The code b
 
 
 
-\section*{Features}
-Clove-lang has some useful built-in features, a couple of which allow for interaction with the outside world. This section introduces them in detail.
+\section*{Built-in functions}
+Clove-lang has some useful built-in features, a couple of which interact with the outside world.
 
-% \subsection*{random()}
+\paragraph*{file()}
+It takes three arguments: writing option, path, content. The function's behaviour depends on the first argument which specifies whether the new content should be appended to the file, or replace the old one. If the path does not exist, it will be created, although it is limited to one subdirectory.
 
-\subsection*{file()}
+\paragraph*{http()}
+This function supports four main HTTP requests: GET, POST, PUT, and DELETE, one of which has to be specified in the first argument. The second argument is the resource's URL, and the third, optional argument is the request body (only applicable to POST and PUT requests) which is a string of url-encoded pairs, or an anonymous object.
 
-
-\subsection*{http()}
-
+\import{./code-snippets/}{http-request-and-file-writing.tex}
 
 \end{document}
