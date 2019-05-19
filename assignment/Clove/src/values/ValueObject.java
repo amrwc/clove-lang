@@ -1,5 +1,7 @@
 package values;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -88,4 +90,26 @@ public class ValueObject extends ValueAbstract {
 			result += entry.getKey() + ": " + entry.getValue() + ", ";
 		return result.substring(0, result.length() - 2) + "}";
 	}
+
+	/**
+	 * Turns the ValueObject into an url-encoded string.
+	 * 
+	 * @read https://stackoverflow.com/a/2810102/10620237
+	 * @read https://stackoverflow.com/a/29213105/10620237
+	 * @returns url-encoded string
+	 */
+	public String toUrlString() {
+		return internalValue.entrySet().stream()
+			.map(p -> urlEncUTF8(p.getKey().toString()) + "=" + urlEncUTF8(p.getValue().toString()))
+			.reduce((p1, p2) -> p1 + "&" + p2)
+			.orElse("");
+	}
+	
+	private String urlEncUTF8(String s) {
+        try {
+            return URLEncoder.encode(s, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new UnsupportedOperationException(e);
+        }
+    }
 }

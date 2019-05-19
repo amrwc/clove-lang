@@ -43,3 +43,17 @@ response = http("DELETE", url)
 
 log("DELETE request response: ", response.code)
 log(response.body)
+log()
+log()
+
+
+
+url = "https://reqres.in/api/users/2"
+body = {
+  name: "John Doe",
+  job: "director"
+}
+response = http("POST", url, body)
+
+log("POST request with a ValueObject as body response: ", response.code)
+log(response.body)
