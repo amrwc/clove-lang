@@ -1,10 +1,22 @@
 // Test ValueArray
+log("ValueArray:")
+
+const arr[10] = [10, 20, [30, 40]]
+log("arr: ", arr)
+
+log("arr[2][0]: ", arr[2][0])
+log()
 
 
-
-const bob[10] = [10, 20, [30]]
-
-log(bob[2][0])
+log("Before appending with resizing: ", arr)
+for (let i = 0; i < 10; i++) {
+  if (arr->length() + 1 > arr->cap()) {
+    arr->resize(arr->cap() + 1)
+  }
+  arr->append(i)
+}
+log("After: ", arr)
+log()
 
 
 //let arr[10] = [10, 20, "foo", "bar"]

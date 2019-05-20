@@ -460,18 +460,23 @@ public class Parser implements CloveVisitor {
 			? parseProtoArgs((SimpleNode) node)
 			: null;
 
-		if (value instanceof ValueList) {
+		if (value instanceof ValueList)
 			return ((ValueList) value).execProto(protoFunc, protoArgs);
-		} else if (value instanceof ValueObject) {
+		
+		else if (value instanceof ValueArray)
+			return ((ValueArray) value).execProto(protoFunc, protoArgs);
+		
+		else if (value instanceof ValueObject)
 			return ((ValueObject) value).execProto(protoFunc, protoArgs);
-		} else if (value instanceof ValueString) {
+		
+		else if (value instanceof ValueString)
 			return ((ValueString) value).execProto(protoFunc, protoArgs);
-		} else {
+
+		else
 			throw new ExceptionSemantic("Variable \""
 				+ ((SimpleNode) node.jjtGetChild(0)).tokenValue
 				+ "\" of type \"" + value.getClass().getCanonicalName()
 				+ "\" does not support prototype functions.");
-		}
 	}
 
 	/**
