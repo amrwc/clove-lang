@@ -1,8 +1,9 @@
 // Test ValueArray
 log("ValueArray:")
+log()
 
+log("const arr[10] = [10, 20, [30, 40]]")
 const arr[10] = [10, 20, [30, 40]]
-log("arr: ", arr)
 
 log("arr[2][0]: ", arr[2][0])
 log()
@@ -16,13 +17,23 @@ for (let i = 0; i < 10; i++) {
   arr->append(i)
 }
 log("After: ", arr)
+
+
+
+log()
+log()
 log()
 
 
-//let arr[10] = [10, 20, "foo", "bar"]
 
-//let arr2[20]
-//const arr3[30] // Should error since it's a constant
+log('let arr2[10] = [10, [20, "foo"], "bar"]')
+let arr2[10] = [10, [20, "foo"], "bar"]
+
+log("arr2[1][1]: ", arr2[1][1])
+log()
+
+//let arr3[20]
+//const arr4[30] // Should error since it's a constant
 
 //arr2->append(10)
 //arr3->append(10)
