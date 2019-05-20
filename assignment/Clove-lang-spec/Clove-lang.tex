@@ -68,30 +68,32 @@
   \Huge {Clove-lang}
 \end{center}
 
-\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language; syntactically, it resembles JavaScript. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in such ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned; otherwise, all values are mutable. Variables' types are recognised dynamically by their literals.\par
+\noindent Clove is a Java-based, interpreted, dynamically typed, general-purpose programming language. It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned; otherwise, all values are mutable.\par
 
 Common statements and expressions, such as loops, if-statements, variable and function declarations/calls/invocations are conventional and similar to other languages, namely JavaScript. Variable names cannot start with a number and must be preceded by either \emph{let} or \emph{const} tokens.\par
 
-Many keywords included in the language can be expressed in a bunch of ways \==~Clove-lang contains Polish translations of commonly used keywords. This set of translations can easily be expanded by slightly altering the token part of the grammar. The translations enable users not knowing English to start programming and familiarise themselves with programming concepts more easily.
+Many keywords included in the language can be expressed in a bunch of ways \==~Clove-lang contains Polish translations of commonly used keywords. The translations can easily be expanded by slightly altering the grammar. These translations enable people not knowing English to start programming and familiarise themselves with programming concepts more easily.
 
 
 
+\vspace{-0.25em}
 \subsection*{Data types}
-The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Anonymous function is unique in that it acts as a container for a function definition as opposed to being a standalone implementation of a type.\par
+The following data types are supported: integers, rational numbers, strings, booleans, anonymous objects, lists, arrays, and anonymous functions. The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Array includes all the list's features, but has a fixed size. Anonymous function is unique in that it is a container for a function definition instead of being a standalone implementation of a type.\par
 
-All the types evaluate to values that are treated similarly \==~they can be passed around, nested (into compound types), evaluated, and returned from functions. It applies to both literals and dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number.
+All the types evaluate to values that are treated similarly \==~they can be passed around, nested, evaluated, and returned from functions. It applies to both literals and dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number, but it is fine to add a number to a string.
 
 
 
+\vspace{-0.25em}
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their empty literals must be used. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous value-function. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in the `demonstrations' and `examples' directories.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' scope in this example. Variables in function invocations or any other blocks are defined in their corresponding scope (are inaccessible from the outside) and removed after the block is finished.
+Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their empty literals must be used. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous \emph{value-function}. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in the `demonstrations' and `examples' directories.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' scope in this example. Variables in function invocations or any other block are defined in their corresponding scope (are inaccessible from the outside) and removed after the block is finished.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
 
 
 \subsection*{Prototype functions and shorthand operators}
-The string, list and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Clove supports a few shorthand operators for reassignment and incrementation/decrementation. Examples shown below.
+The string, list, array and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Clove supports a few shorthand operators for reassignment and incrementation/decrementation. Examples shown below.
 
 \import{./code-snippets/}{prototype-functions-and-shorthand-operators.tex}
 

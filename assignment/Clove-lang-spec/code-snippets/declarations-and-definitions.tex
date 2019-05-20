@@ -4,26 +4,28 @@
 \begin{listing}[H]
 \begin{spacing}{0.6}
 \begin{minted}[frame=single]{JavaScript}
-let foo                                     // Variable declaration
-let num = 77                                // Variable definition
-var str = "bar"                             // 'let' and 'var' are equivalent
-const pi = 3.14                             // Constant definition
-let flag = false
+let foo                                 // Variable declaration
+let num = 77                            // Variable definition
+var str = "bar"                         // 'let' and 'var' are equivalent
+const pi = 3.14                         // Constant definition
+let flag = false                        // Boolean definition
 
-function sumAndDouble(param1, param2) {     // Function definition
-  let sum = param1 + param2
-  return sum * 2
+function sumAndDouble(param1, param2) { // Function definition
+  return (param1 + param2) * 2
 }
-const square1 = fn(val) {return val * val}  // Value-function definition
-const square2 = (val) => {return val * val} // Arrow function
+const sq1 = fn(val) {return val * val}  // Value-function definition
+const sq2 = (val) => {return val * val} // Arrow function
 
-let emptyList = []                          // List declaration
-let list = ["foo", "bar", "baz", 2000]      // List definition
-let emptyObject = {}                        // Anonymous object declaration
-let object = {                              // Anonymous object definition
-  key: "value",
-  foo: 12
+let emptyList = []                      // List declaration
+let list = ["foo", "bar", "baz", 2000]  // List definition
+let emptyObject = {}                    // Anonymous object declaration
+let object = {                          // Anonymous object definition
+  key: "value"
 }
+let emptyArray[]                        // Array declaration -- 0 capacity
+let emptyArrayWithCap[10]               // Array declaration -- explicit capacity
+let array[] = {str, list, object, flag} // Array definition -- implicit capacity
+let arr2[15] = {"str", ["list"], false} // Array definition -- explicit capacity
 \end{minted}
 \end{spacing}
 \end{listing}
