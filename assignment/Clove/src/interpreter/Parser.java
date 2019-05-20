@@ -205,6 +205,8 @@ public class Parser implements CloveVisitor {
 			for (; currChild < limit; currChild++) {
 				if (value instanceof ValueList)
 					value = listDereference(node, value, currChild);
+				else if (value instanceof ValueArray)
+					value = arrayDereference(node, value, currChild);
 				else if (value instanceof ValueObject)
 					value = objectDereference(node, value, currChild);
 			}
@@ -216,6 +218,8 @@ public class Parser implements CloveVisitor {
 				Value val = null;
 				if (value instanceof ValueList)
 					val = listDereference(node, value, currChild);
+				else if (value instanceof ValueArray)
+					value = arrayDereference(node, value, currChild);
 				else if (value instanceof ValueObject)
 					val = objectDereference(node, value, currChild);
 				else if (value instanceof ValueString)
@@ -228,8 +232,13 @@ public class Parser implements CloveVisitor {
 
 			// ...and reassign the value of the list...
 			if (value instanceof ValueList) {
-				int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+				final int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
 				((ValueList) value).set(index, rightVal);
+			}
+			// ...or an array's value...
+			else if (value instanceof ValueArray) {
+				final int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+				((ValueArray) value).set(index, rightVal);
 			}
 			// ...or an object's key.
 			else if (value instanceof ValueObject) {
