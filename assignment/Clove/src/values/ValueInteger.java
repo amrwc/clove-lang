@@ -3,25 +3,25 @@ package values;
 public class ValueInteger extends ValueAbstract {
 
 	private long internalValue;
-	
+
 	public ValueInteger(long b) {
 		internalValue = b;
 	}
-	
+
 	public String getName() {
 		return "integer";
 	}
-	
+
 	/** Convert this to a primitive long. */
 	public long longValue() {
 		return internalValue;
 	}
-	
+
 	/** Convert this to a primitive double. */
 	public double doubleValue() {
-		return (double)internalValue;
+		return (double) internalValue;
 	}
-	
+
 	/** Convert this to a primitive String. */
 	public String stringValue() {
 		return "" + internalValue;
@@ -35,37 +35,40 @@ public class ValueInteger extends ValueAbstract {
 		else
 			return -1;
 	}
-	
+
+	/**
+	 * Tries to parse a double value to a ValueInteger. If it's
+	 * impossible, returns a ValueRational.
+	 * 
+	 * @read https://stackoverflow.com/a/9898528/10620237
+	 * @returns {ValueInteger/ValueRational} cast attempt result
+	 * @author amrwc
+	 */
+	private Value tryInt(double v) {
+		if ((v == Math.floor(v)) && !Double.isInfinite(v))
+		    return new ValueInteger((long) Math.floor(v));
+		else
+			return new ValueRational(v);
+	}
+
 	public Value add(Value v) {
-		return new ValueInteger(internalValue + v.longValue());
+		return tryInt(internalValue + v.doubleValue());
 	}
 
 	public Value subtract(Value v) {
-		return new ValueInteger(internalValue - v.longValue());
+		return tryInt(internalValue - v.doubleValue());
 	}
 
 	public Value mult(Value v) {
-		return new ValueInteger(internalValue * v.longValue());
+		return tryInt(internalValue * v.doubleValue());
 	}
 
-	/**
-	 * @read https://stackoverflow.com/a/9898528/10620237
-	 * @author amrwc
-	 */
 	public Value div(Value v) {
-		var res = (v instanceof ValueRational)
-			? internalValue / v.doubleValue()
-			: internalValue / (double) v.longValue();
-
-		// Try returning ValueInteger if the outcome can be parsed to int/long.
-		if ((res == Math.floor(res)) && !Double.isInfinite(res))
-		    return new ValueInteger((long) Math.floor(res));
-		else
-			return new ValueRational(res);
+		return tryInt(internalValue / v.doubleValue());
 	}
 
 	public Value mod(Value v) {
-		return new ValueInteger(internalValue % v.longValue());
+		return tryInt(internalValue % v.doubleValue());
 	}
 
 	public Value unary_plus() {
@@ -75,8 +78,8 @@ public class ValueInteger extends ValueAbstract {
 	public Value unary_minus() {
 		return new ValueInteger(-internalValue);
 	}
-	
+
 	public String toString() {
-		return "" + internalValue;
+		return stringValue();
 	}
 }
