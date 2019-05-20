@@ -73,6 +73,7 @@ log()
 
 
 
+log("Shorthand reassignments on arrays:")
 log("arr[0] -= 2")
 arr[0] -= 2
 log("arr: ", arr)
@@ -85,4 +86,28 @@ log()
 
 log("arr3[0].ten /= 4")
 arr3[0].ten /= 4
+log("arr3: ", arr3)
+
+
+
+log()
+log()
+log()
+
+
+
+log("Increment/decrement array values:")
+log("arr[1]++: ", arr[1]++)
+log("arr: ", arr)
+log()
+
+log("--arr2[1][0]: ", --arr2[1][0])
+log("arr2: ", arr2)
+log()
+
+log("arr3[0].ten--: ", arr3[0].ten--)
+log("arr3: ", arr3)
+log()
+
+log('++arr3[0]["ten"]: ', ++arr3[0]["ten"])
 log("arr3: ", arr3)
