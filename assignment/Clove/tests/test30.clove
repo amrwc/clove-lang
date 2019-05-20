@@ -78,8 +78,8 @@ arr[0] -= 2
 log("arr: ", arr)
 log()
 
-log("arr2[1][0] *= 3")
-arr2[1][0] *= 3
+log("arr2[1][0] *= 1.5")
+arr2[1][0] *= 1.5
 log("arr2: ", arr2)
 log()
 
