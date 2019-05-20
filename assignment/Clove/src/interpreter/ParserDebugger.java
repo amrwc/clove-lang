@@ -56,6 +56,11 @@ public class ParserDebugger implements CloveVisitor {
 		return null;
 	}
 
+	public Object visit(ASTDeclaration node, Object data) {
+		dump(node, data);
+		return null;
+	}
+
 	// Execute an assignment statement, by popping a value off the stack and assigning it
 	// to a variable.
 	public Object visit(ASTAssignment node, Object data) {
@@ -109,11 +114,6 @@ public class ParserDebugger implements CloveVisitor {
 	}
 
 	public Object visit(ASTIncrementDecrement node, Object data) {
-		dump(node, data);
-		return null;
-	}
-
-	public Object visit(ASTDeclaration node, Object data) {
 		dump(node, data);
 		return null;
 	}
