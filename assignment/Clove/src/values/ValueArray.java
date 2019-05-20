@@ -76,11 +76,11 @@ public class ValueArray extends ValueAbstract {
 
 	public void append(Value v) {
 		if (internalValue.size() + 1 > capacity)
-			throw new ExceptionSemantic("The ValueArray of capacity \"" + capacity
-				+ "\" is full and cannot be further appended.");
+			throw new ExceptionSemantic("The ValueArray of capacity " + capacity
+				+ " is full and cannot take any more values.");
 		if (v == null)
 			throw new ExceptionSemantic("The argument for ValueArray.append()"
-					+ " cannot be null.");
+				+ " cannot be null.");
 
 		internalValue.add(v);
 	}
@@ -160,5 +160,9 @@ public class ValueArray extends ValueAbstract {
 							.map(Object::toString)
 							.collect(Collectors.joining(", "));
 		return "[" + strVal + "]";
+	}
+
+	public String stringValue() {
+		return toString();
 	}
 }

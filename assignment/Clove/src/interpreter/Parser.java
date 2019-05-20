@@ -860,22 +860,31 @@ public class Parser implements CloveVisitor {
 	}
 
 	public Object visit(ASTArrayInit node, Object data) {
-		String name = getTokenOfChild(node, 0);
+		final String name = getTokenOfChild(node, 0);
 		Display.Reference reference = scope.findReference(name);
 		// If the array is being defined as a constant...
 		if (reference == null)
 			reference = scope.findReference("constant" + name);
 
-		// Get the array's initial length.
-		Value capacity = doChild(node, 1);
+		// Get the array's initial capacity.
+		final int capacity = (int) doChild(node, 1).longValue();
+		// Get the number of values in the initialisation.
+		// -2 -- the first two children are identifier() and capacity.
+		final int initValNum = node.jjtGetNumChildren() - 2;
+
+		// If there's more values than the array can store...
+		if (initValNum > capacity)
+			throw new ExceptionSemantic("There is more initial values for \""
+				+ name + "\" array (" + initValNum + ") than its capacity ("
+				+ capacity + ").");
+
 		// Initialise an empty array with the specified length.
-		ValueArray valueArray = new ValueArray((int) capacity.longValue());
+		ValueArray valueArray = new ValueArray(capacity);
 
 		// Add all the values to the array.
-		int keyCount = node.jjtGetNumChildren();
 		Value currentValue;
 		// i := 2 -- the values start from the third child.
-		for (int i = 2; i < keyCount; i++) {
+		for (int i = 2; i < node.jjtGetNumChildren(); i++) {
 			currentValue = doChild(node, i);
 			valueArray.append(currentValue);
 		}

@@ -105,12 +105,18 @@ public class ValueList extends ValueAbstract {
 		return internalValue.size();
 	}
 
+	/**
+	 * @read https://stackoverflow.com/a/23183963/10620237
+	 */
 	public String toString() {
-		// https://stackoverflow.com/a/23183963/10620237
 		String strVal = internalValue
 							.stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(", "));
 		return "[" + strVal + "]";
+	}
+
+	public String stringValue() {
+		return toString();
 	}
 }
