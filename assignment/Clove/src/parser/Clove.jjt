@@ -279,8 +279,11 @@ void call() #Call :
 void definition() #Definition :
 {}
 {
-  <LET> ( LOOKAHEAD(3) array_init() | assignment() ) {jjtThis.defType = "variable";}
-| <CONST> const_init() {jjtThis.defType = "constant";}
+  <LET> ( LOOKAHEAD(3) array_init() | assignment() )
+  {jjtThis.defType = "variable";}
+
+| <CONST> ( LOOKAHEAD(2) array_init() | const_init() )
+  {jjtThis.defType = "constant";}
 }
 
 
@@ -511,12 +514,10 @@ void identifier() #Identifier :
 }
 
 
-void const_init() :
+void const_init() #ConstInit :
 {}
 {
-  LOOKAHEAD(2)
-  identifier() "=" expression() #ConstInit(2)
-| array_init()
+  identifier() "=" expression()
 }
 
 
