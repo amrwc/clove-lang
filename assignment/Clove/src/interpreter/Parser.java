@@ -134,6 +134,33 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
+	 * Declaration of a variable.
+	 * 
+	 * @author amrwc
+	 */
+	public Object visit(ASTDeclaration node, Object data) {
+		String name = getTokenOfChild((SimpleNode) node, 0);
+
+		if (node.defType == "constant")
+			throw new ExceptionSemantic("Constants must be initialised."
+					+ " Change the \"const\" keyword before \"" + name + "\" to \"let\".");
+
+		if (scope.findReference(name) != null)
+			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
+
+		// Define the variable and get the reference.
+		Display.Reference ref = scope.defineVariable(name);
+
+		// If the declaration has two children, it's a ValueArray declaration.
+		if (node.jjtGetNumChildren() > 1) {
+			final int capacity = (int) doChild(node, 1).longValue();
+			ref.setValue(new ValueArray(capacity));
+		}
+
+		return data;
+	}
+
+	/**
 	 * Execute an assignment statement.
 	 * 
 	 * @author amrwc
@@ -611,23 +638,6 @@ public class Parser implements CloveVisitor {
 		}
 
 		return old;
-	}
-
-	/**
-	 * Declaration of a variable.
-	 * 
-	 * @author amrwc
-	 */
-	public Object visit(ASTDeclaration node, Object data) {
-		if (node.defType == "constant")
-			throw new ExceptionSemantic("Constants must be initialised.");
-
-		String name = getTokenOfChild((SimpleNode) node, 0);
-		if (scope.findReference(name) != null)
-			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
-
-		scope.defineVariable(name);
-		return data;
 	}
 
 	/**

@@ -245,8 +245,8 @@ void statement() #Statement :
 {}
 {
     LOOKAHEAD(call()) call()
-  | LOOKAHEAD(3) definition()
-  //| LOOKAHEAD(definition()) definition()
+  | LOOKAHEAD(definition()) definition()
+  | LOOKAHEAD(declaration()) declaration()
   | LOOKAHEAD(assignment()) assignment()
   | function_definition()
   | block()
@@ -258,7 +258,6 @@ void statement() #Statement :
   | LOOKAHEAD(postfix_expression()) postfix_expression()
   | proto_invoke()
   | prefix_expression()
-  | declaration()
   | http()
   | file()
 }
@@ -283,6 +282,24 @@ void definition() #Definition :
   {jjtThis.defType = "variable";}
 
 | <CONST> ( LOOKAHEAD(2) array_init() | const_init() )
+  {jjtThis.defType = "constant";}
+}
+
+
+/**
+ * Declaration of a variable using the <LET> keyword.
+ * 
+ * @author amrwc
+ */
+void declaration() #Declaration :
+{}
+{
+  // If the declaration has two children, it's a ValueArray declaration.
+  <LET> identifier() [ "[" add_expression() "]" ]
+  {jjtThis.defType = "variable";}
+
+  // This will give an error since constants must be initialised.
+| <CONST> identifier() [ "[" add_expression() "]" ]
   {jjtThis.defType = "constant";}
 }
 
@@ -443,23 +460,6 @@ void prefix_expression() #IncrementDecrement :
     identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
   	{jjtThis.shorthandOperator = "pre" + operator.image;}
   )
-}
-
-
-/**
- * Declaration of a variable using the <LET> keyword.
- * 
- * @author amrwc
- */
-void declaration() #Declaration :
-{}
-{
-  <LET> identifier() [ "[" add_expression() "]" ]
-  {jjtThis.defType = "variable";}
-
-  // This will give an error since constants have to be initialised.
-| <CONST> identifier() [ "[" add_expression() "]" ]
-  {jjtThis.defType = "constant";}
 }
 
 
