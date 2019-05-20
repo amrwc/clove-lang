@@ -653,7 +653,7 @@ void literal() :
   | bool()
   | value_function()
   | value_object()
-  | value_list()
+  | value_list_or_array()
 }
 
 
@@ -783,7 +783,7 @@ void value_object() #ValueObject :
  * 
  * @author amrwc
  */
-void value_list() #ValueListOrArray :
+void value_list_or_array() #ValueListOrArray :
 {}
 {
   "[" [ expression() ( "," expression() )* ] "]"
