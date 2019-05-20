@@ -37,7 +37,30 @@ let arr3[20]
 log("arr3: ", arr3)
 log("arr3->getClass(): ", arr3->getClass())
 log("arr3->cap(): ", arr3->cap())
-//const arr4[30] // Should error since it's a constant
+log("arr3->append({ten: 10})")
+arr3->append({ten: 10})
+log("arr3: ", arr3)
 
-//arr2->append(10)
-//arr3->append(10)
+
+
+log()
+log()
+log()
+
+
+
+log("Array reassignment at an index:")
+log("arr[0] = 12")
+arr[0] = 12
+log("arr: ", arr)
+log()
+
+log('arr2[2] = "baz"')
+arr2[2] = "baz"
+log("arr2: ", arr2)
+log()
+
+log("arr3[0].ten = 13")
+arr3[0].ten = 13
+log("arr3: ", arr3)
+log()
