@@ -215,19 +215,19 @@ public class Parser implements CloveVisitor {
 			if (node.shorthandOperator != null) {
 				// If the shorthand operator is present, get the rightmost
 				// value of the dereference (the deepest dereference of Lvalue).
-				Value val = null;
+				Value v = null;
 				if (value instanceof ValueList)
-					val = listDereference(node, value, currChild);
+					v = listDereference(node, value, currChild);
 				else if (value instanceof ValueArray)
-					value = arrayDereference(node, value, currChild);
+					v = arrayDereference(node, value, currChild);
 				else if (value instanceof ValueObject)
-					val = objectDereference(node, value, currChild);
+					v = objectDereference(node, value, currChild);
 				else if (value instanceof ValueString)
-					val = stringDereference(node, value, currChild);
+					v = stringDereference(node, value, currChild);
 
 				// Update the Rvalue that will be assigned.
 				rightVal = 
-					doShorthand(node.shorthandOperator, val, rightVal);
+					doShorthand(node.shorthandOperator, v, rightVal);
 			}
 
 			// ...and reassign the value of the list...
