@@ -32,7 +32,11 @@ let arr2[10] = [10, [20, "foo"], "bar"]
 log("arr2[1][1]: ", arr2[1][1])
 log()
 
-//let arr3[20]
+log("let arr3[20]")
+let arr3[20]
+log("arr3: ", arr3)
+log("arr3->getClass(): ", arr3->getClass())
+log("arr3->cap(): ", arr3->cap())
 //const arr4[30] // Should error since it's a constant
 
 //arr2->append(10)
