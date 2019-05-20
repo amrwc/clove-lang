@@ -295,11 +295,14 @@ void declaration() #Declaration :
 {}
 {
   // If the declaration has two children, it's a ValueArray declaration.
-  <LET> identifier() [ "[" add_expression() "]" ]
+  <LET> identifier() [
+    "[" [ add_expression() {jjtThis.isArrayWithCap = true;} ] "]"
+    {jjtThis.isArrayDeclaration = true;}
+  ]
   {jjtThis.defType = "variable";}
 
   // This will give an error since constants must be initialised.
-| <CONST> identifier() [ "[" add_expression() "]" ]
+| <CONST> identifier() [ "[" [ add_expression() ] "]" ]
   {jjtThis.defType = "constant";}
 }
 
@@ -524,7 +527,8 @@ void const_init() #ConstInit :
 void array_init() #ArrayInit :
 {}
 {
-  identifier() "[" add_expression() "]" "=" "[" expression() ( "," expression() )* "]"
+  identifier() "[" [ add_expression() {jjtThis.isArrayWithCap = true;} ] "]" "="
+  "{" expression() ( "," expression() )* "}"
 }
 
 

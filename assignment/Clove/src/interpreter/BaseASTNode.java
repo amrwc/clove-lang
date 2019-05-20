@@ -36,4 +36,20 @@ public class BaseASTNode {
 	 * @author amrwc
 	 */
 	public String defType = null;
+
+	/**
+	 * Tells whether it's a declaration of an empty array
+	 * with 0 capacity.
+	 * 
+	 * @author amrwc
+	 */
+	public boolean isArrayDeclaration = false;
+
+	/**
+	 * Tells whether the declaration/definition is an array
+	 * with an explicitly stated capacity.
+	 * 
+	 * @author amrwc
+	 */
+	public boolean isArrayWithCap = false;
 }

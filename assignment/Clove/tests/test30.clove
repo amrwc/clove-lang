@@ -3,7 +3,7 @@ log("ValueArray:")
 log()
 
 log("const arr[10] = [10, 20, [30, 40]]")
-const arr[10] = [10, 20, [30, 40]]
+const arr[10] = {10, 20, [30, 40]}
 
 log("arr[2][0]: ", arr[2][0])
 log()
@@ -26,7 +26,7 @@ log()
 
 
 log('let arr2[10] = [10, [20, "foo"], "bar"]')
-let arr2[10] = [10, [20, "foo"], "bar"]
+let arr2[10] = {10, [20, "foo"], "bar"}
 
 log("arr2[1][1]: ", arr2[1][1])
 log()
@@ -110,3 +110,29 @@ log()
 
 log('++arr3[0]["ten"]: ', ++arr3[0]["ten"])
 log("arr3: ", arr3)
+
+
+
+log()
+log()
+log()
+
+
+
+log("Declaring/defining arrays without specifying the capacity explicitly:")
+log('const arr5[] = {100, 200, 300, "four", {five: 5}, [6, 7]}')
+const arr5[] = {100, 200, 300, "four", {five: 5}, [6, 7]}
+log("arr5: ", arr5)
+log("arr5->cap(): ", arr5->cap())
+log()
+
+log('let arr6[] = {{five: 5}, [6, 7], 100, 200, 300, "four"}')
+let arr6[] = {{five: 5}, [6, 7], 100, 200, 300, "four"}
+log("arr6: ", arr6)
+log("arr6->cap(): ", arr6->cap())
+log()
+
+log("let arr7[]")
+let arr7[]
+log("arr7: ", arr7)
+log("arr7->cap(): ", arr7->cap())
