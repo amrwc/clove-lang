@@ -846,7 +846,6 @@ public class Parser implements CloveVisitor {
 
 		reference.setValue(valueArray);
 		return data;
-//		return valueArray; //??? TODO:
 	}
 
 	// Function invocation argument list.
