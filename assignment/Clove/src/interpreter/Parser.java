@@ -561,6 +561,8 @@ public class Parser implements CloveVisitor {
 			for (; currChild < limit; currChild++) {
 				if (value instanceof ValueList)
 					value = listDereference(node, value, currChild + 1);
+				else if (value instanceof ValueArray)
+					value = arrayDereference(node, value, currChild + 1);
 				else if (value instanceof ValueObject)
 					value = objectDereference(node, value, currChild + 1);
 			}
@@ -617,33 +619,48 @@ public class Parser implements CloveVisitor {
 		ValueInteger one = new ValueInteger(1);
 
 		if (value instanceof ValueList) {
-			int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
-
-			old = ((ValueList) value).get(index);
+			ValueList list = (ValueList) value; // Cast value to an appropriate class.
+			final int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
+			old = list.get(index);
 
 			if (operation.contains("++"))
-				((ValueList) value).set(index, old.add(one));
+				list.set(index, old.add(one)); // Do ++
 			else
-				((ValueList) value).set(index, old.subtract(one));
+				list.set(index, old.subtract(one)); // Do --
+
+			// If it's a prefix operation, return the new value immediately.
+			if (operation.equals("pre++") || operation.equals("pre--"))
+				return list.get(index);
+		}
+
+		else if (value instanceof ValueArray) {
+			ValueArray array = (ValueArray) value;
+			final int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
+			old = array.get(index);
+
+			if (operation.contains("++"))
+				array.set(index, old.add(one));
+			else
+				array.set(index, old.subtract(one));
 
 			if (operation.equals("pre++") || operation.equals("pre--"))
-				return ((ValueList) value).get(index);
+				return array.get(index);
 		}
 
 		else if (value instanceof ValueObject) {
+			ValueObject object = (ValueObject) value;
 			String keyName = node.jjtGetChild(numChildren - 1) instanceof ASTIdentifier
 					? getTokenOfChild(node, numChildren - 1)
 					: doChild(node, numChildren - 1).toString();
-
-			old = ((ValueObject) value).get(keyName);
+			old = object.get(keyName);
 
 			if (operation.contains("++"))
-				((ValueObject) value).set(keyName, old.add(one));
+				object.set(keyName, old.add(one));
 			else
-				((ValueObject) value).set(keyName, old.subtract(one));
+				object.set(keyName, old.subtract(one));
 
 			if (operation.equals("pre++") || operation.equals("pre--"))
-				return ((ValueObject) value).get(keyName);
+				return object.get(keyName);
 		}
 
 		return old;
