@@ -50,6 +50,9 @@ public class ValueArray extends ValueAbstract {
 			case "append":
 				protoArgs.forEach(arg -> append(arg));
 				break;
+			case "capacity":
+			case "cap":
+				return new ValueInteger(capacity);
 			case "copy":
 				return new ValueArray(new Vector<Value>(internalValue));
 			case "getClass":
@@ -58,10 +61,14 @@ public class ValueArray extends ValueAbstract {
 				return findIndex(protoArgs.get(0));
 			case "length":
 				return length();
+			case "resize":
+				resize(protoArgs.get(0));
+				break;
 			case "shift":
 				return internalValue.remove(0);
 			default:
-				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValuArray class.");
+				throw new ExceptionSemantic("There is no prototype function \""
+					+ protoFunc + "\" in ValuArray class.");
 		}
 
 		return null;
@@ -69,9 +76,12 @@ public class ValueArray extends ValueAbstract {
 
 	public void append(Value v) {
 		if (internalValue.size() + 1 > capacity)
-			throw new ExceptionSemantic("The ValueArray is full and cannot be further appended.");
+			throw new ExceptionSemantic("The ValueArray of capacity \"" + capacity
+				+ "\" is full and cannot be further appended.");
 		if (v == null)
-			throw new ExceptionSemantic("The argument for ValueArray.append() cannot be null.");
+			throw new ExceptionSemantic("The argument for ValueArray.append()"
+					+ " cannot be null.");
+
 		internalValue.add(v);
 	}
 
@@ -119,8 +129,32 @@ public class ValueArray extends ValueAbstract {
 		return internalValue.size();
 	}
 
+	/**
+	 * Resizes the ValueArray -- increases the internal capacity
+	 * and the Vector's size.
+	 * 
+	 * @param {ValueInteger} len
+	 */
+	private void resize(Value len) {
+		int newLen = (int) len.longValue();
+		capacity = newLen;
+
+		// If the internal capacity exceeds the Vector's cap, adjust the latter.
+		if (capacity > internalValue.capacity()) {
+			internalValue.setSize(capacity);
+
+			// Remove all the null values assigned by the setSize() method.
+			// The loop ends at the index after the last non-null value.
+			int firstNull = internalValue.indexOf(null);
+			for (int i = capacity - 1; i >= firstNull; i--)
+				internalValue.remove(i);
+		}
+	}
+
+	/**
+	 * @read https://stackoverflow.com/a/23183963/10620237
+	 */
 	public String toString() {
-		// https://stackoverflow.com/a/23183963/10620237
 		String strVal = internalValue
 							.stream()
 							.map(Object::toString)
