@@ -64,3 +64,25 @@ log("arr3[0].ten = 13")
 arr3[0].ten = 13
 log("arr3: ", arr3)
 log()
+
+
+
+log()
+log()
+log()
+
+
+
+log("arr[0] -= 2")
+arr[0] -= 2
+log("arr: ", arr)
+log()
+
+log("arr2[1][0] *= 3")
+arr2[1][0] *= 3
+log("arr2: ", arr2)
+log()
+
+log("arr3[0].ten /= 4")
+arr3[0].ten /= 4
+log("arr3: ", arr3)
