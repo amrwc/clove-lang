@@ -139,23 +139,29 @@ public class Parser implements CloveVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTDeclaration node, Object data) {
-		String name = getTokenOfChild((SimpleNode) node, 0);
+		final String name = getTokenOfChild((SimpleNode) node, 0);
 
 		if (node.defType == "constant")
 			throw new ExceptionSemantic("Constants must be initialised."
-					+ " Change the \"const\" keyword before \"" + name + "\" to \"let\".");
+				+ " Change the \"const\" keyword before \"" + name + "\" to \"let\".");
 
 		if (scope.findReference(name) != null)
 			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
 
 		// Define the variable and get the reference.
-		Display.Reference ref = scope.defineVariable(name);
+		final Display.Reference ref = scope.defineVariable(name);
 
-		// If the declaration has two children, it's a ValueArray declaration.
-		if (node.jjtGetNumChildren() > 1) {
+		// If the declaration has an add_expression() in brackets,
+		// it's a ValueArray declaration with an explicit capacity.
+		if (node.isArrayWithCap == true) {
 			final int capacity = (int) doChild(node, 1).longValue();
 			ref.setValue(new ValueArray(capacity));
 		}
+
+		// Otherwise, if it's just an array declaration, set an empty ValueArray
+		// with 0 capacity.
+		else if (node.isArrayDeclaration == true)
+			ref.setValue(new ValueArray(0));
 
 		return data;
 	}
@@ -866,11 +872,30 @@ public class Parser implements CloveVisitor {
 		if (reference == null)
 			reference = scope.findReference("constant" + name);
 
-		// Get the array's initial capacity.
-		final int capacity = (int) doChild(node, 1).longValue();
-		// Get the number of values in the initialisation.
-		// -2 -- the first two children are identifier() and capacity.
-		final int initValNum = node.jjtGetNumChildren() - 2;
+		int initValNum = -1;
+		int capacity = -1;
+		int currChild = -1;
+		if (node.isArrayWithCap == true) {
+			// Get the number of values in the initialisation.
+			// -2 -- the first two children are identifier() and capacity.
+			initValNum = node.jjtGetNumChildren() - 2;
+
+			// Get the array's initial capacity from the explicitly specified
+			// capacity (child index 1),
+			capacity = (int) doChild(node, 1).longValue();
+
+			// currChild := 2 -- the values start from the third child.
+			currChild = 2;
+		} else {
+			// -1 -- the first child is an identifier().
+			initValNum = node.jjtGetNumChildren() - 1;
+
+			// Capacity is implicitly set with the number of values on initialisation.
+			capacity = initValNum;
+
+			// currChild := 1 -- the values start from the second child.
+			currChild = 1;
+		}
 
 		// If there's more values than the array can store...
 		if (initValNum > capacity)
@@ -878,14 +903,13 @@ public class Parser implements CloveVisitor {
 				+ name + "\" array (" + initValNum + ") than its capacity ("
 				+ capacity + ").");
 
-		// Initialise an empty array with the specified length.
+		// Initialise an empty array with the specified capacity.
 		ValueArray valueArray = new ValueArray(capacity);
 
 		// Add all the values to the array.
 		Value currentValue;
-		// i := 2 -- the values start from the third child.
-		for (int i = 2; i < node.jjtGetNumChildren(); i++) {
-			currentValue = doChild(node, i);
+		for (; currChild < node.jjtGetNumChildren(); currChild++) {
+			currentValue = doChild(node, currChild);
 			valueArray.append(currentValue);
 		}
 
