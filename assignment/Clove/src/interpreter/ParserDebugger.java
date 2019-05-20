@@ -340,7 +340,7 @@ public class ParserDebugger implements CloveVisitor {
 		return data;
 	}
 
-	public Object visit(ASTValueListOrArray node, Object data) {
+	public Object visit(ASTValueList node, Object data) {
 		dump(node, data);
 		return data;
 	}

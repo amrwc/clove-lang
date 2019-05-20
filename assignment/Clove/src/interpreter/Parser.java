@@ -1293,13 +1293,12 @@ public class Parser implements CloveVisitor {
 	 * 
 	 * @author amrwc
 	 */
-	public Object visit(ASTValueListOrArray node, Object data) {
+	public Object visit(ASTValueList node, Object data) {
 		ValueList valueList = new ValueList();
 
 		// Add all the values to the list.
-		int keyCount = node.jjtGetNumChildren();
 		Value currentValue;
-		for (int i = 0; i < keyCount; i++) {
+		for (int i = 0; i < node.jjtGetNumChildren(); i++) {
 			currentValue = doChild(node, i);
 			valueList.append(currentValue);
 		}

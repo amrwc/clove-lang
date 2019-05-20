@@ -653,7 +653,7 @@ void literal() :
   | bool()
   | value_function()
   | value_object()
-  | value_list_or_array()
+  | value_list()
 }
 
 
@@ -767,7 +767,7 @@ void value_function() #ValueFunction :
 
 
 /**
- * Anonymous object declaration.
+ * Anonymous object literal.
  * 
  * @author amrwc
  */
@@ -779,11 +779,11 @@ void value_object() #ValueObject :
 
 
 /**
- * List/array declaration.
+ * List literal.
  * 
  * @author amrwc
  */
-void value_list_or_array() #ValueListOrArray :
+void value_list() #ValueList :
 {}
 {
   "[" [ expression() ( "," expression() )* ] "]"
