@@ -8,7 +8,6 @@ const arr[10] = [10, 20, [30, 40]]
 log("arr[2][0]: ", arr[2][0])
 log()
 
-
 log("Before appending with resizing: ", arr)
 for (let i = 0; i < 10; i++) {
   if (arr->length() + 1 > arr->cap()) {
