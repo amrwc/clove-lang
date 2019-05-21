@@ -25,8 +25,8 @@ log()
 // e.g. str = "key"; obj[key + 1]; obj[key + 2]
 let str = "string"
 log("str: ", str)
-str++
-log("str++: ", str) // string1
+log("str++: ", str++)
+log("str: ", str) // string1
 log()
 
 

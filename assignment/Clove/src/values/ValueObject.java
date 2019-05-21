@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
+import parser.ast.ASTIdentifier;
+import parser.ast.SimpleNode;
 
 /**
  * @see https://docs.oracle.com/javase/8/docs/api/java/util/HashMap.html
@@ -28,6 +31,23 @@ public class ValueObject extends ValueAbstract {
 	public int compare(Value v) {
 		HashMap<String, Value> map = ((ValueObject) v).internalValue;
 		return internalValue.equals(map) ? 0 : 1;
+	}
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild) {
+		final Parser par = new Parser();
+		final ValueObject valueObject = (ValueObject) v;
+		final var keyName = node.jjtGetChild(currChild) instanceof ASTIdentifier
+			? Parser.getTokenOfChild(node, currChild)
+			: par.doChild(node, currChild).toString();
+		return valueObject.get(keyName);
 	}
 
 	/**

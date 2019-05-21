@@ -2,11 +2,23 @@ package values;
 
 import java.util.ArrayList;
 
+import parser.ast.SimpleNode;
+
 /** An abstract Value, that defines all possible operations on abstract ValueS.
  * 
  *  If an operation is not supported, throw SemanticException.
  */
 public interface Value {
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild);
 
 	/**
 	 * Execute a prototype function.

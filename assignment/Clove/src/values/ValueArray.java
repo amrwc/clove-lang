@@ -5,6 +5,8 @@ import java.util.Vector;
 import java.util.stream.Collectors;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
+import parser.ast.SimpleNode;
 
 /**
  * @see https://docs.oracle.com/javase/8/docs/api/java/util/Vector.html
@@ -35,6 +37,21 @@ public class ValueArray extends ValueAbstract {
 	public int compare(Value v) {
 		Vector<Value> arr = ((ValueArray) v).internalValue;
 		return internalValue.equals(arr) ? 0 : 1;
+	}
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild) {
+		final Parser par = new Parser();
+		final ValueArray valueList = (ValueArray) v;
+		final int index = (int) ((ValueInteger) par.doChild(node, currChild)).longValue();
+		return valueList.get(index);
 	}
 
 	/**
