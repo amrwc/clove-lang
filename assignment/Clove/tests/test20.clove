@@ -12,6 +12,6 @@ funkcja foo(str) {
 }
 foo("function := func, fn, funkcja")
 
-zakoncz // quit := zakoncz, wyjdz
+zakoncz() // quit := zakoncz, wyjdz
 
 log("This won't be printed out.")
