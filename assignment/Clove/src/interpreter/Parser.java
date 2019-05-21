@@ -88,14 +88,14 @@ public class Parser implements CloveVisitor {
 
 		// If there's more than 1 child in the left child, then it's not just an identifier.
 		if (leftNumChildren > 0) {
-			fndef = getValueFn(node);
+			fndef = getValueFunction(node);
 			node.optimised = fndef;
 		}
 
 		if (node.optimised == null) { 
 			String fnname = getTokenOfChild(node, 0); // Child 0 - identifier (fn name)
 			fndef = scope.findFunction(fnname);
-			if (fndef == null) fndef = findValueFn(fnname);
+			if (fndef == null) fndef = findValueFunction(fnname);
 
 			node.optimised = fndef; // Save it for next time
 		} else
@@ -496,29 +496,13 @@ public class Parser implements CloveVisitor {
 	 * @author amrwc
 	 */
 	public Object visit(ASTProtoInvoke node, Object data) {
-		Value value = doChild(node, 0);
-		String protoFunc = node.tokenValue;
-		ArrayList<Value> protoArgs = (node.jjtGetNumChildren() > 1)
+		final Value value = doChild(node, 0);
+		final String protoFunc = node.tokenValue;
+		final ArrayList<Value> protoArgs = (node.jjtGetNumChildren() > 1)
 			? parseProtoArgs((SimpleNode) node)
 			: null;
 
-		if (value instanceof ValueList)
-			return ((ValueList) value).execProto(protoFunc, protoArgs);
-		
-		else if (value instanceof ValueArray)
-			return ((ValueArray) value).execProto(protoFunc, protoArgs);
-		
-		else if (value instanceof ValueObject)
-			return ((ValueObject) value).execProto(protoFunc, protoArgs);
-		
-		else if (value instanceof ValueString)
-			return ((ValueString) value).execProto(protoFunc, protoArgs);
-
-		else
-			throw new ExceptionSemantic("Variable \""
-				+ ((SimpleNode) node.jjtGetChild(0)).tokenValue
-				+ "\" of type \"" + value.getClass().getCanonicalName()
-				+ "\" does not support prototype functions.");
+		return value.execProto(protoFunc, protoArgs);
 	}
 
 	/**
@@ -1010,14 +994,14 @@ public class Parser implements CloveVisitor {
 
 		// If there's more than 1 child in the left child, then it's not just an identifier.
 		if (leftNumChildren > 0) {
-			fndef = getValueFn(node);
+			fndef = getValueFunction(node);
 			node.optimised = fndef;
 		}
 
 		if (node.optimised == null) {
 			String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-			if (fndef == null) fndef = findValueFn(fnname);
+			if (fndef == null) fndef = findValueFunction(fnname);
 
 			if (!fndef.hasReturn())
 				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
@@ -1033,11 +1017,11 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Try finding the ValueFn inside the scope and extract its FunctionDefinition.
+	 * Try finding the ValueFunction inside the scope and extract its FunctionDefinition.
 	 * 
 	 * @author amrwc
 	 */
-	private FunctionDefinition findValueFn(String fnname) {
+	private FunctionDefinition findValueFunction(String fnname) {
 		Reference reference = scope.findReference(fnname);
 		if (reference == null)
 			// Find a constant of the same name.
@@ -1046,16 +1030,16 @@ public class Parser implements CloveVisitor {
 			throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 
 		ValueFunction valueFunction = (ValueFunction) reference.getValue();
-		return valueFunction.get(); // Extract the FunctionDefinition stored in ValueFn.
+		return valueFunction.get(); // Extract the FunctionDefinition stored in ValueFunction.
 	}
 
 	/**
-	 * Retrieves ValueFn from a dereference and returns its FunctionDefinition.
+	 * Retrieves ValueFunction from a dereference and returns its FunctionDefinition.
 	 * 
 	 * @param node
 	 * @author amrwc
 	 */
-	private FunctionDefinition getValueFn(SimpleNode node) {
+	private FunctionDefinition getValueFunction(SimpleNode node) {
 		Value value = doChild(node, 0); // Do the dereference.
 
 		ValueFunction valueFunction = (ValueFunction) value;

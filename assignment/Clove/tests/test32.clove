@@ -1,0 +1,33 @@
+/**
+ * Test newer prototype functions in ValueList,
+ * ValueArray and ValueObject.
+ */
+
+log('Test newer prototype functions')
+log()
+
+
+
+const list = []
+let array[]
+array->resize(10)
+
+// Populate the structures
+for (let i = 100; i < 110; i++) {
+  list->append(random(0, i))
+  array->append(random(0, i))
+}
+
+log('list:  ', list)
+log('array: ', array)
+log()
+
+
+
+log('list->remove(4): ', list->remove(4))
+log('list:  ', list)
+log()
+
+log('array->remove(7): ', array->remove(7))
+log('array:  ', array)
+log()

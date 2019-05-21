@@ -1,0 +1,82 @@
+/**
+ * Test stack and queue operations on ValueList
+ * and ValueArray.
+ */
+
+log('Test stack and queue operations')
+log()
+
+
+
+const list = []
+let array[]
+array->resize(10)
+
+// Populate the structures
+for (let i = 0; i < 10; i++) {
+  list->append("v" + i)
+  array->append("v" + i)
+}
+
+log('list:  ', list)
+log('array: ', array)
+log()
+
+
+
+log('Stack:')
+for (let i = 0; i < 3; i++) {
+  const rand = random(0, 100000)
+  log('	list->push(', rand, ')')
+  list->push(rand)
+  log('	list:  ', list)
+
+  if (array->length() + 1 > array->capacity()) {
+    array->resize(array->cap() + 1)
+  }
+
+  log('	array->push(', rand, ')')
+  array->push(rand)
+  log('	array: ', array)
+  log()
+}
+log()
+log()
+
+for (let i = 0; i < 3; i++) {
+  log('	list->pop(): ', list->pop())
+  log('	list:  ', list)
+  log('	array->pop(): ', array->pop())
+  log('	array: ', array)
+  log()
+}
+log()
+log()
+
+
+
+log('Queue:')
+for (let i = 0; i < 3; i++) {
+  const rand = random(0, 100000)
+  log('	list->push(', rand, ')')
+  list->push(rand)
+  log('	list:  ', list)
+
+  if (array->length() + 1 > array->capacity()) {
+    array->resize(array->cap() + 1)
+  }
+
+  log('	array->push(', rand, ')')
+  array->push(rand)
+  log('	array: ', array)
+  log()
+}
+log()
+
+for (let i = 0; i < 3; i++) {
+  log()
+  log('	list->shift(): ', list->shift())
+  log('	list:  ', list)
+  log('	array->shift(): ', array->shift())
+  log('	array: ', array)
+}
