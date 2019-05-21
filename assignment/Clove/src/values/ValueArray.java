@@ -81,8 +81,6 @@ public class ValueArray extends ValueAbstract {
 				return new ValueString(getName());
 			case "indexOf":
 				return findIndex(protoArgs.get(0));
-			case "length":
-				return length();
 			case "pop":
 				return internalValue.remove(internalValue.size() - 1);
 			case "remove":
@@ -92,6 +90,9 @@ public class ValueArray extends ValueAbstract {
 				break;
 			case "shift":
 				return internalValue.remove(0);
+			case "size":
+			case "length":
+				return new ValueInteger(size());
 			default:
 				throw new ExceptionSemantic("There is no prototype function \""
 					+ protoFunc + "\" in ValueArray class.");
@@ -145,12 +146,6 @@ public class ValueArray extends ValueAbstract {
 		internalValue.set(i, v);
 	}
 
-	// To be used in Clove-lang because it resolves to a Value.
-	private Value length() {
-		return new ValueInteger(internalValue.size());
-	}
-
-	// To be used internally, by the Parser implementation.
 	public int size() {
 		return internalValue.size();
 	}
