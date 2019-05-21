@@ -5,14 +5,14 @@
 \begin{spacing}{0.6}
 \begin{minted}[frame=single]{JavaScript}
 const list = [13, "foo", ["bar", "baz"]]
-const nestedBar = list[2]->shift()        // bar
+const nestedBar = list[2]->shift()       // bar
 const obj = { ten: 10, twenty: 20 }
-obj->remove("ten")                        // { twenty: 20 }
+obj->remove("ten")                       // { twenty: 20 }
+const array[] = {77, {key: "val"}, [88]} // Array with capacity of 3
+array->resize(array->cap() + 7)          // Increases the array's capacity by 7
 
-list[0] += 7                              // [20, "foo", ["baz"]]
-obj.twenty /= 7                           // { twenty: 2.857142857142857 }
-list[2][0]++                              // [20, "foo", ["baz1"]]
---obj["twenty"]                           // { twenty: 1.857142857142857 }
+obj.twenty /= 7                          // { twenty: 2.857142857142857 }
+--obj["twenty"]                          // { twenty: 1.857142857142857 }
 \end{minted}
 \end{spacing}
 \end{listing}
