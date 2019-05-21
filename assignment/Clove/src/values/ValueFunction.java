@@ -7,12 +7,12 @@ import interpreter.FunctionDefinition;
  * 
  * @author amrwc
  */
-public class ValueFn extends ValueAbstract {
+public class ValueFunction extends ValueAbstract {
 	private FunctionDefinition functionDefinition;
 
-	public ValueFn() {}
+	public ValueFunction() {}
 
-	public ValueFn(FunctionDefinition fndef) {
+	public ValueFunction(FunctionDefinition fndef) {
 		functionDefinition = fndef;
 	}
 
