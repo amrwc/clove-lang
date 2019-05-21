@@ -56,9 +56,9 @@ public class ValueObject extends ValueAbstract {
 	/**
 	 * Execute a prototype function.
 	 * 
-	 * @param protoFunc
-	 * @param protoArgs
-	 * @return Value
+	 * @param {String} protoFunc -- prototype function name
+	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
+	 * @returns {Value} result of the prototype function
 	 * @author amrwc
 	 */
 	@Override
@@ -69,6 +69,9 @@ public class ValueObject extends ValueAbstract {
 			case "remove":
 				protoArgs.forEach(arg -> remove(arg.stringValue()));
 				break;
+			case "size":
+			case "length":
+				return new ValueInteger(size());
 			case "tryRemove":
 				protoArgs.forEach(arg -> tryRemove(arg.stringValue()));
 				break;
@@ -116,6 +119,11 @@ public class ValueObject extends ValueAbstract {
 		return result.substring(0, result.length() - 2) + "}";
 	}
 
+	@Override
+	public String stringValue() {
+		return toString();
+	}
+
 	/**
 	 * Turns the ValueObject into an url-encoded string.
 	 * 
@@ -137,4 +145,8 @@ public class ValueObject extends ValueAbstract {
             throw new UnsupportedOperationException(e);
         }
     }
+
+	public int size() {
+		return internalValue.size();
+	}
 }

@@ -11,23 +11,32 @@ log()
 const list = []
 let array[]
 array->resize(10)
+const object = {}
 
 // Populate the structures
 for (let i = 100; i < 110; i++) {
   list->append(random(0, i))
   array->append(random(0, i))
+  object[i] = random(0, i)
 }
 
 log('list:  ', list)
 log('array: ', array)
+log('object: ', object)
+log()
 log()
 
 
 
 log('list->remove(4): ', list->remove(4))
 log('list:  ', list)
+log('list->size(): ', list->size())
 log()
 
 log('array->remove(7): ', array->remove(7))
 log('array:  ', array)
+log('array->size(): ', array->size())
+log()
+
+log('object->size(): ', object->size())
 log()
