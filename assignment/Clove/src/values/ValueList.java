@@ -31,14 +31,15 @@ public class ValueList extends ValueAbstract {
 	/**
 	 * Execute a prototype function.
 	 * 
-	 * @param protoFunc
-	 * @param protoArgs
-	 * @return Value
+	 * @param {String} protoFunc -- prototype function name
+	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
+	 * @returns {Value} result of the prototype function
 	 * @author amrwc
 	 */
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "append":
+			case "push":
 				protoArgs.forEach(arg -> append(arg));
 				break;
 			case "copy":
@@ -49,10 +50,15 @@ public class ValueList extends ValueAbstract {
 				return findIndex(protoArgs.get(0));
 			case "length":
 				return length();
+			case "pop":
+				return internalValue.remove(internalValue.size() - 1);
+			case "remove":
+				return internalValue.remove((int) protoArgs.get(0).longValue());
 			case "shift":
 				return internalValue.remove(0);
 			default:
-				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueList class.");
+				throw new ExceptionSemantic("There is no prototype function \""
+					+ protoFunc + "\" in ValueList class.");
 		}
 
 		return null;

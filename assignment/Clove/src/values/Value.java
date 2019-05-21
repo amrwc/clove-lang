@@ -1,11 +1,23 @@
 package values;
 
+import java.util.ArrayList;
+
 /** An abstract Value, that defines all possible operations on abstract ValueS.
  * 
  *  If an operation is not supported, throw SemanticException.
  */
 public interface Value {
-	
+
+	/**
+	 * Execute a prototype function.
+	 * 
+	 * @param {String} protoFunc -- prototype function name
+	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
+	 * @returns {Value} result of the prototype function
+	 * @author amrwc
+	 */
+	public Value execProto(String protoFunc, ArrayList<Value> protoArgs);
+
 	/** Get name of this Value type. */
 	public String getName();
 	
