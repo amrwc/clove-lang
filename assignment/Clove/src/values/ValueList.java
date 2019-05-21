@@ -21,12 +21,14 @@ public class ValueList extends ValueAbstract {
 		internalValue = valueList;
 	}
 
+	@Override
 	public String getName() {
 		return "ValueList";
 	}
 
+	@Override
 	public int compare(Value v) {
-		ArrayList<Value> arr = ((ValueList) v).internalValue;
+		final ArrayList<Value> arr = ((ValueList) v).internalValue;
 		return internalValue.equals(arr) ? 0 : 1;
 	}
 
@@ -38,6 +40,7 @@ public class ValueList extends ValueAbstract {
 	 * @param currChild -- current child of the node being parsed
 	 * @returns {Value} the dereferenced value
 	 */
+	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild) {
 		final Parser par = new Parser();
 		final ValueList valueList = (ValueList) v;
@@ -53,6 +56,7 @@ public class ValueList extends ValueAbstract {
 	 * @returns {Value} result of the prototype function
 	 * @author amrwc
 	 */
+	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "append":
@@ -94,7 +98,7 @@ public class ValueList extends ValueAbstract {
 	 * @return {ValueInteger} index of the Value in the ValueList
 	 */
 	private Value findIndex(Value v) {
-		String strVal = v.stringValue();
+		final String strVal = v.stringValue();
 		for (int i = 0; i < internalValue.size(); i++) {
 			if (internalValue.get(i).stringValue().equals(strVal))
 				return new ValueInteger(i);
@@ -107,7 +111,7 @@ public class ValueList extends ValueAbstract {
 			throw new ExceptionSemantic("The index " + i + " is out of bounds of the list with length "
 			+ internalValue.size() + ".");
 
-		Value val = internalValue.get(i);
+		final Value val = internalValue.get(i);
 		if (val != null) return val;
 		throw new ExceptionSemantic("Value of index " + i + " in the list is undefined or equal to null.");
 	}
@@ -120,7 +124,7 @@ public class ValueList extends ValueAbstract {
 
 	// To be used in Clove-lang because it resolves to a Value.
 	private Value length() {
-		return new ValueInteger((long) internalValue.size());
+		return new ValueInteger(internalValue.size());
 	}
 
 	// To be used internally, by the Parser implementation.
@@ -131,14 +135,16 @@ public class ValueList extends ValueAbstract {
 	/**
 	 * @read https://stackoverflow.com/a/23183963/10620237
 	 */
+	@Override
 	public String toString() {
-		String strVal = internalValue
+		final String strVal = internalValue
 							.stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(", "));
 		return "[" + strVal + "]";
 	}
 
+	@Override
 	public String stringValue() {
 		return toString();
 	}

@@ -16,10 +16,12 @@ public class ValueFunction extends ValueAbstract {
 		functionDefinition = fndef;
 	}
 
+	@Override
 	public int compare(Value v) {
 		return functionDefinition.compareTo(v);
 	}
 
+	@Override
 	public String getName() {
 		return "ValueFn";
 	}

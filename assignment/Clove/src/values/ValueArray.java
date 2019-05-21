@@ -13,7 +13,7 @@ import parser.ast.SimpleNode;
  * @author amrwc
  */
 public class ValueArray extends ValueAbstract {
-	private Vector<Value> internalValue;
+	private final Vector<Value> internalValue;
 	private int capacity;
 	
 	public ValueArray() {
@@ -30,12 +30,14 @@ public class ValueArray extends ValueAbstract {
 		internalValue = valueArray;
 	}
 
+	@Override
 	public String getName() {
 		return "ValueArray";
 	}
 
+	@Override
 	public int compare(Value v) {
-		Vector<Value> arr = ((ValueArray) v).internalValue;
+		final Vector<Value> arr = ((ValueArray) v).internalValue;
 		return internalValue.equals(arr) ? 0 : 1;
 	}
 
@@ -47,6 +49,7 @@ public class ValueArray extends ValueAbstract {
 	 * @param currChild -- current child of the node being parsed
 	 * @returns {Value} the dereferenced value
 	 */
+	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild) {
 		final Parser par = new Parser();
 		final ValueArray valueList = (ValueArray) v;
@@ -62,6 +65,7 @@ public class ValueArray extends ValueAbstract {
 	 * @returns {Value} result of the prototype function
 	 * @author amrwc
 	 */
+	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "append":
@@ -115,7 +119,7 @@ public class ValueArray extends ValueAbstract {
 	 * @return {ValueInteger} index of the Value in the ValueArray
 	 */
 	private Value findIndex(Value v) {
-		String strVal = v.stringValue();
+		final String strVal = v.stringValue();
 		for (int i = 0; i < internalValue.size(); i++) {
 			if (internalValue.get(i).stringValue().equals(strVal))
 				return new ValueInteger(i);
@@ -128,7 +132,7 @@ public class ValueArray extends ValueAbstract {
 			throw new ExceptionSemantic("The index " + i + " is out of bounds of the array with length "
 			+ internalValue.size() + ".");
 
-		Value val = internalValue.get(i);
+		final Value val = internalValue.get(i);
 		if (val != null) return val;
 		throw new ExceptionSemantic("Value of index " + i + " in the array is undefined or equal to null.");
 	}
@@ -143,7 +147,7 @@ public class ValueArray extends ValueAbstract {
 
 	// To be used in Clove-lang because it resolves to a Value.
 	private Value length() {
-		return new ValueInteger((long) internalValue.size());
+		return new ValueInteger(internalValue.size());
 	}
 
 	// To be used internally, by the Parser implementation.
@@ -158,7 +162,7 @@ public class ValueArray extends ValueAbstract {
 	 * @param {ValueInteger} len
 	 */
 	private void resize(Value len) {
-		int newLen = (int) len.longValue();
+		final int newLen = (int) len.longValue();
 		capacity = newLen;
 
 		// If the internal capacity exceeds the Vector's cap, adjust the latter.
@@ -167,7 +171,7 @@ public class ValueArray extends ValueAbstract {
 
 			// Remove all the null values assigned by the setSize() method.
 			// The loop ends at the index after the last non-null value.
-			int firstNull = internalValue.indexOf(null);
+			final int firstNull = internalValue.indexOf(null);
 			for (int i = capacity - 1; i >= firstNull; i--)
 				internalValue.remove(i);
 		}
@@ -176,14 +180,16 @@ public class ValueArray extends ValueAbstract {
 	/**
 	 * @read https://stackoverflow.com/a/23183963/10620237
 	 */
+	@Override
 	public String toString() {
-		String strVal = internalValue
+		final String strVal = internalValue
 							.stream()
 							.map(Object::toString)
 							.collect(Collectors.joining(", "));
 		return "[" + strVal + "]";
 	}
 
+	@Override
 	public String stringValue() {
 		return toString();
 	}

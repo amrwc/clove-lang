@@ -17,12 +17,12 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 
 	private String name;
 	private String parmSignature = "";
-	private Vector<String> parameters = new Vector<String>();
-	private HashMap<String, Integer> slots = new HashMap<String, Integer>();
-	private HashMap<String, FunctionDefinition> functions = new HashMap<String, FunctionDefinition>();
+	private final Vector<String> parameters = new Vector<String>();
+	private final HashMap<String, Integer> slots = new HashMap<String, Integer>();
+	private final HashMap<String, FunctionDefinition> functions = new HashMap<String, FunctionDefinition>();
 	private SimpleNode ASTFunctionBody = null;
 	private SimpleNode ASTFunctionReturnExpression = null;
-	private int depth;
+	private final int depth;
 	
 	/** Ctor for function definition. */
 	FunctionDefinition(String functionName, int level) {
@@ -80,6 +80,7 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 	}
 	
 	/** Comparison operator.  Functions of the same name are the same. */
+	@Override
 	public int compareTo(Object o) {
 		return name.compareTo(((FunctionDefinition)o).name);
 	}
@@ -110,7 +111,7 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 	
 	/** Get the storage slot number of a given variable or parm.  Return -1 if it doesn't exist. */
 	int getLocalSlotNumber(String name) {
-		Integer slot = slots.get(name);
+		final Integer slot = slots.get(name);
 		if (slot == null)
 			return -1;
 		return slot.intValue();
@@ -118,10 +119,10 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 	
 	/** Define a variable.  Return its slot number. */
 	int defineVariable(String name) {
-		Integer slot = slots.get(name);
+		final Integer slot = slots.get(name);
 		if (slot != null)
 			return slot.intValue();
-		int slotNumber = slots.size();
+		final int slotNumber = slots.size();
 		slots.put(name, Integer.valueOf(slotNumber));
 		return slotNumber;
 	}
