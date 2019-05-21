@@ -3,41 +3,42 @@
  * and shorthand operators.
  */
 
+log('const list = [13, "foo", ["bar", "baz"]]')
 const list = [13, "foo", ["bar", "baz"]]
-log("list: ", list)
 
-const nestedBar = list[2]->shift() // bar
 log("const nestedBar = list[2]->shift()")
-log("nestedBar: ", nestedBar, ", list: ", list)
-log()
-
-
-const obj = { ten: 10, twenty: 20 }
-log("obj: ", obj)
-log('obj->remove("ten")')
-obj->remove("ten")
-log("obj: ", obj)
-log()
-
-
-log("list[0] += 7")
-list[0] += 7
+const nestedBar = list[2]->shift() // bar
+log("nestedBar: ", nestedBar)
 log("list: ", list)
+log()
+
+
+log("const obj = { ten: 10, twenty: 20 }")
+const obj = { ten: 10, twenty: 20 }
+log('obj->remove("ten")')
+obj->remove("ten")                       // { twenty: 20 }
+log("obj: ", obj)
 log()
 
 
 log("obj.twenty /= 7")
-obj.twenty /= 7
+obj.twenty /= 7                          // { twenty: 2.857142857142857 }
 log("obj: ", obj)
 log()
 
 
-log("list[2][0]++")
-list[2][0]++
-log("list: ", list)
+log('const array[] = {77, {key: "val"}, [88]}')
+const array[] = {77, {key: "val"}, [88]} // Array with capacity of 3
+log("array: ", array)
+log("array->cap(): ", array->cap())
 log()
 
 
-log('--obj["twenty"]')
---obj["twenty"]
+log("array->resize(array->cap() + 7)")
+array->resize(array->cap() + 7)          // Increases the array's capacity by 7
+log("array->cap(): ", array->cap())
+log()
+
+
+log('--obj["twenty"]: ', --obj["twenty"])// { twenty: 1.857142857142857 }
 log("obj: ", obj)
