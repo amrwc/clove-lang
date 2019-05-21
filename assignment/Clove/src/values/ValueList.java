@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
+import parser.ast.SimpleNode;
 
 /**
  * @see https://docs.oracle.com/javase/8/docs/api/index.html?java/util/ArrayList.html
@@ -26,6 +28,21 @@ public class ValueList extends ValueAbstract {
 	public int compare(Value v) {
 		ArrayList<Value> arr = ((ValueList) v).internalValue;
 		return internalValue.equals(arr) ? 0 : 1;
+	}
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild) {
+		final Parser par = new Parser();
+		final ValueList valueList = (ValueList) v;
+		final int index = (int) ((ValueInteger) par.doChild(node, currChild)).longValue();
+		return valueList.get(index);
 	}
 
 	/**

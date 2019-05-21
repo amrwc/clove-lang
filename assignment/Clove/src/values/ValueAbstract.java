@@ -3,12 +3,26 @@ package values;
 import java.util.ArrayList;
 
 import interpreter.ExceptionSemantic;
+import parser.ast.SimpleNode;
 
 public abstract class ValueAbstract implements Value {
 
 	public abstract String getName();
 
 	public abstract int compare(Value v);
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild) {
+		throw new ExceptionSemantic("Value type " + getName() + " doesn't support"
+			+ " custom dereferencing.");
+	}
 
 	/**
 	 * Execute a prototype function.

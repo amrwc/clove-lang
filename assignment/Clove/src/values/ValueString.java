@@ -3,6 +3,8 @@ package values;
 import java.util.ArrayList;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
+import parser.ast.SimpleNode;
 
 public class ValueString extends ValueAbstract {
 	
@@ -15,6 +17,22 @@ public class ValueString extends ValueAbstract {
 	
 	public ValueString(String b) {
 		internalValue = b;
+	}
+
+	/**
+	 * Dereferences a value in a nested expression.
+	 * 
+	 * @param node -- node in question
+	 * @param v -- value to be dereferenced
+	 * @param currChild -- current child of the node being parsed
+	 * @returns {Value} the dereferenced value
+	 */
+	public Value dereference(SimpleNode node, Value v, int currChild) {
+		final Parser par = new Parser();
+		final ValueString valueString = (ValueString) v;
+		final int index = (int) ((ValueInteger) par.doChild(node, currChild)).longValue();
+		final String str = "" + ((ValueString) valueString).stringValue().charAt(index);
+		return new ValueString(str);
 	}
 
 	/**
