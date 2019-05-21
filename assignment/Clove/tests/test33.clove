@@ -1,0 +1,35 @@
+/**
+ * Test optional semi-colons
+ */
+
+log('Test optional semi-colons')
+
+
+// Statements:
+function f() {
+  return 2 + 2;                      // return_expression()
+}
+f();                                 // call()
+
+let foo1 = [];                       // definition()
+let foo2;                            // declaration()
+const foo3 = 3;                      // definition()
+
+const f2 = (x) => {                  // definition()
+  return x + x;
+};
+
+foo2 = 2;                            // assignment()
+
+foo2++;                              // postfix_expression()
+--foo2;                              // prefix_expression()
+
+foo1->append(8);                     // proto_invoke()
+
+http("get", "http://example.com");   // http()
+
+file("create", "./test33.txt", ";"); // file()
+
+log();                               // write()
+
+quit();                              // quit()

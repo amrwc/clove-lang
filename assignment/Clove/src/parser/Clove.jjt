@@ -244,22 +244,22 @@ ASTCode code() #Code :
 void statement() #Statement :
 {}
 {
-    LOOKAHEAD(call()) call()
-  | LOOKAHEAD(definition()) definition()
-  | LOOKAHEAD(declaration()) declaration()
-  | LOOKAHEAD(assignment()) assignment()
+    LOOKAHEAD(call()) call() [";"]
+  | LOOKAHEAD(definition()) definition() [";"]
+  | LOOKAHEAD(declaration()) declaration() [";"]
+  | LOOKAHEAD(assignment()) assignment() [";"]
   | function_definition()
   | block()
   | if_statement()
   | for_loop()
   | while_loop()
-  | write()
-  | quit()
-  | LOOKAHEAD(postfix_expression()) postfix_expression()
-  | proto_invoke()
-  | prefix_expression()
-  | http()
-  | file()
+  | write() [";"]
+  | quit() [";"]
+  | LOOKAHEAD(postfix_expression()) postfix_expression() [";"]
+  | proto_invoke() [";"]
+  | prefix_expression() [";"]
+  | http() [";"]
+  | file() [";"]
 }
 
 
@@ -379,7 +379,12 @@ void if_statement() #IfStatement :
 void for_loop() #ForLoop :
 {}
 {
-  <FOR> "(" definition() ";" expression() ";" ( LOOKAHEAD(3) assignment() | expression() ) ")" statement()
+  <FOR> "("
+    definition() ";"
+    expression() ";"
+    ( LOOKAHEAD(3) assignment() | expression() )
+  ")"
+  statement()
 }
 
 
@@ -406,7 +411,7 @@ void write() #Write :
 void quit() #Quit :
 {}
 {
-  <QUIT>
+  <QUIT> "(" [ expression() ( "," expression() )* ] ")"
 }
 
 
@@ -556,7 +561,7 @@ void function_body() #FunctionBody :
 void return_expression() #ReturnExpression :
 {}
 {
-  expression()
+  expression() [";"]
 }
 
 
