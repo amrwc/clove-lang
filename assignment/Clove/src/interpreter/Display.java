@@ -7,13 +7,13 @@ import values.Value;
  */ 
 class Display {
 	private final int maximumFunctionNesting = 64;
-	private FunctionInvocation[] display = new FunctionInvocation[maximumFunctionNesting];
+	private final FunctionInvocation[] display = new FunctionInvocation[maximumFunctionNesting];
 	private int currentLevel;
 
 	/** Reference to a slot. */
 	class Reference {
-		private int displayDepth;
-		private int slotNumber;
+		private final int displayDepth;
+		private final int slotNumber;
 		
 		/** Ctor */
 		Reference(int depth, int slot) {
@@ -41,12 +41,12 @@ class Display {
 	
 	/** Execute a function in its scope, using a specified parser. */
 	Value execute(FunctionInvocation fn, Parser p) {
-		int changeLevel = fn.getLevel();
-		FunctionInvocation oldContext = display[changeLevel];
-		int oldLevel = currentLevel;
+		final int changeLevel = fn.getLevel();
+		final FunctionInvocation oldContext = display[changeLevel];
+		final int oldLevel = currentLevel;
 		display[changeLevel] = fn;
 		currentLevel = changeLevel;
-		Value v = display[currentLevel].execute(p);
+		final Value v = display[currentLevel].execute(p);
 		display[changeLevel] = oldContext;
 		currentLevel = oldLevel;
 		return v;
@@ -61,7 +61,7 @@ class Display {
 	Reference findReference(String name) {
 		int level = currentLevel;
 		while (level >= 0) {
-			int offset = display[level].findSlotNumber(name);
+			final int offset = display[level].findSlotNumber(name);
 			if (offset >= 0)
 				return new Reference(level, offset);
 			level--;
@@ -82,7 +82,7 @@ class Display {
 	FunctionDefinition findFunction(String name) {
 		int level = currentLevel;
 		while (level >= 0) {
-			FunctionDefinition definition = display[level].findFunction(name);
+			final FunctionDefinition definition = display[level].findFunction(name);
 			if (definition != null)
 				return definition;
 			level--;

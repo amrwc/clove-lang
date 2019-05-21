@@ -8,7 +8,7 @@ import parser.ast.SimpleNode;
 
 public class ValueString extends ValueAbstract {
 	
-	private String internalValue;
+	private final String internalValue;
 	
 	/** Return a ValueString given a quote-delimited source string. */
 	public static ValueString stripDelimited(String b) {
@@ -27,11 +27,12 @@ public class ValueString extends ValueAbstract {
 	 * @param currChild -- current child of the node being parsed
 	 * @returns {Value} the dereferenced value
 	 */
+	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild) {
 		final Parser par = new Parser();
 		final ValueString valueString = (ValueString) v;
 		final int index = (int) ((ValueInteger) par.doChild(node, currChild)).longValue();
-		final String str = "" + ((ValueString) valueString).stringValue().charAt(index);
+		final String str = "" + valueString.stringValue().charAt(index);
 		return new ValueString(str);
 	}
 
@@ -43,6 +44,7 @@ public class ValueString extends ValueAbstract {
 	 * @return Value
 	 * @author amrwc
 	 */
+	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "getClass":
@@ -58,24 +60,29 @@ public class ValueString extends ValueAbstract {
 		return new ValueInteger(internalValue.length());
 	}
 	
+	@Override
 	public String getName() {
 		return "ValueString";
 	}
 	
 	/** Convert this to a String. */
+	@Override
 	public String stringValue() {
 		return internalValue;		
 	}
 
+	@Override
 	public int compare(Value v) {
 		return internalValue.compareTo(v.stringValue());
 	}
 	
 	/** Add performs string concatenation. */
+	@Override
 	public Value add(Value v) {
 		return new ValueString(internalValue + v.stringValue());
 	}
 	
+	@Override
 	public String toString() {
 		return internalValue;
 	}

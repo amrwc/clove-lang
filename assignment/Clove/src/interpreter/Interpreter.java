@@ -14,7 +14,7 @@ public class Interpreter {
 	}
 
 	public static void main(String args[]) {
-		boolean debugAST = args.length == 1 && args[0].equals("-d1");
+		final boolean debugAST = args.length == 1 && args[0].equals("-d1");
 
 		// Print the help message.
 		if (args.length == 1 && (args[0].equals("-h") || args[0].equals("--help"))) {
@@ -22,16 +22,16 @@ public class Interpreter {
 			return;
 		}
 
-		Clove language = new Clove(System.in);
+		final Clove language = new Clove(System.in);
 		try {
-			ASTCode parser = language.code();
+			final ASTCode parser = language.code();
 			CloveVisitor nodeVisitor;
 			if (debugAST)
 				nodeVisitor = new ParserDebugger();
 			else
 				nodeVisitor = new Parser(args);
 			parser.jjtAccept(nodeVisitor, null);
-		} catch (Throwable e) {
+		} catch (final Throwable e) {
 			System.out.println(e.getMessage());
 		}
 	}

@@ -2,31 +2,36 @@ package values;
 
 public class ValueInteger extends ValueAbstract {
 
-	private long internalValue;
+	private final long internalValue;
 
 	public ValueInteger(long b) {
 		internalValue = b;
 	}
 
+	@Override
 	public String getName() {
 		return "integer";
 	}
 
 	/** Convert this to a primitive long. */
+	@Override
 	public long longValue() {
 		return internalValue;
 	}
 
 	/** Convert this to a primitive double. */
+	@Override
 	public double doubleValue() {
-		return (double) internalValue;
+		return internalValue;
 	}
 
 	/** Convert this to a primitive String. */
+	@Override
 	public String stringValue() {
 		return "" + internalValue;
 	}
 
+	@Override
 	public int compare(Value v) {
 		if (internalValue == v.longValue())
 			return 0;
@@ -51,34 +56,42 @@ public class ValueInteger extends ValueAbstract {
 			return new ValueRational(v);
 	}
 
+	@Override
 	public Value add(Value v) {
 		return tryInt(internalValue + v.doubleValue());
 	}
 
+	@Override
 	public Value subtract(Value v) {
 		return tryInt(internalValue - v.doubleValue());
 	}
 
+	@Override
 	public Value mult(Value v) {
 		return tryInt(internalValue * v.doubleValue());
 	}
 
+	@Override
 	public Value div(Value v) {
 		return tryInt(internalValue / v.doubleValue());
 	}
 
+	@Override
 	public Value mod(Value v) {
 		return tryInt(internalValue % v.doubleValue());
 	}
 
+	@Override
 	public Value unary_plus() {
 		return new ValueInteger(internalValue);
 	}
 
+	@Override
 	public Value unary_minus() {
 		return new ValueInteger(-internalValue);
 	}
 
+	@Override
 	public String toString() {
 		return stringValue();
 	}

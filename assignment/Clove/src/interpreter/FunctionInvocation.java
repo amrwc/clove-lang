@@ -7,9 +7,9 @@ import values.Value;
 /** Function invocation context. */
 class FunctionInvocation {
 
-	private FunctionDefinition function;
+	private final FunctionDefinition function;
 	private int argumentCount = 0;
-	private Vector<Value> slots;
+	private final Vector<Value> slots;
 	
 	private final void setSlot(int n, Value v) {
 		if (n >= slots.size())
@@ -45,7 +45,7 @@ class FunctionInvocation {
 	/** Execute this invocation. */
 	Value execute(Parser parser) {
 		parser.doChildren(function.getFunctionBody(), null);
-		Value returnValue = function.hasReturn()
+		final Value returnValue = function.hasReturn()
 			? parser.doChild(function.getFunctionReturnExpression(), 0)
 			: null;
 

@@ -24,12 +24,14 @@ public class ValueObject extends ValueAbstract {
 		internalValue = valueObject;
 	}
 
+	@Override
 	public String getName() {
 		return "ValueObject";
 	}
 
+	@Override
 	public int compare(Value v) {
-		HashMap<String, Value> map = ((ValueObject) v).internalValue;
+		final HashMap<String, Value> map = ((ValueObject) v).internalValue;
 		return internalValue.equals(map) ? 0 : 1;
 	}
 
@@ -41,6 +43,7 @@ public class ValueObject extends ValueAbstract {
 	 * @param currChild -- current child of the node being parsed
 	 * @returns {Value} the dereferenced value
 	 */
+	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild) {
 		final Parser par = new Parser();
 		final ValueObject valueObject = (ValueObject) v;
@@ -58,6 +61,7 @@ public class ValueObject extends ValueAbstract {
 	 * @return Value
 	 * @author amrwc
 	 */
+	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
 			case "getClass":
@@ -80,7 +84,7 @@ public class ValueObject extends ValueAbstract {
 	}
 
 	public Value get(String name) {
-		Value value = internalValue.get(name);
+		final Value value = internalValue.get(name);
 		if (value != null) return value;
 		throw new ExceptionSemantic("Object key \"" + name + "\" is undefined or equal to null.");
 	}
@@ -103,10 +107,11 @@ public class ValueObject extends ValueAbstract {
 	}
 
 	// Returns the key-value pairs in '{key: value}' notation.
+	@Override
 	public String toString() {
 		if (internalValue.size() == 0) return "{}";
 		String result = "{";
-		for (HashMap.Entry<String, Value> entry : internalValue.entrySet())
+		for (final HashMap.Entry<String, Value> entry : internalValue.entrySet())
 			result += entry.getKey() + ": " + entry.getValue() + ", ";
 		return result.substring(0, result.length() - 2) + "}";
 	}
@@ -128,7 +133,7 @@ public class ValueObject extends ValueAbstract {
 	private String urlEncUTF8(String s) {
         try {
             return URLEncoder.encode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
+        } catch (final UnsupportedEncodingException e) {
             throw new UnsupportedOperationException(e);
         }
     }

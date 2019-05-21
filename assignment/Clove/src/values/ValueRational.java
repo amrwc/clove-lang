@@ -2,26 +2,30 @@ package values;
 
 public class ValueRational extends ValueAbstract {
 
-	private double internalValue;
+	private final double internalValue;
 
 	public ValueRational(double b) {
 		internalValue = b;
 	}
 
+	@Override
 	public String getName() {
 		return "rational";
 	}
 
 	/** Convert this to a primitive double. */
+	@Override
 	public double doubleValue() {
-		return (double) internalValue;
+		return internalValue;
 	}
 
 	/** Convert this to a primitive String. */
+	@Override
 	public String stringValue() {
 		return "" + internalValue;
 	}
 
+	@Override
 	public int compare(Value v) {
 		if (internalValue == v.doubleValue())
 			return 0;
@@ -46,34 +50,42 @@ public class ValueRational extends ValueAbstract {
 			return new ValueRational(v);
 	}
 
+	@Override
 	public Value add(Value v) {
 		return tryInt(internalValue + v.doubleValue());
 	}
 
+	@Override
 	public Value subtract(Value v) {
 		return tryInt(internalValue - v.doubleValue());
 	}
 
+	@Override
 	public Value mult(Value v) {
 		return tryInt(internalValue * v.doubleValue());
 	}
 
+	@Override
 	public Value div(Value v) {
 		return tryInt(internalValue / v.doubleValue());
 	}
 
+	@Override
 	public Value mod(Value v) {
 		return tryInt(internalValue % v.doubleValue());
 	}
 
+	@Override
 	public Value unary_plus() {
 		return new ValueRational(internalValue);
 	}
 
+	@Override
 	public Value unary_minus() {
 		return new ValueRational(-internalValue);
 	}
 
+	@Override
 	public String toString() {
 		return stringValue();
 	}
