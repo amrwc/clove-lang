@@ -1045,7 +1045,7 @@ public class Parser implements CloveVisitor {
 		if (reference == null)
 			throw new ExceptionSemantic("Function " + fnname + " is undefined.");
 
-		ValueFn valueFunction = (ValueFn) reference.getValue();
+		ValueFunction valueFunction = (ValueFunction) reference.getValue();
 		return valueFunction.get(); // Extract the FunctionDefinition stored in ValueFn.
 	}
 
@@ -1058,7 +1058,7 @@ public class Parser implements CloveVisitor {
 	private FunctionDefinition getValueFn(SimpleNode node) {
 		Value value = doChild(node, 0); // Do the dereference.
 
-		ValueFn valueFunction = (ValueFn) value;
+		ValueFunction valueFunction = (ValueFunction) value;
 		if (valueFunction == null)
 			throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
 
@@ -1265,11 +1265,11 @@ public class Parser implements CloveVisitor {
 		if (node.fnHasReturn)
 			currentFnDef.setFunctionReturnExpression(getChild(node, 2));
 
-		return new ValueFn(currentFnDef);
+		return new ValueFunction(currentFnDef);
 	}
 
 	/**
-	 * Anonymous object declaration.
+	 * Anonymous object literal.
 	 * 
 	 * @author amrwc
 	 */
@@ -1289,7 +1289,7 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * List/array declaration.
+	 * List literal.
 	 * 
 	 * @author amrwc
 	 */
