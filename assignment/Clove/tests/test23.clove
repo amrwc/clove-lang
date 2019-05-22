@@ -1,4 +1,7 @@
 // Test shorthand operators
+log("Shorthand operators:")
+log()
+
 
 let lorem = "lorem ipsum"
 log("lorem: ", lorem)
@@ -135,6 +138,7 @@ log("	obj: ", obj)
 
 log()
 log()
+log()
 
 
 
@@ -178,4 +182,30 @@ log()
 
 log('	++obj2.obj["list"][2].seventy: ', ++obj2.obj["list"][2].seventy)
 log("	obj2: ", obj2)
+
+
+
 log()
+log()
+log()
+
+
+
+log("Key aliases -- dereference of square-notation keys:");
+log('	const alias1 = "list";')
+const alias1 = "list";
+log('	const alias2 = "seventy";')
+const alias2 = "seventy";
+log("	obj2: ", obj2)
+log()
+
+log("	obj2[alias1][1]++: ", obj2[alias1][1]++)
+log("	obj2: ", obj2)
+log()
+
+log('	++obj2["obj"][alias1][2]["seventy"]: ', ++obj2["obj"][alias1][2]["seventy"])
+log("	obj2: ", obj2)
+log()
+
+log('	++obj2["obj"][alias1][2][alias2]: ', ++obj2["obj"][alias1][2][alias2])
+log("	obj2: ", obj2)

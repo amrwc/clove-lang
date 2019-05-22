@@ -22,16 +22,16 @@ public class ValueString extends ValueAbstract {
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 
-	 * @param node -- node in question
-	 * @param v -- value to be dereferenced
-	 * @param currChild -- current child of the node being parsed
+	 * @param {SimpleNode} node -- node in question
+	 * @param {Value} v -- value to be dereferenced
+	 * @param {int} currChild -- current child of the node being parsed
+	 * @param {Parser} p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
-	public Value dereference(SimpleNode node, Value v, int currChild) {
-		final Parser par = new Parser();
+	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueString valueString = (ValueString) v;
-		final int index = (int) ((ValueInteger) par.doChild(node, currChild)).longValue();
+		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).longValue();
 		final String str = "" + valueString.stringValue().charAt(index);
 		return new ValueString(str);
 	}
