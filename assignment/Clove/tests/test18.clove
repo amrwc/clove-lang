@@ -66,3 +66,23 @@ write()
 
 write("obj3.nested.fn2(10)")
 write(obj3.nested.fn2(10))
+write()
+
+
+write("----------------------------")
+
+
+write("Square-notation:");
+write();
+
+write('obj3["nested"]: ', obj3["nested"]);
+write('const nest = "nested";')
+const nest = "nested";
+write('obj3[nest]: ', obj3[nest]);
+write();
+
+write("obj3[nest].fn2(10): ", obj3[nest].fn2(10));
+write('obj3[nest]["fn2"](10): ', obj3[nest]["fn2"](10));
+write('const alias = "fn2";')
+const alias = "fn2";
+write("obj3[nest][alias](10): ", obj3[nest][alias](10));

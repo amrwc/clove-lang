@@ -218,13 +218,13 @@ public class Parser implements CloveVisitor {
 			// ...traverse through the dereference to find the parent of
 			// the rightmost value to the left of the assignment operator...
 			for (; currChild < limit; currChild++)
-				value = value.dereference(node, value, currChild);
+				value = value.dereference(node, value, currChild, this);
 
 			// Handle a shorthand operator on a dereferenced variable.
 			if (node.shorthandOperator != null) {
 				// If the shorthand operator is present, get the rightmost
 				// value of the dereference (the deepest dereference of Lvalue).
-				final Value v = value.dereference(node, value, currChild);
+				final Value v = value.dereference(node, value, currChild, this);
 
 				// Update the Rvalue that will be assigned.
 				rightVal = 
@@ -553,7 +553,7 @@ public class Parser implements CloveVisitor {
 			// ...traverse through the dereference to find the parent of
 			// the rightmost value...
 			for (; currChild < limit; currChild++)
-				value = value.dereference(node, value, currChild + 1);
+				value = value.dereference(node, value, currChild + 1, this);
 
 			// ...and reassign the value of the compound value...
 			switch (node.shorthandOperator) {
@@ -1079,7 +1079,7 @@ public class Parser implements CloveVisitor {
 
 	/**
 	 * Dereference a variable or parameter, and return its value.,
-	 * or call/invoke a function.
+	 * or call/invoke a nested function.
 	 * 
 	 * @author amrwc
 	 */
@@ -1087,30 +1087,19 @@ public class Parser implements CloveVisitor {
 	public Object visit(ASTDereference node, Object data) {
 		Display.Reference reference;
 
-		// Get the main variable's/parameter's name (token).
-		final String name = node.tokenValue;
-//System.out.println("debug0: " + name);
-//System.out.println("debug0: " + scope.findReference(name) + scope.findReference("constant" + name));
-		reference = scope.findReference(name);
-		if (reference == null)
-			// Find a constant of the same name.
-			reference = scope.findReference("constant" + name);
-		if (reference == null)
-			throw new ExceptionSemantic("Variable or parameter \""
-				+ name + "\" is undefined.");
-//System.out.println("debug: " + reference.getValue());
-//		if (node.optimised == null) {
-//			final String name = node.tokenValue;
-//			reference = scope.findReference(name);
-//			if (reference == null)
-//				// Find a constant of the same name.
-//				reference = scope.findReference("constant" + name);
-//			if (reference == null)
-//				throw new ExceptionSemantic("Variable or parameter \""
-//					+ name + "\" is undefined.");
-//			node.optimised = reference;
-//		} else
-//			reference = (Display.Reference) node.optimised;
+		if (node.optimised == null) {
+			// Get the main variable's/parameter's name (token).
+			final String name = node.tokenValue;
+			reference = scope.findReference(name);
+			if (reference == null)
+				// Find a constant of the same name.
+				reference = scope.findReference("constant" + name);
+			if (reference == null)
+				throw new ExceptionSemantic("Variable or parameter \""
+					+ name + "\" is undefined.");
+			node.optimised = reference;
+		} else
+			reference = (Display.Reference) node.optimised;
 
 		final int numChildren = node.jjtGetNumChildren();
 		if (numChildren > 0) { // If it's not a normal dereference of a variable...
@@ -1118,79 +1107,15 @@ public class Parser implements CloveVisitor {
 			Value value = reference.getValue();
 
 			// ...traverse through the chain of dereferences.
-//			for (; currChild < numChildren; currChild++)
-//				value = value.dereference(node, value, currChild);
-			for (; currChild < numChildren; currChild++) {
-				if (value instanceof ValueList)
-					value = listDereference(node, value, currChild);
-				else if (value instanceof ValueArray)
-					value = arrayDereference(node, value, currChild);
-				else if (value instanceof ValueObject)
-					value = objectDereference(node, value, currChild);
-				else if (value instanceof ValueString)
-					value = stringDereference(node, value, currChild);
-			}
+			for (; currChild < numChildren; currChild++)
+				value = value.dereference(node, value, currChild, this);
 
 			return value;
 		}
 
-//System.out.println("debug: " + reference.getValue());
 		return reference.getValue();
 	}
-	
-	/**
-	 * Dereference of a list.
-	 * 
-	 * @author amrwc
-	 */
-	private Value listDereference(SimpleNode node, Value v, int currChild) {
-		ValueList valueList = (ValueList) v;
-		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-		return valueList.get(index);
-	}
 
-	/**
-	 * Dereference of an array.
-	 * 
-	 * @author amrwc
-	 */
-	private Value arrayDereference(SimpleNode node, Value v, int currChild) {
-		ValueArray valueList = (ValueArray) v;
-		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-		return valueList.get(index);
-	}
-
-	/**
-	 * Dereference of an anonymous object.
-	 * 
-	 * @author amrwc
-	 */
-	private Value objectDereference(SimpleNode node, Value v, int currChild) {
-		ValueObject valueObject = (ValueObject) v;
-		var keyName = node.jjtGetChild(currChild) instanceof ASTIdentifier
-			? getTokenOfChild(node, currChild)
-			: doChild(node, currChild).toString();
-		return valueObject.get(keyName);
-	}
-
-	/**
-	 * Dereference of a character in a ValueString.
-	 * 
-	 * @author amrwc
-	 */
-	private Value stringDereference(SimpleNode node, Value v, int currChild) {
-		ValueString valueString = (ValueString) v;
-		int index = (int) ((ValueInteger) doChild(node, currChild)).longValue();
-		String str = "" + ((ValueString) valueString).stringValue().charAt(index);
-		return new ValueString(str);
-	}
-
-	
-	
-	
-	
-	
-	
 	/**
 	 * Returns command-line arguments as a ValueList.
 	 * 

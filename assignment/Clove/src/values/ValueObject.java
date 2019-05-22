@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
 import interpreter.Parser;
-import parser.ast.ASTDereference;
+import parser.ast.ASTIdentifier;
 import parser.ast.SimpleNode;
 
 /**
@@ -38,23 +38,18 @@ public class ValueObject extends ValueAbstract {
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 
-	 * @param node -- node in question
-	 * @param v -- value to be dereferenced
-	 * @param currChild -- current child of the node being parsed
+	 * @param {SimpleNode} node -- node in question
+	 * @param {Value} v -- value to be dereferenced
+	 * @param {int} currChild -- current child of the node being parsed
+	 * @param {Parser} p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
-	public Value dereference(SimpleNode node, Value v, int currChild) {
-		final Parser par = new Parser();
+	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueObject valueObject = (ValueObject) v;
-		final var keyName = node.jjtGetChild(currChild) instanceof ASTDereference
-//			? Parser.getTokenOfChild(node, currChild)
-			? par.doChild(node, currChild).toString()
-			: par.doChild(node, currChild).toString();
-//System.out.println("Debug1: " + v);
-//System.out.println("Debug1: ");
-//System.out.println("Debug2: " + valueObject.get(keyName));
-//System.out.println("Exits here");
+		final String keyName = (node.jjtGetChild(currChild) instanceof ASTIdentifier)
+			? Parser.getTokenOfChild(node, currChild)
+			: p.doChild(node, currChild).toString();
 		return valueObject.get(keyName);
 	}
 
