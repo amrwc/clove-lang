@@ -83,6 +83,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < HTTP: "HTTP" >
 | < FILE: ("FILE"|"PLIK") >
 | < RANDOM: ("RANDOM"|"LOSUJ") >
+| < REFLECT: "REFLECT" >
 }
 
 TOKEN : /* LITERALS */
@@ -645,6 +646,7 @@ void primary_expression() :
   | http()
   | file()
   | random()
+  | reflect()
   | "(" expression() ")"
 }
 
@@ -703,6 +705,15 @@ void random() #Random :
   <RANDOM> "("
         add_expression() // Min value
     "," add_expression() // Max value
+  ")"
+}
+
+
+void reflect() #Reflect :
+{}
+{
+  <REFLECT> "("
+        ( character() | dereference() )
   ")"
 }
 
