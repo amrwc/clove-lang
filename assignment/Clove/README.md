@@ -19,4 +19,4 @@ You can also use the `run` script placed in the `examples` directory
 ./run [file_name].clove [args]
 ```
 
-If on Windows 10 you get `'java' is not recognized as an internal or external command` error, you need to add Java to your path. Follow the steps of [the tutorial](https://stackoverflow.com/a/28451116).
+On Windows 10 if you get `'java' is not recognized as an internal or external command` error, you need to add Java to your path. Follow the steps from [this short tutorial](https://stackoverflow.com/a/28451116).
