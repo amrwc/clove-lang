@@ -1,0 +1,27 @@
+/**
+ * Test Reflection API
+ */
+
+// Louis's example of sending HTTP GET request using reflection:
+//string urlText = "https://my-json-server.typicode.com/typicode/demo/posts";
+
+//reflection result = Reflect(CONSTRUCT: "java.lang.StringBuilder");
+//reflection url = Reflect(CONSTRUCT: "java.net.URL", urlText);
+//reflection connection = ("java.net.HttpURLConnection") url.openConnection();
+//connection.setRequestMethod("GET");
+//reflection reader = Reflect(CONSTRUCT: "java.io.BufferedReader", ("java.io.Reader") Reflect(CONSTRUCT: "java.io.InputStreamReader", ("java.io.InputStream") connection.getInputStream()));
+
+//string line = reader.readLine();
+
+//result.append(line);
+//while (!(line == "")) {
+//    result.append(line);
+//    line = reader.readLine();
+//}
+
+//reader.close();
+
+//print(result.toString());
+
+
+const urlClass = reflect("java.net.URL");

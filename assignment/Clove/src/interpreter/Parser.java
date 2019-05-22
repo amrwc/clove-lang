@@ -1168,6 +1168,25 @@ public class Parser implements CloveVisitor {
 					+ "to be either of ValueInteger or ValueRational type.");
 	}
 
+	/**
+	 * Instantiates a class requested at run-time
+	 * and stores it in the ValueReflection type.
+	 * 
+	 * @author amrwc
+	 */
+	@Override
+	public Object visit(ASTReflect node, Object data) {
+		System.out.println("Reflection grammar works!");
+		try {
+			return new ValueReflection(doChild(node, 0));
+		} catch (ReflectiveOperationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		return data;
+		return null;
+	}
+
 
 
 	/***********************************************
