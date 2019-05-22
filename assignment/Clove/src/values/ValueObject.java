@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
 import interpreter.Parser;
-import parser.ast.ASTIdentifier;
+import parser.ast.ASTDereference;
 import parser.ast.SimpleNode;
 
 /**
@@ -47,9 +47,14 @@ public class ValueObject extends ValueAbstract {
 	public Value dereference(SimpleNode node, Value v, int currChild) {
 		final Parser par = new Parser();
 		final ValueObject valueObject = (ValueObject) v;
-		final var keyName = node.jjtGetChild(currChild) instanceof ASTIdentifier
-			? Parser.getTokenOfChild(node, currChild)
+		final var keyName = node.jjtGetChild(currChild) instanceof ASTDereference
+//			? Parser.getTokenOfChild(node, currChild)
+			? par.doChild(node, currChild).toString()
 			: par.doChild(node, currChild).toString();
+//System.out.println("Debug1: " + v);
+//System.out.println("Debug1: ");
+//System.out.println("Debug2: " + valueObject.get(keyName));
+//System.out.println("Exits here");
 		return valueObject.get(keyName);
 	}
 
@@ -66,6 +71,8 @@ public class ValueObject extends ValueAbstract {
 		switch (protoFunc) {
 			case "getClass":
 				return new ValueString(getName());
+			case "keys":
+				return keys();
 			case "remove":
 				protoArgs.forEach(arg -> remove(arg.stringValue()));
 				break;
@@ -148,5 +155,16 @@ public class ValueObject extends ValueAbstract {
 
 	public int size() {
 		return internalValue.size();
+	}
+
+	/**
+	 * Returns a list of the anonymous object's keys.
+	 * 
+	 * @returns {ValueList} list of ValueString's of the object's keys
+	 */
+	private ValueList keys() {
+		final ValueList keys = new ValueList();
+		internalValue.keySet().forEach(key -> keys.append(new ValueString(key)));
+		return keys;
 	}
 }
