@@ -25,7 +25,8 @@ public class Parser implements CloveVisitor {
 	private String[] argv;
 	private final Display scope = new Display(); // Scope display handler
 
-	public Parser() {}
+	public Parser() {
+	}
 
 	public Parser(String[] args) {
 		argv = args;
@@ -33,7 +34,7 @@ public class Parser implements CloveVisitor {
 
 	// Get the ith child of a given node.
 	private static SimpleNode getChild(SimpleNode node, int childIndex) {
-		return (SimpleNode)node.jjtGetChild(childIndex);
+		return (SimpleNode) node.jjtGetChild(childIndex);
 	}
 
 	// Get the token value of the ith child of a given node.
@@ -49,7 +50,7 @@ public class Parser implements CloveVisitor {
 	// Execute a given child of a given node, and return its value as a Value.
 	// This is used by the expression evaluation nodes.
 	public Value doChild(SimpleNode node, int childIndex) {
-		return (Value)doChild(node, childIndex, null);
+		return (Value) doChild(node, childIndex, null);
 	}
 
 	// Execute all children of the given node
@@ -67,13 +68,11 @@ public class Parser implements CloveVisitor {
 	// Execute a Clove program
 	@Override
 	public Object visit(ASTCode node, Object data) {
-		return doChildren(node, data);	
+		return doChildren(node, data);
 	}
 
-
-
 	/***********************************************
-	 *                 Statements                  *
+	 * Statements *
 	 ***********************************************/
 
 	// Execute a statement
@@ -92,16 +91,18 @@ public class Parser implements CloveVisitor {
 		FunctionDefinition fndef;
 		final int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
-		// If there's more than 1 child in the left child, then it's not just an identifier.
+		// If there's more than 1 child in the left child, then it's not just an
+		// identifier.
 		if (leftNumChildren > 0) {
 			fndef = getValueFunction(node);
 			node.optimised = fndef;
 		}
 
-		if (node.optimised == null) { 
+		if (node.optimised == null) {
 			final String fnname = getTokenOfChild(node, 0); // Child 0 - identifier (fn name)
 			fndef = scope.findFunction(fnname);
-			if (fndef == null) fndef = findValueFunction(fnname);
+			if (fndef == null)
+				fndef = findValueFunction(fnname);
 
 			node.optimised = fndef; // Save it for next time
 		} else
@@ -126,15 +127,14 @@ public class Parser implements CloveVisitor {
 
 		if (scope.findReference(name) == null && scope.findReference("constant" + name) == null) {
 			switch (node.defType) {
-				case "variable":
-					scope.defineVariable(name);
-					break;
-				case "constant":
-					scope.defineConstant(name);
+			case "variable":
+				scope.defineVariable(name);
+				break;
+			case "constant":
+				scope.defineConstant(name);
 			}
 			initialisation.jjtAccept(this, data); // Do the initialisation.
-		}
-		else
+		} else
 			throw new ExceptionSemantic("Variable or constant \"" + name + "\" already exists.");
 
 		return data;
@@ -150,8 +150,8 @@ public class Parser implements CloveVisitor {
 		final String name = getTokenOfChild(node, 0);
 
 		if (node.defType == "constant")
-			throw new ExceptionSemantic("Constants must be initialised."
-				+ " Change the \"const\" keyword before \"" + name + "\" to \"let\".");
+			throw new ExceptionSemantic("Constants must be initialised." + " Change the \"const\" keyword before \""
+					+ name + "\" to \"let\".");
 
 		if (scope.findReference(name) != null)
 			throw new ExceptionSemantic("Variable \"" + name + "\" already exists.");
@@ -227,8 +227,7 @@ public class Parser implements CloveVisitor {
 				final Value v = value.dereference(node, value, currChild, this);
 
 				// Update the Rvalue that will be assigned.
-				rightVal = 
-					doShorthand(node.shorthandOperator, v, rightVal);
+				rightVal = doShorthand(node.shorthandOperator, v, rightVal);
 			}
 
 			// ...and reassign the value of the list...
@@ -271,24 +270,24 @@ public class Parser implements CloveVisitor {
 	 * Executes a shorthand reassignment between L-value and R-value.
 	 * 
 	 * @param operator -- shorthand operator to be executed
-	 * @param ref -- variable reference
-	 * @param val -- base value (operand)
+	 * @param ref      -- variable reference
+	 * @param val      -- base value (operand)
 	 * @param rightVal -- second operand
 	 * @author amrwc
 	 */
 	private Value doShorthand(String operator, Value val, Value rightVal) {
 		switch (operator) {
-			case "+=":
-				return val.add(rightVal);
-			case "-=":
-				return val.subtract(rightVal);
-			case "*=":
-				return val.mult(rightVal);
-			case "/=":
-				return val.div(rightVal);
-			default:
-				throw new ExceptionSemantic("Operator \"" + operator
-					+ "\" cannot be used on " + val + " and " + rightVal + ".");
+		case "+=":
+			return val.add(rightVal);
+		case "-=":
+			return val.subtract(rightVal);
+		case "*=":
+			return val.mult(rightVal);
+		case "/=":
+			return val.div(rightVal);
+		default:
+			throw new ExceptionSemantic(
+					"Operator \"" + operator + "\" cannot be used on " + val + " and " + rightVal + ".");
 		}
 	}
 
@@ -367,7 +366,8 @@ public class Parser implements CloveVisitor {
 	private ArrayList<SimpleNode> collectDefinitions(SimpleNode node, SimpleNode init) {
 		final ArrayList<SimpleNode> definitions = new ArrayList<SimpleNode>();
 
-		// Handle raw block() that occurs without any preceding statement such as for()/if().
+		// Handle raw block() that occurs without any preceding statement such as
+		// for()/if().
 		if (node instanceof ASTBlock) {
 			for (int i = 0; i < node.jjtGetNumChildren(); i++) {
 				final Node innerNode = node.jjtGetChild(i).jjtGetChild(0);
@@ -378,15 +378,18 @@ public class Parser implements CloveVisitor {
 		}
 
 		// If it's a for-loop including an initialisation node...
-		if (init != null && init instanceof ASTDefinition) definitions.add(init);
+		if (init != null && init instanceof ASTDefinition)
+			definitions.add(init);
 
 		// Handle statement()/block() without children.
-		if (node.jjtGetNumChildren() == 0) return definitions;
+		if (node.jjtGetNumChildren() == 0)
+			return definitions;
 
 		// Collect the possible single definition from the statement().
 		final Node statement = node.jjtGetChild(node.jjtGetNumChildren() - 1);
 
-		// statement() -> definition()/fndef() -- there can only be one, since it's not a block.
+		// statement() -> definition()/fndef() -- there can only be one, since it's not
+		// a block.
 		final Node innerNode = statement.jjtGetChild(0);
 		if (innerNode instanceof ASTDefinition || innerNode instanceof ASTFunctionDefinition)
 			definitions.add((SimpleNode) innerNode);
@@ -406,9 +409,9 @@ public class Parser implements CloveVisitor {
 			throw new ExceptionSemantic("The test expression of an if statement must be boolean.");
 
 		if (((ValueBoolean) test).booleanValue()) // If test evaluated to true...
-			doChild(node, 1);                     // ...do 'if'. Or...
-		else if (node.ifHasElse)                  // ...if it evaluated to false and has 'else'...
-			doChild(node, 2);                     // ...do 'else'.
+			doChild(node, 1); // ...do 'if'. Or...
+		else if (node.ifHasElse) // ...if it evaluated to false and has 'else'...
+			doChild(node, 2); // ...do 'else'.
 
 		removeDefinitions(node);
 		return data;
@@ -504,9 +507,7 @@ public class Parser implements CloveVisitor {
 	public Object visit(ASTProtoInvoke node, Object data) {
 		final Value value = doChild(node, 0);
 		final String protoFunc = node.tokenValue;
-		final ArrayList<Value> protoArgs = (node.jjtGetNumChildren() > 1)
-			? parseProtoArgs(node)
-			: null;
+		final ArrayList<Value> protoArgs = (node.jjtGetNumChildren() > 1) ? parseProtoArgs(node) : null;
 
 		return value.execProto(protoFunc, protoArgs);
 	}
@@ -560,52 +561,51 @@ public class Parser implements CloveVisitor {
 
 			// ...and reassign the value of the compound value...
 			switch (node.shorthandOperator) {
-				case "pre++":
-					return doIncDecNested(node, numChildren, value, "pre++");
-				case "pre--":
-					return doIncDecNested(node, numChildren, value, "pre--");
-				case "post++":
-					return doIncDecNested(node, numChildren, value, "post++");
-				case "post--":
-					return doIncDecNested(node, numChildren, value, "post--");
-				default:
-					throw new ExceptionSemantic("Operator \"" + node.shorthandOperator
-						+ "\" cannot be used on " + value + " and " + one + ".");
+			case "pre++":
+				return doIncDecNested(node, numChildren, value, "pre++");
+			case "pre--":
+				return doIncDecNested(node, numChildren, value, "pre--");
+			case "post++":
+				return doIncDecNested(node, numChildren, value, "post++");
+			case "post--":
+				return doIncDecNested(node, numChildren, value, "post--");
+			default:
+				throw new ExceptionSemantic(
+						"Operator \"" + node.shorthandOperator + "\" cannot be used on " + value + " and " + one + ".");
 			}
 		}
 
 		// Handle a normal variable.
 		switch (node.shorthandOperator) {
-			case "pre++":
-				ref.setValue(value.add(one));
-				return ref.getValue();
-			case "pre--":
-				ref.setValue(value.subtract(one));
-				return ref.getValue();
-			case "post++":
-				ref.setValue(value.add(one));
-				return value;
-			case "post--":
-				ref.setValue(value.subtract(one));
-				return value;
-			default:
-				throw new ExceptionSemantic("Operator \"" + node.shorthandOperator
-					+ "\" cannot be used on " + value + " and " + one + ".");
+		case "pre++":
+			ref.setValue(value.add(one));
+			return ref.getValue();
+		case "pre--":
+			ref.setValue(value.subtract(one));
+			return ref.getValue();
+		case "post++":
+			ref.setValue(value.add(one));
+			return value;
+		case "post--":
+			ref.setValue(value.subtract(one));
+			return value;
+		default:
+			throw new ExceptionSemantic(
+					"Operator \"" + node.shorthandOperator + "\" cannot be used on " + value + " and " + one + ".");
 		}
 	}
 
 	/**
-	 * Reassigns the rightmost value and returns the new or
-	 * old value depending on pre/post-fix operator.
+	 * Reassigns the rightmost value and returns the new or old value depending on
+	 * pre/post-fix operator.
 	 * 
 	 * @param node
 	 * @param numChildren
-	 * @param value -- value to be changed
-	 * @param operation -- "post++"/"post--"/"pre++"/"pre--"
+	 * @param value       -- value to be changed
+	 * @param operation   -- "post++"/"post--"/"pre++"/"pre--"
 	 * @returns updated value or old value
 	 */
-	private Value doIncDecNested(SimpleNode node, int numChildren, Value value,
-		String operation) {
+	private Value doIncDecNested(SimpleNode node, int numChildren, Value value, String operation) {
 		Value old = null;
 		final ValueInteger one = new ValueInteger(1);
 
@@ -670,37 +670,34 @@ public class Parser implements CloveVisitor {
 		String body = null;
 
 		switch (method) {
-			case "GET":
-			case "DELETE": {
-				return doHttpReq(method, url);
-			}
-			case "POST":
-			case "PUT": {
-				if (node.jjtGetNumChildren() < 3) {
-					throw new ExceptionSemantic("The \"" + method
-						+ "\" HTTP method needs a request body.");
-				} else {
-					final var tryBody = doChild(node, 2); // String/ValueObject
+		case "GET":
+		case "DELETE": {
+			return doHttpReq(method, url);
+		}
+		case "POST":
+		case "PUT": {
+			if (node.jjtGetNumChildren() < 3) {
+				throw new ExceptionSemantic("The \"" + method + "\" HTTP method needs a request body.");
+			} else {
+				final var tryBody = doChild(node, 2); // String/ValueObject
 
-					// If the third (request body) argument is an anonymous object...
-					if (tryBody instanceof ValueObject) {
-						// ...turn the key-value pairs into url-encoded pairs.
-						body = ((ValueObject) tryBody).toUrlString();
-					} else {
-						body = tryBody.toString();
-					}
+				// If the third (request body) argument is an anonymous object...
+				if (tryBody instanceof ValueObject) {
+					// ...turn the key-value pairs into url-encoded pairs.
+					body = ((ValueObject) tryBody).toUrlString();
+				} else {
+					body = tryBody.toString();
 				}
-				return doHttpReq(method, url, body);
 			}
-			default:
-				throw new ExceptionSemantic("The http function doesn't support \""
-					+ method + "\" method.");
+			return doHttpReq(method, url, body);
+		}
+		default:
+			throw new ExceptionSemantic("The http function doesn't support \"" + method + "\" method.");
 		}
 	}
 
 	/**
-	 * Sends an HTTP request and returns its response
-	 * in a ValueObject.
+	 * Sends an HTTP request and returns its response in a ValueObject.
 	 * 
 	 * @read https://docs.oracle.com/javase/tutorial/networking/urls/readingWriting.html
 	 * @param method
@@ -722,38 +719,36 @@ public class Parser implements CloveVisitor {
 			conn.setReadTimeout(15000);
 			conn.setConnectTimeout(15000);
 
-			switch(method) {
-				case "GET":
-				case "DELETE":
-					break;
-				case "POST":
-				case "PUT": {
-					if (data == null)
-						throw new ExceptionSemantic("The \"" + method
-							+ "\" method's request body cannot evaluate to null.");
-	
-					conn.setRequestMethod(method);
-					conn.setDoOutput(true);
-	
-					final OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
-					out.write(data);
-					out.flush();
-					out.close();
-					break;
-				}
-				default:
-					throw new ExceptionSemantic("The \"" + method
-						+ "\" method is not supported by the http function.");
+			switch (method) {
+			case "GET":
+			case "DELETE":
+				break;
+			case "POST":
+			case "PUT": {
+				if (data == null)
+					throw new ExceptionSemantic(
+							"The \"" + method + "\" method's request body cannot evaluate to null.");
+
+				conn.setRequestMethod(method);
+				conn.setDoOutput(true);
+
+				final OutputStreamWriter out = new OutputStreamWriter(conn.getOutputStream());
+				out.write(data);
+				out.flush();
+				out.close();
+				break;
+			}
+			default:
+				throw new ExceptionSemantic("The \"" + method + "\" method is not supported by the http function.");
 			}
 			final int responseCode = conn.getResponseCode();
 			res.set("code", new ValueInteger(responseCode));
 
 			if (responseCode == 200 || responseCode == 201) {
 				String line;
-				final BufferedReader br = new BufferedReader(
-					new InputStreamReader(conn.getInputStream()));
+				final BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				while ((line = br.readLine()) != null)
-                    responseBody += line.strip() + "\n";
+					responseBody += line.strip() + "\n";
 				br.close();
 			}
 		} catch (final Exception e) {
@@ -772,9 +767,8 @@ public class Parser implements CloveVisitor {
 	/**
 	 * Writes text content to a file.
 	 * 
-	 * Example usage:
-	 * file("append", "file.txt", content)
-	 * ...where content can be any Value type.
+	 * Example usage: file("append", "file.txt", content) ...where content can be
+	 * any Value type.
 	 * 
 	 * @read https://stackoverflow.com/a/23221771/10620237
 	 * @param (child0) {String} option ("create"/"overwrite"|"open"/"append")
@@ -796,39 +790,36 @@ public class Parser implements CloveVisitor {
 		final Charset utf8 = StandardCharsets.UTF_8;
 
 		try {
-			if (parentDir != null && Files.notExists(parentDir)) 
+			if (parentDir != null && Files.notExists(parentDir))
 				Files.createDirectory(parentDir);
 
 			switch (option) {
-				case "create":
-				case "overwrite":
-					Files.write(path, lines, utf8);
-					break;
-				case "open":
-				case "append":
-					Files.write(path, lines, utf8,
-						StandardOpenOption.CREATE, StandardOpenOption.APPEND);
-					break;
-				default:
-					throw new ExceptionSemantic("There is no \"" + option
-						+ "\" option in the file function.");
+			case "create":
+			case "overwrite":
+				Files.write(path, lines, utf8);
+				break;
+			case "open":
+			case "append":
+				Files.write(path, lines, utf8, StandardOpenOption.CREATE, StandardOpenOption.APPEND);
+				break;
+			default:
+				throw new ExceptionSemantic("There is no \"" + option + "\" option in the file function.");
 			}
 		} catch (final Exception e) {
 			System.err.println("Problem writing to the \"" + pathStr + "\" file.");
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return new ValueString(pathStr);
 	}
 
-
-
 	/***********************************************
-	 *               Sub-statements                *
+	 * Sub-statements *
 	 ***********************************************/
 
 	// Process an identifier
-	// This doesn't do anything, but needs to be here because we need an ASTIdentifier node.
+	// This doesn't do anything, but needs to be here because we need an
+	// ASTIdentifier node.
 	@Override
 	public Object visit(ASTIdentifier node, Object data) {
 		return data;
@@ -837,8 +828,8 @@ public class Parser implements CloveVisitor {
 	/**
 	 * Initialise a constant.
 	 * 
-	 * NOTE: It's separated from assignment, to separate the concerns.
-	 *       This way constants can be safely defined and initialised.
+	 * NOTE: It's separated from assignment, to separate the concerns. This way
+	 * constants can be safely defined and initialised.
 	 * 
 	 * @author amrwc
 	 */
@@ -889,9 +880,8 @@ public class Parser implements CloveVisitor {
 
 		// If there's more values than the array can store...
 		if (initValNum > capacity)
-			throw new ExceptionSemantic("There is more initial values for \""
-				+ name + "\" array (" + initValNum + ") than its capacity ("
-				+ capacity + ").");
+			throw new ExceptionSemantic("There is more initial values for \"" + name + "\" array (" + initValNum
+					+ ") than its capacity (" + capacity + ").");
 
 		// Initialise an empty array with the specified capacity.
 		final ValueArray valueArray = new ValueArray(capacity);
@@ -910,8 +900,8 @@ public class Parser implements CloveVisitor {
 	// Function invocation argument list.
 	@Override
 	public Object visit(ASTArgumentList node, Object data) {
-		final FunctionInvocation newInvocation = (FunctionInvocation)data;
-		for (int i=0; i<node.jjtGetNumChildren(); i++)
+		final FunctionInvocation newInvocation = (FunctionInvocation) data;
+		for (int i = 0; i < node.jjtGetNumChildren(); i++)
 			newInvocation.setArgument(doChild(node, i));
 		newInvocation.checkArgumentCount();
 		return data;
@@ -920,8 +910,8 @@ public class Parser implements CloveVisitor {
 	// Function definition parameter list
 	@Override
 	public Object visit(ASTParameterList node, Object data) {
-		final FunctionDefinition currentDefinition = (FunctionDefinition)data;
-		for (int i=0; i<node.jjtGetNumChildren(); i++)
+		final FunctionDefinition currentDefinition = (FunctionDefinition) data;
+		for (int i = 0; i < node.jjtGetNumChildren(); i++)
 			currentDefinition.defineParameter(getTokenOfChild(node, i));
 		return data;
 	}
@@ -938,72 +928,85 @@ public class Parser implements CloveVisitor {
 		return doChildren(node, data);
 	}
 
-
-
 	/***********************************************
-	 *                Expressions                  *
+	 * Expressions *
 	 ***********************************************/
 
 	@Override
 	public Object visit(ASTOr node, Object data) { // OR
 		return doChild(node, 0).or(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTAnd node, Object data) { // AND
 		return doChild(node, 0).and(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompEqual node, Object data) { // ==
 		return doChild(node, 0).eq(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompNequal node, Object data) { // !=
 		return doChild(node, 0).neq(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompGTE node, Object data) { // >=
 		return doChild(node, 0).gte(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompLTE node, Object data) { // <=
 		return doChild(node, 0).lte(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompGT node, Object data) { // >
 		return doChild(node, 0).gt(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTCompLT node, Object data) { // <
 		return doChild(node, 0).lt(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTAdd node, Object data) { // +
 		return doChild(node, 0).add(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTSubtract node, Object data) { // -
 		return doChild(node, 0).subtract(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTTimes node, Object data) { // *
 		return doChild(node, 0).mult(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTDivide node, Object data) { // /
 		return doChild(node, 0).div(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTModulo node, Object data) { // %
 		return doChild(node, 0).mod(doChild(node, 1));
 	}
+
 	@Override
 	public Object visit(ASTUnaryNot node, Object data) { // NOT
 		return doChild(node, 0).not();
 	}
+
 	@Override
 	public Object visit(ASTUnaryPlus node, Object data) { // + (unary)
 		return doChild(node, 0).unary_plus();
 	}
+
 	@Override
 	public Object visit(ASTUnaryMinus node, Object data) { // - (unary)
 		return doChild(node, 0).unary_minus();
@@ -1019,7 +1022,8 @@ public class Parser implements CloveVisitor {
 		FunctionDefinition fndef;
 		final int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
-		// If there's more than 1 child in the left child, then it's not just an identifier.
+		// If there's more than 1 child in the left child, then it's not just an
+		// identifier.
 		if (leftNumChildren > 0) {
 			fndef = getValueFunction(node);
 			node.optimised = fndef;
@@ -1028,10 +1032,12 @@ public class Parser implements CloveVisitor {
 		if (node.optimised == null) {
 			final String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
-			if (fndef == null) fndef = findValueFunction(fnname);
+			if (fndef == null)
+				fndef = findValueFunction(fnname);
 
 			if (!fndef.hasReturn())
-				throw new ExceptionSemantic("Function " + fnname + " is being invoked in an expression but does not have a return value.");
+				throw new ExceptionSemantic(
+						"Function " + fnname + " is being invoked in an expression but does not have a return value.");
 
 			node.optimised = fndef; // Save it for next time
 		} else
@@ -1044,7 +1050,8 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Try finding the ValueFunction inside the scope and extract its FunctionDefinition.
+	 * Try finding the ValueFunction inside the scope and extract its
+	 * FunctionDefinition.
 	 * 
 	 * @author amrwc
 	 */
@@ -1061,7 +1068,8 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Retrieves ValueFunction from a dereference and returns its FunctionDefinition.
+	 * Retrieves ValueFunction from a dereference and returns its
+	 * FunctionDefinition.
 	 * 
 	 * @param node
 	 * @author amrwc
@@ -1081,8 +1089,8 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Dereference a variable or parameter, and return its value.,
-	 * or call/invoke a nested function.
+	 * Dereference a variable or parameter, and return its value., or call/invoke a
+	 * nested function.
 	 * 
 	 * @author amrwc
 	 */
@@ -1098,8 +1106,7 @@ public class Parser implements CloveVisitor {
 				// Find a constant of the same name.
 				reference = scope.findReference("constant" + name);
 			if (reference == null)
-				throw new ExceptionSemantic("Variable or parameter \""
-					+ name + "\" is undefined.");
+				throw new ExceptionSemantic("Variable or parameter \"" + name + "\" is undefined.");
 			node.optimised = reference;
 		} else
 			reference = (Display.Reference) node.optimised;
@@ -1128,11 +1135,10 @@ public class Parser implements CloveVisitor {
 	@Override
 	public Object visit(ASTGetArgs node, Object data) {
 		final ValueList args = new ValueList();
-		for (final String arg: argv)
+		for (final String arg : argv)
 			args.append(new ValueString(arg));
 		if (args.size() == 0)
-			System.out.println("Warning: The program asked for command-line arguments, "
-				+ "but none were passed in.");
+			System.out.println("Warning: The program asked for command-line arguments, " + "but none were passed in.");
 		return args;
 	}
 
@@ -1155,7 +1161,7 @@ public class Parser implements CloveVisitor {
 			final double result = ThreadLocalRandom.current().nextDouble(minDouble, maxDouble);
 			return new ValueRational(result);
 		}
-		
+
 		else if (min instanceof ValueInteger && max instanceof ValueInteger) {
 			final long minLong = min.longValue();
 			final long maxLong = max.longValue();
@@ -1164,8 +1170,8 @@ public class Parser implements CloveVisitor {
 		}
 
 		else
-			throw new ExceptionSemantic("The random() function requires the arguments"
-					+ "to be either of ValueInteger or ValueRational type.");
+			throw new ExceptionSemantic("The random() function requires the"
+				+ " arguments to be either of ValueInteger or ValueRational type.");
 	}
 
 	/**
@@ -1176,21 +1182,42 @@ public class Parser implements CloveVisitor {
 	 */
 	@Override
 	public Object visit(ASTReflect node, Object data) {
-		System.out.println("Reflection grammar works!");
+		// TODO:
+		final String className = doChild(node, 0).stringValue();
+		final int numChildren = node.jjtGetNumChildren();
+
 		try {
-			return new ValueReflection(doChild(node, 0));
-		} catch (ReflectiveOperationException e) {
-			// TODO Auto-generated catch block
+			// If there's only the class name...
+			if (numChildren == 1)
+				return new ValueReflection(className);
+
+			// ...or if there's the class name, constructor
+			// parameter types and constructor arguments...
+			else if (numChildren == 3) {
+				// Get all constructor argument types.
+				ValueList ctorParamTypesValue = (ValueList) doChild(node, 1);
+				final String[] ctorParamTypesArray = new String[ctorParamTypesValue.size()];
+				for (int i = 0; i < ctorParamTypesValue.size(); i++)
+					ctorParamTypesArray[i] = ctorParamTypesValue.get(i).stringValue();
+
+				// Get all constructor arguments.
+				// TODO: Change this to array.
+				final ArrayList<String> ctorArgsList = new ArrayList<String>();
+				ValueList ctorArgsValue = (ValueList) doChild(node, 2);
+				for (int i = 0; i < ctorArgsValue.size(); i++)
+					ctorArgsList.add(ctorArgsValue.get(i).stringValue());
+
+				return new ValueReflection(className, ctorParamTypesArray, ctorArgsList);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 //		return data;
 		return null;
 	}
 
-
-
 	/***********************************************
-	 *                 Literals                    *
+	 * Literals *
 	 ***********************************************/
 
 	// Return integer literal
