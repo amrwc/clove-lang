@@ -467,27 +467,30 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Execute the WRITE statement. Print out all given arguments.
+	 * Execute the WRITE statement. Prints out all given arguments.
 	 * 
 	 * @author amrwc
 	 */
 	@Override
 	public Object visit(ASTWrite node, Object data) {
 		final int numChildren = node.jjtGetNumChildren();
-		for (int i = 0; i < numChildren; i++) {
+		for (int i = 0; i < numChildren; i++)
 			System.out.print(doChild(node, i));
-		}
 		System.out.println();
 		return data;
 	}
 
 	/**
-	 * Quit expression.
+	 * Execute QUIT statement. Prints out all given arguments.
 	 * 
 	 * @author amrwc
 	 */
 	@Override
 	public Object visit(ASTQuit node, Object data) {
+		final int numChildren = node.jjtGetNumChildren();
+		for (int i = 0; i < numChildren; i++)
+			System.out.print(doChild(node, i));
+		System.out.println();
 		System.exit(0);
 		return null;
 	}
