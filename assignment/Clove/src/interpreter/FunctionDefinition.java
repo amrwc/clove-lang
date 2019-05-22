@@ -111,7 +111,6 @@ public class FunctionDefinition implements Comparable<Object>, Serializable {
 	
 	/** Get the storage slot number of a given variable or parm.  Return -1 if it doesn't exist. */
 	int getLocalSlotNumber(String name) {
-//System.out.println("Slots: " + slots);
 		final Integer slot = slots.get(name);
 		if (slot == null)
 			return -1;

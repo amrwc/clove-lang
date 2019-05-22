@@ -3,6 +3,7 @@ package values;
 import java.util.ArrayList;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
 import parser.ast.SimpleNode;
 
 public abstract class ValueAbstract implements Value {
@@ -16,13 +17,14 @@ public abstract class ValueAbstract implements Value {
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 
-	 * @param node -- node in question
-	 * @param v -- value to be dereferenced
-	 * @param currChild -- current child of the node being parsed
+	 * @param {SimpleNode} node -- node in question
+	 * @param {Value} v -- value to be dereferenced
+	 * @param {int} currChild -- current child of the node being parsed
+	 * @param {Parser} p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
-	public Value dereference(SimpleNode node, Value v, int currChild) {
+	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		throw new ExceptionSemantic("Value type " + getName() + " doesn't support"
 			+ " custom dereferencing.");
 	}
