@@ -1,40 +1,42 @@
 package values;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
-import interpreter.Parser;
-import parser.ast.ASTIdentifier;
-import parser.ast.SimpleNode;
 
 /**
  * @read https://www.sitepoint.com/java-reflection-api-tutorial/
  * @read https://www.geeksforgeeks.org/reflection-in-java/
+ * @read http://tutorials.jenkov.com/java-reflection/index.html
  * @author amrwc
  */
 public class ValueReflection extends ValueAbstract {
-	
-//	private HashMap<String, Value> internalValue = new HashMap<String, Value>();
-	private Class<?> internalValue;
+	private Class<?> theClass;
+	private Constructor<?> constructor;
 
 //	public ValueReflection() {}
 
-	public ValueReflection(Value v) throws ReflectiveOperationException {
-		// TODO:
-		internalValue = Class.forName(v.stringValue());
-		System.out.println("Class: " + internalValue.getCanonicalName());
+	public ValueReflection(String className) throws ClassNotFoundException {
+		theClass = Class.forName(className);
 	}
 
-	public ValueReflection(Value v, ArrayList<String> args) {
+	public ValueReflection(String className, String[] ctorParamTypes,
+			ArrayList<String> ctorArgs) {
 		// TODO:
-	}
+		try {
+			theClass = Class.forName(className);
 
-//	public ValueReflection(HashMap<String, Value> valueObject) {
-//		internalValue = valueObject;
-//	}
+			final Class[] paramTypes = new Class[ctorParamTypes.length];
+			for (int i = 0; i < ctorParamTypes.length; i++)
+				paramTypes[i] = Class.forName(ctorParamTypes[i]);
+
+			constructor = theClass.getConstructor(paramTypes);
+System.out.println("CTOR: " + constructor);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public String getName() {
@@ -44,8 +46,8 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public int compare(Value v) {
 		// TODO: TEST IT
-		final Object obj = ((ValueReflection) v).internalValue;
-		return internalValue.equals(obj) ? 0 : 1;
+		final Class<?> incomingClass = ((ValueReflection) v).theClass;
+		return theClass.equals(incomingClass) ? 0 : 1;
 	}
 
 	/**

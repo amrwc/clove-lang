@@ -709,11 +709,19 @@ void random() #Random :
 }
 
 
+/**
+ * Instantiates a class requested at run-time
+ * and stores it in the ValueReflection type.
+ *
+ * @author amrwc
+ */
 void reflect() #Reflect :
 {}
 {
   <REFLECT> "("
-        ( character() | dereference() )
+          ( character()  | dereference() )   // Class-name
+    [ "," ( value_list() | dereference() )   // Constructor argument types
+      "," ( value_list() | dereference() ) ] // Constructor arguments
   ")"
 }
 
