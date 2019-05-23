@@ -11,4 +11,4 @@
    1. Right-click the `Clove.jjt` file and press 'Compile with javacc'.
    1. If the above button is grey, open the file first and try again.
 1. Make sure the project is built if it didn't happen automatically:
-   Project → Build All (`cmd + B` on Mac)
+   Project → Build All (`cmd + B` on Mac, `ctrl + B` on Windows).
