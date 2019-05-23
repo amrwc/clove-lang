@@ -1,7 +1,6 @@
 package values;
 
 public class ValueRational extends ValueAbstract {
-
 	private final double internalValue;
 
 	public ValueRational(double b) {
@@ -11,6 +10,12 @@ public class ValueRational extends ValueAbstract {
 	@Override
 	public String getName() {
 		return "rational";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Float getRawValue() {
+		return (float) internalValue;
 	}
 
 	/** Convert this to a primitive double. */

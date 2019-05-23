@@ -1,7 +1,6 @@
 package values;
 
 public class ValueInteger extends ValueAbstract {
-
 	private final long internalValue;
 
 	public ValueInteger(long b) {
@@ -11,6 +10,12 @@ public class ValueInteger extends ValueAbstract {
 	@Override
 	public String getName() {
 		return "integer";
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer getRawValue() {
+		return (int) internalValue;
 	}
 
 	/** Convert this to a primitive long. */

@@ -26,6 +26,12 @@ public class ValueFunction extends ValueAbstract {
 		return "ValueFn";
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public FunctionDefinition getRawValue() {
+		return get();
+	}
+
 	public int getLevel() {
 		return functionDefinition.getLevel();
 	}
