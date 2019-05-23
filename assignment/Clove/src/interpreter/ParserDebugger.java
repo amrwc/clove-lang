@@ -403,4 +403,10 @@ public class ParserDebugger implements CloveVisitor {
 		dump(node, data);
 		return data;
 	}
+
+	@Override
+	public Object visit(ASTValueReflection node, Object data) {
+		dump(node, data);
+		return data;
+	}
 }

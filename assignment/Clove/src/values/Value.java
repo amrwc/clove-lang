@@ -35,6 +35,8 @@ public interface Value {
 	/**
 	 * Gets the raw value from Value classes.
 	 * 
+	 * @read https://stackoverflow.com/a/45119778/10620237
+	 * @read https://stackoverflow.com/a/17840541/10620237
 	 * @param <T> -- type
 	 * @returns raw internalValue from Value classes
 	 */

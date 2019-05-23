@@ -64,3 +64,4 @@
 /ASTDereference.java
 /ASTIfStatement.java
 /ASTReflect.java
+/ASTValueReflection.java

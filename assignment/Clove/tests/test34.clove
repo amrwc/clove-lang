@@ -24,9 +24,23 @@
 //print(result.toString());
 
 
-//const urlClass = reflect("java.net.URL");
+//const strBuilder = reflect("java.lang.StringBuilder");
+//log('strBuilder: ', strBuilder);
+//log();
 
-const urlClass1 = reflect("java.net.URL", ["https://jsonplaceholder.typicode.com/posts/1"]);
-log('urlClass1: ', urlClass1)
+const urlInstance = reflect("java.net.URL", ["https://jsonplaceholder.typicode.com/posts/1"]);
+const conn = urlInstance.openConnection();
+const conn3 = ("java.net.HttpURLConnection") conn;
+conn3.setRequestMethod("GET");
+
+//const conn2 = reflect("java.net.HttpURLConnection", [conn]);
+//const conn2 = reflect("java.net.HttpURLConnection", [urlInstance.openConnection()]);
 
 //const urlClass2 = reflect("java.net.URL", ["java.lang.String"], ["https://jsonplaceholder.typicode.com/posts/1"]);
+
+
+
+
+
+
+
