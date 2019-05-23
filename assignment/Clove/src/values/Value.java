@@ -32,6 +32,14 @@ public interface Value {
 	 */
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs);
 
+	/**
+	 * Gets the raw value from Value classes.
+	 * 
+	 * @param <T> -- type
+	 * @returns raw internalValue from Value classes
+	 */
+	public <T> T getRawValue();
+
 	/** Get name of this Value type. */
 	public String getName();
 	

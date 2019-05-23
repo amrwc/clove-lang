@@ -719,9 +719,9 @@ void reflect() #Reflect :
 {}
 {
   <REFLECT> "("
-          ( character()  | dereference() )   // Class-name
-    [ "," ( value_list() | dereference() )   // Constructor argument types
-      "," ( value_list() | dereference() ) ] // Constructor arguments
+          ( character()  | dereference() )     // Class-name
+    [ "," ( value_list() | dereference() )     // Constructor argument types/arguments
+    [ "," ( value_list() | dereference() ) ] ] // Constructor arguments
   ")"
 }
 

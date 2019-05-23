@@ -14,6 +14,7 @@ import interpreter.ExceptionSemantic;
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
 	private Constructor<?> constructor;
+	private Class<?> instance;
 
 //	public ValueReflection() {}
 
@@ -21,9 +22,31 @@ public class ValueReflection extends ValueAbstract {
 		theClass = Class.forName(className);
 	}
 
-	public ValueReflection(String className, String[] ctorParamTypes,
-			ArrayList<String> ctorArgs) {
-		// TODO:
+	public ValueReflection(String className, Value[] ctorArgs) {
+		try {
+			// Get class using its canonical name.
+			theClass = Class.forName(className);
+
+			// Get classes of the parameters to choose the right ctor.
+			final Class[] paramTypes = new Class[ctorArgs.length];
+			for (int i = 0; i < ctorArgs.length; i++) {
+				final String canonClass = ctorArgs[i].getRawValue().getClass().getCanonicalName();
+				paramTypes[i] = Class.forName(canonClass);
+			}
+
+			// Get constructor matching the parameter classes.
+			constructor = theClass.getConstructor(paramTypes);
+
+//			final Class[] args = new Class[ctorArgs.length];
+//			for (int i = 0; i < ctorArgs.length; i++)
+//				args[i] = Class.forName(ctorArgs[i]);
+//			instance = constructor.newInstance(initargs);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public ValueReflection(String className, String[] ctorParamTypes, String[] ctorArgs) {
 		try {
 			theClass = Class.forName(className);
 
@@ -33,6 +56,11 @@ public class ValueReflection extends ValueAbstract {
 
 			constructor = theClass.getConstructor(paramTypes);
 System.out.println("CTOR: " + constructor);
+
+			final Class[] args = new Class[ctorArgs.length];
+			for (int i = 0; i < ctorArgs.length; i++)
+				args[i] = Class.forName(ctorArgs[i]);
+//			instance = constructor.newInstance(initargs);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -48,6 +76,12 @@ System.out.println("CTOR: " + constructor);
 		// TODO: TEST IT
 		final Class<?> incomingClass = ((ValueReflection) v).theClass;
 		return theClass.equals(incomingClass) ? 0 : 1;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Class<?> getRawValue() {
+		return theClass;
 	}
 
 	/**

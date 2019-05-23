@@ -14,6 +14,9 @@ public abstract class ValueAbstract implements Value {
 	@Override
 	public abstract int compare(Value v);
 
+	@Override
+	public abstract <T> T getRawValue();
+
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 

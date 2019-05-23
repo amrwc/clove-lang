@@ -41,6 +41,12 @@ public class ValueArray extends ValueAbstract {
 		return internalValue.equals(arr) ? 0 : 1;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public Vector<Value> getRawValue() {
+		return internalValue;
+	}
+
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 

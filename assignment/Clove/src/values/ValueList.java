@@ -12,7 +12,6 @@ import parser.ast.SimpleNode;
  * @author amrwc
  */
 public class ValueList extends ValueAbstract {
-
 	private ArrayList<Value> internalValue = new ArrayList<Value>();
 	
 	public ValueList() {}
@@ -30,6 +29,12 @@ public class ValueList extends ValueAbstract {
 	public int compare(Value v) {
 		final ArrayList<Value> arr = ((ValueList) v).internalValue;
 		return internalValue.equals(arr) ? 0 : 1;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArrayList<Value> getRawValue() {
+		return internalValue;
 	}
 
 	/**
