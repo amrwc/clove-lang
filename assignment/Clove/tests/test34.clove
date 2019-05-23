@@ -24,6 +24,8 @@
 //print(result.toString());
 
 
-const urlClass = reflect("java.net.URL");
+//const urlClass = reflect("java.net.URL");
 
-const urlClass2 = reflect("java.net.URL", ["java.lang.String"], ["https://jsonplaceholder.typicode.com/posts/1"]);
+const urlClass1 = reflect("java.net.URL", ["https://jsonplaceholder.typicode.com/posts/1"]);
+
+//const urlClass2 = reflect("java.net.URL", ["java.lang.String"], ["https://jsonplaceholder.typicode.com/posts/1"]);

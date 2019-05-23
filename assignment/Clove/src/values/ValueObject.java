@@ -35,6 +35,12 @@ public class ValueObject extends ValueAbstract {
 		return internalValue.equals(map) ? 0 : 1;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public HashMap<String, Value> getRawValue() {
+		return internalValue;
+	}
+
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 

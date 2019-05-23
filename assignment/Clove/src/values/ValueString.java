@@ -19,6 +19,12 @@ public class ValueString extends ValueAbstract {
 		internalValue = b;
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	public String getRawValue() {
+		return internalValue;
+	}
+
 	/**
 	 * Dereferences a value in a nested expression.
 	 * 

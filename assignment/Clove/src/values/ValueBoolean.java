@@ -1,7 +1,6 @@
 package values;
 
 public class ValueBoolean extends ValueAbstract {
-
 	private final boolean internalValue;
 	
 	public ValueBoolean(boolean b) {
@@ -12,7 +11,13 @@ public class ValueBoolean extends ValueAbstract {
 	public String getName() {
 		return "boolean";
 	}
-	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Boolean getRawValue() {
+		return internalValue;
+	}
+
 	/** Convert this to a primitive boolean. */
 	@Override
 	public boolean booleanValue() {

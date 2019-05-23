@@ -1187,27 +1187,41 @@ public class Parser implements CloveVisitor {
 		final int numChildren = node.jjtGetNumChildren();
 
 		try {
+			if (numChildren > 3)
+				throw new ExceptionSemantic("ValueReflection only takes"
+					+ " up to 3 arguments.");
+
 			// If there's only the class name...
 			if (numChildren == 1)
 				return new ValueReflection(className);
+
+			// ...or if there's the class name and constructor arguments...
+			else if (numChildren == 2) {
+				// Get all constructor arguments.
+				ValueList ctorArgsValue = (ValueList) doChild(node, 1);
+				final Value[] ctorArgs = new Value[ctorArgsValue.size()];
+				for (int i = 0; i < ctorArgsValue.size(); i++)
+					ctorArgs[i] = ctorArgsValue.get(i);
+
+				return new ValueReflection(className, ctorArgs);
+			}
 
 			// ...or if there's the class name, constructor
 			// parameter types and constructor arguments...
 			else if (numChildren == 3) {
 				// Get all constructor argument types.
 				ValueList ctorParamTypesValue = (ValueList) doChild(node, 1);
-				final String[] ctorParamTypesArray = new String[ctorParamTypesValue.size()];
+				final String[] ctorParamTypes = new String[ctorParamTypesValue.size()];
 				for (int i = 0; i < ctorParamTypesValue.size(); i++)
-					ctorParamTypesArray[i] = ctorParamTypesValue.get(i).stringValue();
+					ctorParamTypes[i] = ctorParamTypesValue.get(i).stringValue();
 
 				// Get all constructor arguments.
-				// TODO: Change this to array.
-				final ArrayList<String> ctorArgsList = new ArrayList<String>();
 				ValueList ctorArgsValue = (ValueList) doChild(node, 2);
+				final String[] ctorArgs = new String[ctorArgsValue.size()];
 				for (int i = 0; i < ctorArgsValue.size(); i++)
-					ctorArgsList.add(ctorArgsValue.get(i).stringValue());
+					ctorArgs[i] = ctorArgsValue.get(i).stringValue();
 
-				return new ValueReflection(className, ctorParamTypesArray, ctorArgsList);
+				return new ValueReflection(className, ctorParamTypes, ctorArgs);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
