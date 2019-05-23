@@ -71,6 +71,11 @@ public class Parser implements CloveVisitor {
 		return doChildren(node, data);
 	}
 
+
+
+
+
+
 	/***********************************************
 	 * Statements *
 	 ***********************************************/
@@ -94,6 +99,16 @@ public class Parser implements CloveVisitor {
 		// If there's more than 1 child in the left child, then it's not just an
 		// identifier.
 		if (leftNumChildren > 0) {
+			// Check for and call a Reflection Method.
+			final Value perhapsReflection = doChild(node, 0);
+			if (perhapsReflection instanceof ValueReflection) {
+				try {
+					((ValueReflection) perhapsReflection).invoke(node, this);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
 			fndef = getValueFunction(node);
 			node.optimised = fndef;
 		}
@@ -813,6 +828,11 @@ public class Parser implements CloveVisitor {
 		return new ValueString(pathStr);
 	}
 
+
+
+
+
+
 	/***********************************************
 	 * Sub-statements *
 	 ***********************************************/
@@ -928,6 +948,11 @@ public class Parser implements CloveVisitor {
 		return doChildren(node, data);
 	}
 
+
+
+
+
+
 	/***********************************************
 	 * Expressions *
 	 ***********************************************/
@@ -1022,9 +1047,19 @@ public class Parser implements CloveVisitor {
 		FunctionDefinition fndef;
 		final int leftNumChildren = node.jjtGetChild(0).jjtGetNumChildren();
 
-		// If there's more than 1 child in the left child, then it's not just an
-		// identifier.
+		// If there's more than 1 child in the left child,
+		// then it's not just an identifier.
 		if (leftNumChildren > 0) {
+			// Check for and invoke a Reflection Method.
+			final Value perhapsReflection = doChild(node, 0);
+			if (perhapsReflection instanceof ValueReflection) {
+				try {
+					return ((ValueReflection) perhapsReflection).invoke(node, this);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+
 			fndef = getValueFunction(node);
 			node.optimised = fndef;
 		}
@@ -1036,8 +1071,8 @@ public class Parser implements CloveVisitor {
 				fndef = findValueFunction(fnname);
 
 			if (!fndef.hasReturn())
-				throw new ExceptionSemantic(
-						"Function " + fnname + " is being invoked in an expression but does not have a return value.");
+				throw new ExceptionSemantic("Function " + fnname + " is being"
+					+ " invoked in an expression but does not have a return value.");
 
 			node.optimised = fndef; // Save it for next time
 		} else
@@ -1079,11 +1114,13 @@ public class Parser implements CloveVisitor {
 
 		final ValueFunction valueFunction = (ValueFunction) value;
 		if (valueFunction == null)
-			throw new ExceptionSemantic("The value function you are trying to invoke is undefined.");
+			throw new ExceptionSemantic("The value function you are trying"
+				+ " to invoke is undefined.");
 
 		final FunctionDefinition fndef = valueFunction.get();
 		if (fndef == null)
-			throw new ExceptionSemantic("Function " + valueFunction.getName() + " is undefined.");
+			throw new ExceptionSemantic("Function " + valueFunction.getName()
+				+ " is undefined.");
 
 		return fndef;
 	}
@@ -1182,20 +1219,19 @@ public class Parser implements CloveVisitor {
 	 */
 	@Override
 	public Object visit(ASTReflect node, Object data) {
-		// TODO:
 		final String className = doChild(node, 0).stringValue();
 		final int numChildren = node.jjtGetNumChildren();
 
-		try {
-			if (numChildren > 3)
-				throw new ExceptionSemantic("ValueReflection only takes"
-					+ " up to 3 arguments.");
+		if (numChildren > 2)
+			throw new ExceptionSemantic("ValueReflection only accepts"
+				+ " up to 2 arguments.");
 
-			// If there's only the class name...
+		try {
+			// If there's only a class name...
 			if (numChildren == 1)
 				return new ValueReflection(className);
 
-			// ...or if there's the class name and constructor arguments...
+			// ...or if there's a class name and constructor arguments...
 			else if (numChildren == 2) {
 				// Get all constructor arguments.
 				ValueList ctorArgsValue = (ValueList) doChild(node, 1);
@@ -1205,30 +1241,17 @@ public class Parser implements CloveVisitor {
 
 				return new ValueReflection(className, ctorArgs);
 			}
-
-			// ...or if there's the class name, constructor
-			// parameter types and constructor arguments...
-//			else if (numChildren == 3) {
-//				// Get all constructor argument types.
-//				ValueList ctorParamTypesValue = (ValueList) doChild(node, 1);
-//				final String[] ctorParamTypes = new String[ctorParamTypesValue.size()];
-//				for (int i = 0; i < ctorParamTypesValue.size(); i++)
-//					ctorParamTypes[i] = ctorParamTypesValue.get(i).stringValue();
-//
-//				// Get all constructor arguments.
-//				ValueList ctorArgsValue = (ValueList) doChild(node, 2);
-//				final String[] ctorArgs = new String[ctorArgsValue.size()];
-//				for (int i = 0; i < ctorArgsValue.size(); i++)
-//					ctorArgs[i] = ctorArgsValue.get(i).stringValue();
-//
-//				return new ValueReflection(className, ctorParamTypes, ctorArgs);
-//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-//		return data;
-		return null;
+
+		return data;
 	}
+
+
+
+
+
 
 	/***********************************************
 	 * Literals *
@@ -1332,5 +1355,23 @@ public class Parser implements CloveVisitor {
 		}
 
 		return valueList;
+	}
+
+	/**
+	 * Reflection literal with a cast.
+	 * 
+	 * @author amrwc
+	 */
+	@Override
+	public Object visit(ASTValueReflection node, Object data) {
+		final String targetClassName = doChild(node, 0).stringValue();
+		final Value objToCast = doChild(node, 1);
+
+		if (objToCast instanceof ValueReflection)
+			return ValueReflection.cast(targetClassName, (ValueReflection) objToCast);
+		
+		else
+			throw new ExceptionSemantic("The object to cast must be of"
+				+ " ValueReflection type.");
 	}
 }

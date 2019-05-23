@@ -1,10 +1,13 @@
 package values;
 
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
+import interpreter.Parser;
+import parser.ast.SimpleNode;
 
 /**
  * @read https://www.sitepoint.com/java-reflection-api-tutorial/
@@ -36,9 +39,45 @@ public class ValueReflection extends ValueAbstract {
 			// Create an instance of the class using the arguments
 			// and their matching constructor.
 			instance = constructor.newInstance(args.get("args"));
+
+//			URL url = new URL("https://jsonplaceholder.typicode.com/posts/1");
+//			Object conn = Class.forName("java.net.HttpURLConnection");
+//			conn = ((Class<?>) conn).cast(url.openConnection());
+//System.out.println("INSANITY: " + conn.getClass());
+// TODO: Change Class<?> for theClass to Object and then cast it whenever necessary.
+//       This way, it's possible to cast shit like the above.
+//       OR: only do this when casting is necessary (make a 'cast' token?).
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Create a new ValueReflection instance using
+	 * the argument of Object type.
+	 * 
+	 * @param {Object} newObject
+	 * @throws ClassNotFoundException 
+	 */
+	public ValueReflection(Object newObject) throws ClassNotFoundException {
+		theClass = newObject.getClass();
+//		theClass = Class.forName(newObject.getClass().getCanonicalName());
+		instance = newObject;
+	}
+
+	/**
+	 * Casting ValueReflection to another class.
+	 */
+	public static ValueReflection cast(String targetClassName, ValueReflection objToCast) {
+		try {
+			final Object targetClass = Class.forName(targetClassName);
+			final Object casted = ((Class<?>) targetClass).cast(objToCast.getRawValue());
+			return new ValueReflection(casted);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
 	}
 
 	/**
@@ -65,26 +104,6 @@ public class ValueReflection extends ValueAbstract {
 
 		return result;
 	}
-
-//	public ValueReflection(String className, String[] ctorParamTypes, String[] ctorArgs) {
-//		try {
-//			theClass = Class.forName(className);
-//
-//			final Class<?>[] paramTypes = new Class[ctorParamTypes.length];
-//			for (int i = 0; i < ctorParamTypes.length; i++)
-//				paramTypes[i] = Class.forName(ctorParamTypes[i]);
-//
-//			constructor = theClass.getConstructor(paramTypes);
-//System.out.println("CTOR: " + constructor);
-//
-//			final Class<?>[] args = new Class[ctorArgs.length];
-//			for (int i = 0; i < ctorArgs.length; i++)
-//				args[i] = Class.forName(ctorArgs[i]);
-////			instance = constructor.newInstance(initargs);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 
 	@Override
 	public String getName() {
@@ -117,15 +136,87 @@ public class ValueReflection extends ValueAbstract {
 	 * @param {Parser} p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
-//	@Override
-//	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
-//		// TODO:
-//		final ValueReflection valueObject = (ValueReflection) v;
+	@Override
+	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
+		// TODO:
+//		final ValueReflection valueReflection = (ValueReflection) v;
 //		final String keyName = (node.jjtGetChild(currChild) instanceof ASTIdentifier)
 //			? Parser.getTokenOfChild(node, currChild)
 //			: p.doChild(node, currChild).toString();
-//		return valueObject.get(keyName);
-//	}
+
+		return this;
+//		return null;
+//		return valueReflection.get(keyName);
+	}
+
+	// Invoke a Method from an instance.
+	/**
+	 * Invokes a Method from an instance. This method gets
+	 * the Method's name from the ASTFunctionInvocation node,
+	 * parses the arguments from its ASTArgumentList node,
+	 * and returns the resulting Object.
+	 * 
+	 * @param {SimpleNode (ASTFunctionInvocation)} node
+	 * @param {Parser} p -- the active Parser's instance
+	 * @returns {Object} the Method's result
+	 */
+	public Object invoke(SimpleNode node, Parser p) {
+		// ASTDereference
+		final SimpleNode derefNode = (SimpleNode) node.jjtGetChild(0);
+
+		// Get the Method's name.
+		final String methodName = Parser.getTokenOfChild(derefNode, 0);
+
+		// ASTArgumentList
+		final SimpleNode argsNode = (SimpleNode) node.jjtGetChild(1);
+
+		try {
+			var args = parseArgs(argsNode, p);
+			final Method method =
+				theClass.getMethod(methodName, (Class<?>[]) args.get("paramTypes"));
+			method.setAccessible(true);
+			return new ValueReflection(method.invoke(instance, args.get("args")));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	/**
+	 * Parses Method arguments and returns them in the correct form.
+	 * 
+	 * @param {SimpleNode (ASTArgumentList)} argsNode -- the Method's arguments
+	 * @param {Parser} p -- active Parser's instance
+	 * @returns {HashMap<String, Object[]>} map containing the parameter types
+	 *          and the arguments in their 'raw type'
+	 * @throws ClassNotFoundException
+	 */
+	private HashMap<String, Object[]> parseArgs(SimpleNode argsNode, Parser p) throws ClassNotFoundException {
+		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
+
+		// Collect classes of the arguments to later find a matching Method.
+		Class<?>[] paramTypes = new Class<?>[0];
+		Object[] args = new Object[0];
+
+		final int numArgs = argsNode.jjtGetNumChildren();
+		if (numArgs > 0) {
+			// Re-initialise the arrays with the right length.
+			paramTypes = new Class<?>[numArgs];
+			args = new Object[numArgs];
+
+			for (int i = 0; i < numArgs; i++) {
+				final Object arg = p.doChild(argsNode, i).getRawValue();
+				paramTypes[i] = arg.getClass();
+				args[i] = arg;
+			}
+		}
+
+		result.put("paramTypes", paramTypes);
+		result.put("args", args);
+
+		return result;
+	}
 
 	/**
 	 * Execute a prototype function.
@@ -159,12 +250,17 @@ public class ValueReflection extends ValueAbstract {
 //		return null;
 	}
 
-	// Returns the key-value pairs in '{key: value}' notation.
+	/**
+	 * @returns {String} key-value pairs in '{key: value}' notation
+	 */
 	@Override
 	public String toString() {
-		return "{\n  class: " + theClass.getCanonicalName()
-			+ ",\n  constructor: " + constructor.toGenericString()
-			+ ",\n  instance: " + instance.toString() + "\n}";
+		if (constructor != null && instance != null)
+			return "{\n  class: " + theClass.getCanonicalName()
+				+ ",\n  constructor: " + constructor.toGenericString()
+				+ ",\n  instance: " + instance.toString() + "\n}";
+		else
+			return "{class: " + theClass.getCanonicalName() + "}";
 	}
 
 	@Override

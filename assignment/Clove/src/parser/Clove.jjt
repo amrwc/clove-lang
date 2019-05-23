@@ -658,9 +658,10 @@ void literal() :
   | character()
   | rational()
   | bool()
-  | value_function()
+  | LOOKAHEAD(2) value_function()
   | value_object()
   | value_list()
+  | value_reflection()
 }
 
 
@@ -808,4 +809,17 @@ void value_list() #ValueList :
 {}
 {
   "[" [ expression() ( "," expression() )* ] "]"
+}
+
+
+/**
+ * Reflection literal with a cast instead of
+ * using reflect() method.
+ * 
+ * @author amrwc
+ */
+void value_reflection() #ValueReflection :
+{}
+{
+  "(" character() ")" dereference()
 }
