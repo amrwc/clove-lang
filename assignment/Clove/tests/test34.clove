@@ -27,5 +27,6 @@
 //const urlClass = reflect("java.net.URL");
 
 const urlClass1 = reflect("java.net.URL", ["https://jsonplaceholder.typicode.com/posts/1"]);
+log('urlClass1: ', urlClass1)
 
 //const urlClass2 = reflect("java.net.URL", ["java.lang.String"], ["https://jsonplaceholder.typicode.com/posts/1"]);

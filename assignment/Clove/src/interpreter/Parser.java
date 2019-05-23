@@ -1208,21 +1208,21 @@ public class Parser implements CloveVisitor {
 
 			// ...or if there's the class name, constructor
 			// parameter types and constructor arguments...
-			else if (numChildren == 3) {
-				// Get all constructor argument types.
-				ValueList ctorParamTypesValue = (ValueList) doChild(node, 1);
-				final String[] ctorParamTypes = new String[ctorParamTypesValue.size()];
-				for (int i = 0; i < ctorParamTypesValue.size(); i++)
-					ctorParamTypes[i] = ctorParamTypesValue.get(i).stringValue();
-
-				// Get all constructor arguments.
-				ValueList ctorArgsValue = (ValueList) doChild(node, 2);
-				final String[] ctorArgs = new String[ctorArgsValue.size()];
-				for (int i = 0; i < ctorArgsValue.size(); i++)
-					ctorArgs[i] = ctorArgsValue.get(i).stringValue();
-
-				return new ValueReflection(className, ctorParamTypes, ctorArgs);
-			}
+//			else if (numChildren == 3) {
+//				// Get all constructor argument types.
+//				ValueList ctorParamTypesValue = (ValueList) doChild(node, 1);
+//				final String[] ctorParamTypes = new String[ctorParamTypesValue.size()];
+//				for (int i = 0; i < ctorParamTypesValue.size(); i++)
+//					ctorParamTypes[i] = ctorParamTypesValue.get(i).stringValue();
+//
+//				// Get all constructor arguments.
+//				ValueList ctorArgsValue = (ValueList) doChild(node, 2);
+//				final String[] ctorArgs = new String[ctorArgsValue.size()];
+//				for (int i = 0; i < ctorArgsValue.size(); i++)
+//					ctorArgs[i] = ctorArgsValue.get(i).stringValue();
+//
+//				return new ValueReflection(className, ctorParamTypes, ctorArgs);
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

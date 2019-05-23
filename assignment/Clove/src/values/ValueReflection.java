@@ -2,6 +2,7 @@ package values;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
 
@@ -14,9 +15,7 @@ import interpreter.ExceptionSemantic;
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
 	private Constructor<?> constructor;
-	private Class<?> instance;
-
-//	public ValueReflection() {}
+	private Object instance;
 
 	public ValueReflection(String className) throws ClassNotFoundException {
 		theClass = Class.forName(className);
@@ -24,47 +23,68 @@ public class ValueReflection extends ValueAbstract {
 
 	public ValueReflection(String className, Value[] ctorArgs) {
 		try {
+			// Store the parameters types to choose the right ctor,
+			// and the arguments in their raw form.
+			final HashMap<String, Object[]> args = parseArgs(ctorArgs);
+
 			// Get class using its canonical name.
 			theClass = Class.forName(className);
 
-			// Get classes of the parameters to choose the right ctor.
-			final Class[] paramTypes = new Class[ctorArgs.length];
-			for (int i = 0; i < ctorArgs.length; i++) {
-				final String canonClass = ctorArgs[i].getRawValue().getClass().getCanonicalName();
-				paramTypes[i] = Class.forName(canonClass);
-			}
-
 			// Get constructor matching the parameter classes.
-			constructor = theClass.getConstructor(paramTypes);
+			constructor = theClass.getConstructor((Class<?>[]) args.get("paramTypes"));
 
-//			final Class[] args = new Class[ctorArgs.length];
+			// Create an instance of the class using the arguments
+			// and their matching constructor.
+			instance = constructor.newInstance(args.get("args"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Parses constructor arguments and returns them in the correct form.
+	 * 
+	 * @param {Value[]} ctorArgs
+	 * @returns {HashMap<String, Object[]>} map containing the parameter types
+	 *          and the arguments in their 'raw type'
+	 * @throws ClassNotFoundException
+	 */
+	private HashMap<String, Object[]> parseArgs(Value[] ctorArgs) throws ClassNotFoundException {
+		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
+		final Class<?>[] paramTypes = new Class[ctorArgs.length];
+		final Object[] args = new Object[ctorArgs.length];
+
+		for (int i = 0; i < ctorArgs.length; i++) {
+			final String canonClass = ctorArgs[i].getRawValue().getClass().getCanonicalName();
+			paramTypes[i] = Class.forName(canonClass);
+			args[i] = ctorArgs[i].getRawValue();
+		}
+
+		result.put("paramTypes", paramTypes);
+		result.put("args", args);
+
+		return result;
+	}
+
+//	public ValueReflection(String className, String[] ctorParamTypes, String[] ctorArgs) {
+//		try {
+//			theClass = Class.forName(className);
+//
+//			final Class<?>[] paramTypes = new Class[ctorParamTypes.length];
+//			for (int i = 0; i < ctorParamTypes.length; i++)
+//				paramTypes[i] = Class.forName(ctorParamTypes[i]);
+//
+//			constructor = theClass.getConstructor(paramTypes);
+//System.out.println("CTOR: " + constructor);
+//
+//			final Class<?>[] args = new Class[ctorArgs.length];
 //			for (int i = 0; i < ctorArgs.length; i++)
 //				args[i] = Class.forName(ctorArgs[i]);
-//			instance = constructor.newInstance(initargs);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public ValueReflection(String className, String[] ctorParamTypes, String[] ctorArgs) {
-		try {
-			theClass = Class.forName(className);
-
-			final Class[] paramTypes = new Class[ctorParamTypes.length];
-			for (int i = 0; i < ctorParamTypes.length; i++)
-				paramTypes[i] = Class.forName(ctorParamTypes[i]);
-
-			constructor = theClass.getConstructor(paramTypes);
-System.out.println("CTOR: " + constructor);
-
-			final Class[] args = new Class[ctorArgs.length];
-			for (int i = 0; i < ctorArgs.length; i++)
-				args[i] = Class.forName(ctorArgs[i]);
-//			instance = constructor.newInstance(initargs);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+////			instance = constructor.newInstance(initargs);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	@Override
 	public String getName() {
@@ -75,13 +95,17 @@ System.out.println("CTOR: " + constructor);
 	public int compare(Value v) {
 		// TODO: TEST IT
 		final Class<?> incomingClass = ((ValueReflection) v).theClass;
-		return theClass.equals(incomingClass) ? 0 : 1;
+		final Object incomingInstance = ((ValueReflection) v).instance;
+		if (instance != null)
+			return instance.equals(incomingInstance) ? 0 : 1;
+		else
+			return theClass.equals(incomingClass) ? 0 : 1;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Class<?> getRawValue() {
-		return theClass;
+	public Object getRawValue() {
+		return (instance != null) ? instance : theClass;
 	}
 
 	/**
@@ -109,7 +133,6 @@ System.out.println("CTOR: " + constructor);
 	 * @param {String} protoFunc -- prototype function name
 	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
 	 * @returns {Value} result of the prototype function
-	 * @author amrwc
 	 */
 	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
@@ -136,63 +159,16 @@ System.out.println("CTOR: " + constructor);
 //		return null;
 	}
 
-//	public void add(String name, Value v) {
-//		internalValue.putIfAbsent(name, v);
-//	}
-
-//	public Value get(String name) {
-//		final Value value = internalValue.get(name);
-//		if (value != null) return value;
-//		throw new ExceptionSemantic("Object key \"" + name + "\" is undefined or equal to null.");
-//	}
-
-//	public void set(String name, Value v) {
-//		if (name == null || name == "null" || v == null)
-//			throw new ExceptionSemantic("Neither key nor value of an object can be null.");
-//		internalValue.put(name, v);
-//	}
-
-//	private void remove(String name) {
-//		if (internalValue.containsKey(name))
-//			internalValue.remove(name);
-//		else
-//			throw new ExceptionSemantic("This ValueObject does not contain the \"" + name + "\" key.");
-//	}
-//
-//	private void tryRemove(String name) {
-//		internalValue.remove(name);
-//	}
-
 	// Returns the key-value pairs in '{key: value}' notation.
-//	@Override
-//	public String toString() {
-//		// TODO:
-//		if (internalValue.size() == 0) return "{}";
-//		String result = "{";
-//		for (final HashMap.Entry<String, Value> entry : internalValue.entrySet())
-//			result += entry.getKey() + ": " + entry.getValue() + ", ";
-//		return result.substring(0, result.length() - 2) + "}";
-//	}
+	@Override
+	public String toString() {
+		return "{\n  class: " + theClass.getCanonicalName()
+			+ ",\n  constructor: " + constructor.toGenericString()
+			+ ",\n  instance: " + instance.toString() + "\n}";
+	}
 
-//	@Override
-//	public String stringValue() {
-//		return toString();
-//	}
-
-//	public int size() {
-//		// TODO:
-//		return internalValue.size();
-//	}
-
-//	/**
-//	 * Returns a list of the anonymous object's keys.
-//	 * 
-//	 * @returns {ValueList} list of ValueString's of the object's keys
-//	 */
-//	private ValueList keys() {
-//		// TODO:
-//		final ValueList keys = new ValueList();
-//		internalValue.keySet().forEach(key -> keys.append(new ValueString(key)));
-//		return keys;
-//	}
+	@Override
+	public String stringValue() {
+		return toString();
+	}
 }
