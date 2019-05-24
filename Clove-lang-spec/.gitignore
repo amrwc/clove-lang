@@ -4,6 +4,7 @@
 # ...except for:
 !.gitignore
 !*.tex
+!*.pdf
 !code-snippets
 !code-snippets/*
 
