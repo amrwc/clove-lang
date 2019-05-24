@@ -33,7 +33,7 @@
 %----------------------------------
 % MINTED: SOURCE CODE LISTINGS
 %----------------------------------
-\usepackage[draft=true,section]{minted} % TODO: Remove draft option for coloured syntax highlighting.
+\usepackage[draft=false,section]{minted} % TODO: Remove draft option for coloured syntax highlighting.
 
 % REMOVE SYNTAX ERROR HIGHLIGHTING
 % https://tex.stackexchange.com/a/343506
@@ -127,7 +127,11 @@ It takes three arguments: writing option, path, content. The function's behaviou
 \paragraph*{http()}
 This function supports four main HTTP requests: GET, POST, PUT, and DELETE, one of which has to be specified in the first argument. The second argument is the resource's URL, and the third, optional argument is the request body (only applicable to POST and PUT requests) which is a string of url-encoded pairs, or an anonymous object.
 
-\import{./code-snippets/}{http-request-and-file-writing.tex}
+\vspace{-0.75em}
+\paragraph*{reflect()}
+Java's Reflection API is accessible via Clove's reflect() method that handles one or two arguments, first being a string with the full package name (e.g. java.lang.String), second is a list with arguments which are used to instantiate the class. If the second argument is not supplied, the class is not instantiated. Current implementation only allows for simple tasks, such as string comparison or concatenation; see example6 in the example programs, or test34.
+
+% \import{./code-snippets/}{http-request-and-file-writing.tex}
 
 
 
