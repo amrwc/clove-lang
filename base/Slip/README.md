@@ -1,1 +1,0 @@
-Simple Lisp-like language. Almost.

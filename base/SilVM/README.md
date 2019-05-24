@@ -1,1 +1,0 @@
-Simple virtual machine from Virtual Machines lecture.
