@@ -4,11 +4,11 @@ Clove ([Sili](https://github.com/DaveVoorhis/LDI/tree/master/Sili)<sup>2</sup>) 
 
 The grammar is defined in [JavaCC](https://javacc.org) with [JJTree](https://javacc.org/jjtree).
 
-## Running .clove files
+### Running .clove files
 
 After setting up and building, do:
 
-```
+```PowerShell
 cd Clove
 java -classpath ./bin Clove < [file_name].clove [args]
 ```
@@ -17,14 +17,24 @@ You can also use the `run` scripts placed in the `examples` directory. Please no
 
 #### Mac
 
-```
+Terminal:
+
+```bash
 ./run [file_name].clove [args]
+```
+
+If you get `-bash: ./run: Permission denied` error, do:
+
+```bash
+chmod 555 run
 ```
 
 #### Windows
 
-```
+cmd/PowerShell:
+
+```PowerShell
 run [file_name].clove [args]
 ```
 
-On Windows 10 if you get `'java' is not recognized as an internal or external command` error, you need to add Java to your path. Follow the steps from [this short tutorial](https://stackoverflow.com/a/28451116).
+If you get `'java' is not recognized as an internal or external command` error, you need to add Java to your path. Follow the steps from [this short tutorial](https://stackoverflow.com/a/28451116).
