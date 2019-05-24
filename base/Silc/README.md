@@ -1,1 +1,0 @@
-Simple compiler from Compilers lecture.
