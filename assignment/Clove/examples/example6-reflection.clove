@@ -1,0 +1,33 @@
+/**
+ * String compare - showcases a simple use
+ * of Reflection API.
+ * 
+ * NOTE: This program takes 3 arguments.
+ * Example usage:
+ * ./run example6-reflection.clove compareTo phrase-to-compare-against phrase
+ */
+
+log("NOTE: This program takes 3 arguments.");
+log("Example usage:");
+log("./run example6-reflection.clove compareTo phrase-to-compare-against phrase");
+log();
+
+
+const args = get_args();
+const str = reflect("java.lang.String", [args[1]]);
+
+if (args[0] == "compareTo") {
+  if (str.compareTo(args[2]) == 0) {
+    log("It's a match!");
+  } else {
+    log("The strings are different.");
+  }
+}
+
+else if (args[0] == "concat") {
+  log(str.concat(args[2]));
+}
+
+else if (args[0] == "endsWith") {
+  log(str.endsWith(args[2]));
+}

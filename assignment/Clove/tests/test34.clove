@@ -2,45 +2,25 @@
  * Test Reflection API
  */
 
-// Louis's example of sending HTTP GET request using reflection:
-//string urlText = "https://my-json-server.typicode.com/typicode/demo/posts";
-
-//reflection result = Reflect(CONSTRUCT: "java.lang.StringBuilder");
-//reflection url = Reflect(CONSTRUCT: "java.net.URL", urlText);
-//reflection connection = ("java.net.HttpURLConnection") url.openConnection();
-//connection.setRequestMethod("GET");
-//reflection reader = Reflect(CONSTRUCT: "java.io.BufferedReader", ("java.io.Reader") Reflect(CONSTRUCT: "java.io.InputStreamReader", ("java.io.InputStream") connection.getInputStream()));
-
-//string line = reader.readLine();
-
-//result.append(line);
-//while (!(line == "")) {
-//    result.append(line);
-//    line = reader.readLine();
-//}
-
-//reader.close();
-
-//print(result.toString());
+log("Reflection API")
+log()
 
 
-//const strBuilder = reflect("java.lang.StringBuilder");
-//log('strBuilder: ', strBuilder);
-//log();
+log('const math = reflect("java.lang.Math");');
+const math = reflect("java.lang.Math");
 
-const urlInstance = reflect("java.net.URL", ["https://jsonplaceholder.typicode.com/posts/1"]);
-const conn = urlInstance.openConnection();
-const conn3 = ("java.net.HttpURLConnection") conn;
-conn3.setRequestMethod("GET");
-
-//const conn2 = reflect("java.net.HttpURLConnection", [conn]);
-//const conn2 = reflect("java.net.HttpURLConnection", [urlInstance.openConnection()]);
-
-//const urlClass2 = reflect("java.net.URL", ["java.lang.String"], ["https://jsonplaceholder.typicode.com/posts/1"]);
+log('math.negateExact(10): ', math.negateExact(10));
+log('math.round(77.77): ', math.round(77.77));
+log()
+log()
 
 
+const string = reflect("java.lang.String", ["example string"]);
+const string2 = "other string";
+const string3 = "example string";
 
-
-
-
-
+if (string.compareTo(string3) == 0) {
+  log("It's a match!");
+} else {
+  log("The strings are different.");
+}
