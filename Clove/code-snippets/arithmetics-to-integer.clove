@@ -1,0 +1,7 @@
+/**
+ * Demonstrates the languages behaviour
+ * with integers and rational numbers.
+ */
+
+log('3.25 / 0.25:');
+log(3.25 / 0.25);

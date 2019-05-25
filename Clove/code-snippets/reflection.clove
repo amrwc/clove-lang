@@ -1,0 +1,12 @@
+/**
+ * Demonstrates use of reflect() built-in function.
+ */
+
+const math = reflect('java.lang.Math');
+const rational = 13.77777;
+log(math.round(rational));
+log();
+
+const str1 = reflect('java.lang.String', ['imastring']);
+const str2 = 'otherstring';
+log(str1.compareTo(str2));

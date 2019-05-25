@@ -1,0 +1,9 @@
+/**
+ * Demonstrates use of keywords' aliases.
+ */
+
+if (true)
+  write("Yes")
+
+jesli (prawda)
+  wyswietl("Tak")

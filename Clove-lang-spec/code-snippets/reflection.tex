@@ -1,0 +1,18 @@
+\vspace{-2.25em}
+\begin{center}
+\begin{minipage}[t]{1\textwidth}
+\begin{listing}[H]
+\begin{spacing}{0.6}
+\begin{minted}[frame=single]{JavaScript}
+const math = reflect('java.lang.Math')
+const rational = 13.77777
+math.round(rational) // 14
+
+const str1 = reflect('java.lang.String', ['imastring'])
+const str2 = 'otherstring'
+str1.compareTo(str2) // -6
+\end{minted}
+\end{spacing}
+\end{listing}
+\end{minipage}
+\end{center}
