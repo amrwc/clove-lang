@@ -1,0 +1,27 @@
+/**
+ * Demonstrates use of shorthand operators.
+ */
+
+log('let ten = 10;');
+let ten = 10;
+log('let twenty = 20;');
+let twenty = 20;
+log();
+
+
+log('ten++: ', ten++, ', ten: ', ten);
+log('++ten: ', ++ten, ', ten: ', ten);
+log();
+
+log('twenty--: ', twenty--, ', twenty: ', twenty);
+log('--twenty: ', --twenty, ', twenty: ', twenty);
+log();
+
+ten += twenty;
+log('ten += twenty: ', ten);
+ten -= twenty;
+log('ten -= twenty: ', ten);
+ten *= twenty;
+log('ten *= twenty: ', ten);
+ten /= twenty;
+log('ten /= twenty: ', ten);

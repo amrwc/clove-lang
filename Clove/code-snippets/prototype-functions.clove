@@ -1,6 +1,5 @@
 /**
- * Demonstrates use of prototype functions
- * and shorthand operators.
+ * Demonstrates use of prototype functions.
  */
 
 log('const list = [13, "foo", ["bar", "baz"]]')
@@ -21,24 +20,16 @@ log("obj: ", obj)
 log()
 
 
-log("obj.twenty /= 7")
-obj.twenty /= 7                          // { twenty: 2.857142857142857 }
-log("obj: ", obj)
-log()
-
-
 log('const array[] = {77, {key: "val"}, [88]}')
 const array[] = {77, {key: "val"}, [88]} // Array with capacity of 3
 log("array: ", array)
 log("array->cap(): ", array->cap())
-log()
-
-
 log("array->resize(array->cap() + 7)")
 array->resize(array->cap() + 7)          // Increases the array's capacity by 7
 log("array->cap(): ", array->cap())
 log()
 
 
-log('--obj["twenty"]: ', --obj["twenty"])// { twenty: 1.857142857142857 }
-log("obj: ", obj)
+log('const str = "stringstring"')
+const str = "stringstring"
+log("str->length(): ", str->length())

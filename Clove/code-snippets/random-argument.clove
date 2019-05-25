@@ -1,0 +1,9 @@
+/**
+ * Demonstrates use of command-line arguments
+ * and the get_args() and random() built-in
+ * functions.
+ */
+
+const args = get_args()
+const r = random(0, args->length())
+log(args[r])

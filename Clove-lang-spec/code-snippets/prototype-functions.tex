@@ -6,13 +6,15 @@
 \begin{minted}[frame=single]{JavaScript}
 const list = [13, "foo", ["bar", "baz"]]
 const nestedBar = list[2]->shift()       // bar
+
 const obj = { ten: 10, twenty: 20 }
 obj->remove("ten")                       // { twenty: 20 }
-const array[] = {77, {key: "val"}, [88]} // Array with capacity of 3
-array->resize(array->cap() + 7)          // Increases the array's capacity by 7
 
-obj.twenty /= 7                          // { twenty: 2.857142857142857 }
---obj["twenty"]                          // { twenty: 1.857142857142857 }
+const array[] = {77, {key: "val"}, [88]} // Array with capacity of 3
+array->resize(array->cap() + 7)          // Increases the array's cap by 7
+
+const str = "stringstring"
+str->length()                            // 12
 \end{minted}
 \end{spacing}
 \end{listing}
