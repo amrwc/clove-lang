@@ -1,3 +1,7 @@
 /bin/
 .metadata
 .settings
+/code-snippets/*.txt
+/example-programs/*.txt
+/example-programs/*.json
+/tests/*.txt
