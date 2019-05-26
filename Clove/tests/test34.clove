@@ -2,8 +2,8 @@
  * Test Reflection API
  */
 
-log("Reflection API")
-log()
+log("Reflection API");
+log();
 
 
 log('const math = reflect("java.lang.Math");');
@@ -11,8 +11,8 @@ const math = reflect("java.lang.Math");
 
 log('math.negateExact(10): ', math.negateExact(10));
 log('math.round(77.77): ', math.round(77.77));
-log()
-log()
+log();
+log();
 
 
 const string = reflect("java.lang.String", ["example string"]);
@@ -24,3 +24,8 @@ if (string.compareTo(string3) == 0) {
 } else {
   log("The strings are different.");
 }
+log();
+log();
+
+
+const integer = reflect("java.lang.Integer", [10]);

@@ -35,7 +35,7 @@ public class ValueReflection extends ValueAbstract {
 		try {
 			// Store the parameters types to choose the right ctor,
 			// and the arguments in their raw form.
-			final HashMap<String, Object[]> args = parseArgs(ctorArgs);
+			final HashMap<String, Object[]> args = parseCtorArgs(ctorArgs);
 
 			// Get class using its canonical name.
 			theClass = Class.forName(className);
@@ -64,6 +64,30 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
+	 * Parses constructor arguments and returns them in the correct form.
+	 * 
+	 * @param {Value[]} ctorArgs
+	 * @returns {HashMap<String, Object[]>} map containing the parameter types
+	 *          and the arguments in their 'raw type'
+	 * @throws ClassNotFoundException
+	 */
+	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs) throws ClassNotFoundException {
+		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
+		final Class<?>[] paramTypes = new Class[ctorArgs.length];
+		final Object[] args = new Object[ctorArgs.length];
+
+		for (int i = 0; i < ctorArgs.length; i++) {
+			paramTypes[i] = parsePrimitive(ctorArgs[i].getRawValue());
+			args[i] = ctorArgs[i].getRawValue();
+		}
+
+		result.put("paramTypes", paramTypes);
+		result.put("args", args);
+
+		return result;
+	}
+
+	/**
 	 * Invokes a Method from an instance. This method gets
 	 * the Method's name from the ASTFunctionInvocation node,
 	 * parses the arguments from its ASTArgumentList node,
@@ -84,7 +108,7 @@ public class ValueReflection extends ValueAbstract {
 		final SimpleNode argsNode = (SimpleNode) node.jjtGetChild(1);
 
 		try {
-			var args = parseArgs(argsNode, p);
+			var args = parseMethodArgs(argsNode, p);
 			final Method method =
 				theClass.getMethod(methodName, (Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
@@ -106,24 +130,18 @@ public class ValueReflection extends ValueAbstract {
 	 *          and the arguments in their 'raw type'
 	 * @throws ClassNotFoundException
 	 */
-	private HashMap<String, Object[]> parseArgs(SimpleNode argsNode, Parser p) throws ClassNotFoundException {
+	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p) throws ClassNotFoundException {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
 
 		// Collect classes of the arguments to later find a matching Method.
-		Class<?>[] paramTypes = new Class<?>[0];
-		Object[] args = new Object[0];
-
 		final int numArgs = argsNode.jjtGetNumChildren();
-		if (numArgs > 0) {
-			// Re-initialise the arrays with the right length.
-			paramTypes = new Class<?>[numArgs];
-			args = new Object[numArgs];
+		final Class<?>[] paramTypes = new Class<?>[numArgs];
+		final Object[] args = new Object[numArgs];
 
-			for (int i = 0; i < numArgs; i++) {
-				final Object arg = p.doChild(argsNode, i).getRawValue();
-				paramTypes[i] = parsePrimitives(arg);
-				args[i] = arg;
-			}
+		for (int i = 0; i < numArgs; i++) {
+			final Object arg = p.doChild(argsNode, i).getRawValue();
+			paramTypes[i] = parsePrimitive(arg);
+			args[i] = arg;
 		}
 
 		result.put("paramTypes", paramTypes);
@@ -140,7 +158,7 @@ public class ValueReflection extends ValueAbstract {
 	 * @returns {Class<?>} adjusted class that will match Method.getMethod()
 	 * @throws ClassNotFoundException
 	 */
-	private Class<?> parsePrimitives(Object arg) throws ClassNotFoundException {
+	private Class<?> parsePrimitive(Object arg) throws ClassNotFoundException {
 		final Class<?> perhapsPrimitive = Class.forName(arg.getClass().getName());
 
 		if (Boolean.class == perhapsPrimitive) return boolean.class;
@@ -187,31 +205,6 @@ public class ValueReflection extends ValueAbstract {
 		}
 
 		return null;
-	}
-
-	/**
-	 * Parses constructor arguments and returns them in the correct form.
-	 * 
-	 * @param {Value[]} ctorArgs
-	 * @returns {HashMap<String, Object[]>} map containing the parameter types
-	 *          and the arguments in their 'raw type'
-	 * @throws ClassNotFoundException
-	 */
-	private HashMap<String, Object[]> parseArgs(Value[] ctorArgs) throws ClassNotFoundException {
-		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
-		final Class<?>[] paramTypes = new Class[ctorArgs.length];
-		final Object[] args = new Object[ctorArgs.length];
-
-		for (int i = 0; i < ctorArgs.length; i++) {
-			final String canonClass = ctorArgs[i].getRawValue().getClass().getCanonicalName();
-			paramTypes[i] = Class.forName(canonClass);
-			args[i] = ctorArgs[i].getRawValue();
-		}
-
-		result.put("paramTypes", paramTypes);
-		result.put("args", args);
-
-		return result;
 	}
 
 	@Override
