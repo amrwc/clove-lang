@@ -221,7 +221,6 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		// TODO: TEST IT
 		final Class<?> incomingClass = ((ValueReflection) v).theClass;
 		final Object incomingInstance = ((ValueReflection) v).instance;
 		if (instance != null)
