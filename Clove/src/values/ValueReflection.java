@@ -4,6 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 
+import interpreter.ExceptionSemantic;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
 
@@ -14,10 +15,9 @@ import parser.ast.SimpleNode;
  * @author amrwc
  * 
  * TODO:
- * - Refactor the parseArgs() methods and perhaps merge them,
- *   or rename appropriately.
- * - Implement execProto() method, or remove it if it is
- *   for no use.
+ * - Add a way to instantiate the reflected class
+ *   later on (create instantiate() method).
+ * - Consider implementing the execProto() method.
  * - Add a constructor to Value that will take Object and do
  *   all the casting that is done in getCorrespondingValue
  *   -- just move this method into the Value interface.
@@ -25,7 +25,7 @@ import parser.ast.SimpleNode;
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
 	private Constructor<?> constructor;
-	private Object instance;
+	private Object internalValue;
 
 	public ValueReflection(String className) throws ClassNotFoundException {
 		theClass = Class.forName(className);
@@ -45,7 +45,7 @@ public class ValueReflection extends ValueAbstract {
 
 			// Create an instance of the class using the arguments
 			// and their matching constructor.
-			instance = constructor.newInstance(args.get("args"));
+			internalValue = constructor.newInstance(args.get("args"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -60,7 +60,7 @@ public class ValueReflection extends ValueAbstract {
 	 */
 	public ValueReflection(Object newObject) throws ClassNotFoundException {
 		theClass = newObject.getClass();
-		instance = newObject;
+		internalValue = newObject;
 	}
 
 	/**
@@ -112,7 +112,7 @@ public class ValueReflection extends ValueAbstract {
 			final Method method =
 				theClass.getMethod(methodName, (Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
-			final Object result = method.invoke(instance, args.get("args"));
+			final Object result = method.invoke(internalValue, args.get("args"));
 			return getCorrespondingValue(result);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -215,9 +215,9 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public int compare(Value v) {
 		final Class<?> incomingClass = ((ValueReflection) v).theClass;
-		final Object incomingInstance = ((ValueReflection) v).instance;
-		if (instance != null)
-			return instance.equals(incomingInstance) ? 0 : 1;
+		final Object incomingInstance = ((ValueReflection) v).internalValue;
+		if (internalValue != null)
+			return internalValue.equals(incomingInstance) ? 0 : 1;
 		else
 			return theClass.equals(incomingClass) ? 0 : 1;
 	}
@@ -225,7 +225,7 @@ public class ValueReflection extends ValueAbstract {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object getRawValue() {
-		return (instance != null) ? instance : theClass;
+		return (internalValue != null) ? internalValue : theClass;
 	}
 
 	/**
@@ -243,20 +243,161 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
+	 * Returns the whole ValueReflection instance, including class name,
+	 * constructor and the internal value.
+	 * 
 	 * @returns {String} key-value pairs in '{key: value}' notation
 	 */
-	@Override
-	public String toString() {
-		if (constructor != null && instance != null)
+	public String toObjectString() {
+		if (constructor != null && internalValue != null)
 			return "{\n  class: " + theClass.getCanonicalName()
 				+ ",\n  constructor: " + constructor.toGenericString()
-				+ ",\n  instance: " + instance.toString() + "\n}";
+				+ ",\n  value: " + internalValue.toString() + "\n}";
 		else
 			return "{class: " + theClass.getCanonicalName() + "}";
 	}
 
 	@Override
+	public String toString() {
+		return internalValue.toString();
+	}
+
+	@Override
 	public String stringValue() {
 		return toString();
+	}
+
+	private void checkIfInstantiated(String caller) {
+		if (internalValue == null)
+			throw new ExceptionSemantic("The \"" + theClass + "\" Reflection class "
+				+ "is not instantiated, therefore \"" + caller
+				+ "\" method cannot execute.");
+	}
+
+	@Override
+	public Value or(Value v) {
+		if (theClass.getCanonicalName() == "java.lang.Boolean") {
+			checkIfInstantiated("OR");
+			return new ValueBoolean((boolean) internalValue || (boolean) v.getRawValue());
+		}
+
+		throw new ExceptionSemantic("Cannot perform OR on " + getName() + " and " + v.getName());
+	}
+
+	@Override
+	public Value and(Value v) {
+		throw new ExceptionSemantic("Cannot perform AND on " + getName() + " and " + v.getName());
+	}
+
+	@Override
+	public Value not() {
+		throw new ExceptionSemantic("Cannot perform NOT on " + getName());
+	}
+
+	@Override
+	public Value add(Value v) {
+		if (theClass.getCanonicalName() == "java.lang.Integer") {
+			checkIfInstantiated("add");
+			return new ValueInteger((int) internalValue + (int) v.getRawValue());
+		} else if (theClass.getCanonicalName() == "java.lang.Long") {
+			checkIfInstantiated("add");
+			return new ValueInteger((long) internalValue + (long) v.getRawValue());
+		}
+
+		throw new ExceptionSemantic("Couldn't perform '+' on " + internalValue
+			+ " and " + v.getName());
+	}
+
+	@Override
+	public Value subtract(Value v) {
+		if (theClass.getCanonicalName() == "java.lang.Integer") {
+			checkIfInstantiated("subtract");
+			return new ValueInteger((int) internalValue - (int) v.getRawValue());
+		} else if (theClass.getCanonicalName() == "java.lang.Long") {
+			checkIfInstantiated("subtract");
+			return new ValueInteger((long) internalValue - (long) v.getRawValue());
+		}
+
+		throw new ExceptionSemantic("Couldn't perform '-' on " + internalValue
+			+ " and " + v.getName());
+	}
+
+	@Override
+	public Value mult(Value v) {
+		throw new ExceptionSemantic("Cannot perform * on " + getName() + " and " + v.getName());
+	}
+
+	@Override
+	public Value div(Value v) {
+		throw new ExceptionSemantic("Cannot perform / on " + getName() + " and " + v.getName());
+	}
+
+	@Override
+	public Value mod(Value v) {
+		throw new ExceptionSemantic("Cannot perform % on " + getName() + " and " + v.getName());
+	}
+
+	@Override
+	public Value unary_plus() {
+		throw new ExceptionSemantic("Cannot perform + on " + getName());
+	}
+
+	@Override
+	public Value unary_minus() {
+		throw new ExceptionSemantic("Cannot perform - on " + getName());
+	}
+
+	/** Convert this to a primitive boolean. */
+	@Override
+	public boolean booleanValue() {
+		throw new ExceptionSemantic("Cannot convert " + getName() + " to boolean.");
+	}
+
+	/** Convert this to a primitive long. */
+	@Override
+	public long longValue() {
+		throw new ExceptionSemantic("Cannot convert " + getName() + " to integer.");
+	}
+
+	/** Convert this to a primitive double. */
+	@Override
+	public double doubleValue() {
+		throw new ExceptionSemantic("Cannot convert " + getName() + " to rational.");
+	}
+
+	/** Test this value and another for equality. */
+	@Override
+	public Value eq(Value v) {
+		return new ValueBoolean(compare(v) == 0);
+	}
+
+	/** Test this value and another for non-equality. */
+	@Override
+	public Value neq(Value v) {
+		return new ValueBoolean(compare(v) != 0);
+	}
+
+	/** Test this value and another for >= */
+	@Override
+	public Value gte(Value v) {
+		return new ValueBoolean(compare(v) >= 0);
+	}
+
+	/** Test this value and another for <= */
+	@Override
+	public Value lte(Value v) {
+		return new ValueBoolean(compare(v) <= 0);
+	}
+
+	/** Test this value and another for > */
+	@Override
+	public Value gt(Value v) {
+		return new ValueBoolean(compare(v) > 0);
+	}
+
+	/** Test this value and another for < */	
+	@Override
+	public Value lt(Value v) {
+		return new ValueBoolean(compare(v) < 0);
 	}
 }

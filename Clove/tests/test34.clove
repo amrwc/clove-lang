@@ -28,4 +28,14 @@ log();
 log();
 
 
-const integer = reflect("java.lang.Integer", [10]);
+const integer1 = reflect("java.lang.Integer", [10]);
+const integer2 = reflect("java.lang.Integer", [12]);
+log(integer1 + integer2);
+log(integer1 - integer2);
+log();
+log();
+
+
+const bool1 = reflect("java.lang.Boolean", [false]);
+const bool2 = reflect("java.lang.Boolean", [true]);
+log(bool1 || bool2);
