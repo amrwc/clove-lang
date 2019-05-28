@@ -1,10 +1,10 @@
 package values;
 
 public class ValueInteger extends ValueAbstract {
-	private final long internalValue;
+	private final int internalValue;
 
-	public ValueInteger(long b) {
-		internalValue = b;
+	public ValueInteger(int v) {
+		internalValue = v;
 	}
 
 	@Override
@@ -15,12 +15,6 @@ public class ValueInteger extends ValueAbstract {
 	@SuppressWarnings("unchecked")
 	@Override
 	public Integer getRawValue() {
-		return (int) internalValue;
-	}
-
-	/** Convert this to a primitive long. */
-	@Override
-	public long longValue() {
 		return internalValue;
 	}
 
@@ -38,17 +32,17 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == v.longValue())
+		if (internalValue == (int) v.getRawValue())
 			return 0;
-		else if (internalValue > v.longValue())
+		else if (internalValue > (int) v.getRawValue())
 			return 1;
 		else
 			return -1;
 	}
 
 	/**
-	 * Tries to parse a double value to a ValueInteger. If it's
-	 * impossible, returns a ValueRational.
+	 * Tries to parse a double value to a ValueInteger. If it's impossible, returns
+	 * a ValueRational.
 	 * 
 	 * @read https://stackoverflow.com/a/9898528/10620237
 	 * @returns {ValueInteger/ValueRational} cast attempt result
@@ -56,7 +50,7 @@ public class ValueInteger extends ValueAbstract {
 	 */
 	private Value tryInt(double v) {
 		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-		    return new ValueInteger((long) Math.floor(v));
+			return new ValueInteger((int) Math.floor(v));
 		else
 			return new ValueRational(v);
 	}

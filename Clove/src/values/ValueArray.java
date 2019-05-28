@@ -59,7 +59,7 @@ public class ValueArray extends ValueAbstract {
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueArray valueList = (ValueArray) v;
-		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).longValue();
+		final int index = ((ValueInteger) p.doChild(node, currChild)).getRawValue();
 		return valueList.get(index);
 	}
 
@@ -90,7 +90,7 @@ public class ValueArray extends ValueAbstract {
 			case "pop":
 				return internalValue.remove(internalValue.size() - 1);
 			case "remove":
-				return internalValue.remove((int) protoArgs.get(0).longValue());
+				return internalValue.remove((int) protoArgs.get(0).getRawValue());
 			case "resize":
 				resize(protoArgs.get(0));
 				break;
@@ -163,7 +163,7 @@ public class ValueArray extends ValueAbstract {
 	 * @param {ValueInteger} len
 	 */
 	private void resize(Value len) {
-		final int newLen = (int) len.longValue();
+		final int newLen = (int) len.getRawValue();
 		capacity = newLen;
 
 		// If the internal capacity exceeds the Vector's cap, adjust the latter.

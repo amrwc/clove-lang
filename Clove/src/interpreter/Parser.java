@@ -177,7 +177,7 @@ public class Parser implements CloveVisitor {
 		// If the declaration has an add_expression() in brackets,
 		// it's a ValueArray declaration with an explicit capacity.
 		if (node.isArrayWithCap == true) {
-			final int capacity = (int) doChild(node, 1).longValue();
+			final int capacity = (int) doChild(node, 1).getRawValue();
 			ref.setValue(new ValueArray(capacity));
 		}
 
@@ -247,12 +247,12 @@ public class Parser implements CloveVisitor {
 
 			// ...and reassign the value of the list...
 			if (value instanceof ValueList) {
-				final int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+				final int index = ((ValueInteger) doChild(node, numChildren - 2)).getRawValue();
 				((ValueList) value).set(index, rightVal);
 			}
 			// ...or an array's value...
 			else if (value instanceof ValueArray) {
-				final int index = (int) ((ValueInteger) doChild(node, numChildren - 2)).longValue();
+				final int index = ((ValueInteger) doChild(node, numChildren - 2)).getRawValue();
 				((ValueArray) value).set(index, rightVal);
 			}
 			// ...or an object's key.
@@ -423,7 +423,7 @@ public class Parser implements CloveVisitor {
 		if (!(test instanceof ValueBoolean))
 			throw new ExceptionSemantic("The test expression of an if statement must be boolean.");
 
-		if (((ValueBoolean) test).booleanValue()) // If test evaluated to true...
+		if (((ValueBoolean) test).getRawValue()) // If test evaluated to true...
 			doChild(node, 1); // ...do 'if'. Or...
 		else if (node.ifHasElse) // ...if it evaluated to false and has 'else'...
 			doChild(node, 2); // ...do 'else'.
@@ -446,7 +446,7 @@ public class Parser implements CloveVisitor {
 			if (!(loopTest instanceof ValueBoolean))
 				throw new ExceptionSemantic("The test expression of a for loop must be boolean.");
 
-			if (!((ValueBoolean) loopTest).booleanValue()) // If loopTest evaluated to false, break.
+			if (!((ValueBoolean) loopTest).getRawValue()) // If loopTest evaluated to false, break.
 				break;
 
 			doChild(node, 3); // Do the loop statement()/body().
@@ -474,7 +474,7 @@ public class Parser implements CloveVisitor {
 			if (!(loopTest instanceof ValueBoolean))
 				throw new ExceptionSemantic("The test expression of a while loop must be boolean.");
 
-			if (!((ValueBoolean) loopTest).booleanValue()) // If loopTest evaluated to false, break.
+			if (!((ValueBoolean) loopTest).getRawValue()) // If loopTest evaluated to false, break.
 				break;
 
 			doChild(node, 1); // Do loop statement()/block().
@@ -626,7 +626,7 @@ public class Parser implements CloveVisitor {
 
 		if (value instanceof ValueList) {
 			final ValueList list = (ValueList) value; // Cast value to an appropriate class.
-			final int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
+			final int index = ((ValueInteger) doChild(node, numChildren - 1)).getRawValue();
 			old = list.get(index);
 
 			if (operation.contains("++"))
@@ -641,7 +641,7 @@ public class Parser implements CloveVisitor {
 
 		else if (value instanceof ValueArray) {
 			final ValueArray array = (ValueArray) value;
-			final int index = (int) ((ValueInteger) doChild(node, numChildren - 1)).longValue();
+			final int index = ((ValueInteger) doChild(node, numChildren - 1)).getRawValue();
 			old = array.get(index);
 
 			if (operation.contains("++"))
@@ -883,7 +883,7 @@ public class Parser implements CloveVisitor {
 
 			// Get the array's initial capacity from the explicitly specified
 			// capacity (child index 1),
-			capacity = (int) doChild(node, 1).longValue();
+			capacity = (int) doChild(node, 1).getRawValue();
 
 			// currChild := 2 -- the values start from the third child.
 			currChild = 2;
@@ -1200,9 +1200,9 @@ public class Parser implements CloveVisitor {
 		}
 
 		else if (min instanceof ValueInteger && max instanceof ValueInteger) {
-			final long minLong = min.longValue();
-			final long maxLong = max.longValue();
-			final long result = ThreadLocalRandom.current().nextLong(minLong, maxLong);
+			final int minLong = min.getRawValue();
+			final int maxLong = max.getRawValue();
+			final int result = ThreadLocalRandom.current().nextInt(minLong, maxLong);
 			return new ValueInteger(result);
 		}
 
@@ -1261,7 +1261,7 @@ public class Parser implements CloveVisitor {
 	@Override
 	public Object visit(ASTInteger node, Object data) {
 		if (node.optimised == null)
-			node.optimised = new ValueInteger(Long.parseLong(node.tokenValue));
+			node.optimised = new ValueInteger(Integer.parseInt(node.tokenValue));
 		return node.optimised;
 	}
 

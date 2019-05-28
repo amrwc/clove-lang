@@ -78,12 +78,6 @@ public interface Value {
 	/** Return unary minus of this value. */
 	public Value unary_minus();
 	
-	/** Convert this to a primitive boolean. */
-	public boolean booleanValue();
-	
-	/** Convert this to a primitive long. */
-	public long longValue();
-	
 	/** Convert this to a primitive double. */
 	public double doubleValue();
 
