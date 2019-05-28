@@ -37,7 +37,7 @@ public class ValueString extends ValueAbstract {
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueString valueString = (ValueString) v;
-		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).longValue();
+		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).getRawValue();
 		final String str = "" + valueString.stringValue().charAt(index);
 		return new ValueString(str);
 	}
