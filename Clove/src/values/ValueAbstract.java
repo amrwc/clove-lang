@@ -96,18 +96,6 @@ public abstract class ValueAbstract implements Value {
 		throw new ExceptionSemantic("Cannot perform - on " + getName());
 	}
 
-	/** Convert this to a primitive boolean. */
-	@Override
-	public boolean booleanValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to boolean.");
-	}
-
-	/** Convert this to a primitive long. */
-	@Override
-	public long longValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to integer.");
-	}
-
 	/** Convert this to a primitive double. */
 	@Override
 	public double doubleValue() {

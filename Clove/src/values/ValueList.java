@@ -49,7 +49,7 @@ public class ValueList extends ValueAbstract {
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueList valueList = (ValueList) v;
-		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).longValue();
+		final int index = (int) ((ValueInteger) p.doChild(node, currChild)).getRawValue();
 		return valueList.get(index);
 	}
 
@@ -77,7 +77,7 @@ public class ValueList extends ValueAbstract {
 			case "pop":
 				return internalValue.remove(internalValue.size() - 1);
 			case "remove":
-				return internalValue.remove((int) protoArgs.get(0).longValue());
+				return internalValue.remove((int) protoArgs.get(0).getRawValue());
 			case "shift":
 				return internalValue.remove(0);
 			case "size":

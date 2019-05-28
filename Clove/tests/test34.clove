@@ -28,14 +28,30 @@ log();
 log();
 
 
-const integer1 = reflect("java.lang.Integer", [10]);
-const integer2 = reflect("java.lang.Integer", [12]);
-log(integer1 + integer2);
+const integer1 = reflect("java.lang.Integer", ["10"]);
+//const integer2 = reflect("java.lang.Long", ["12"]); // TODO:
+const integer2 = reflect("java.lang.Integer", ["12"]);
+log(integer1 + integer2); // Operations on two ValueReflections
 log(integer1 - integer2);
+log(integer1 * integer2);
+log(integer1 / integer2);
+
+const integer3 = 3
+log(integer3 * integer2); // Operation on ValueInteger and ValueReflection
 log();
 log();
 
 
 const bool1 = reflect("java.lang.Boolean", [false]);
 const bool2 = reflect("java.lang.Boolean", [true]);
-log(bool1 || bool2);
+log(bool1 || bool2); // Operations on ValueReflection(s)
+log(bool1 && bool2);
+log(!bool1);
+
+log(!bool1 && bool2); // Operations on ValueBoolean and ValueReflection
+log(!bool2 || bool1);
+//log();
+//log();
+
+
+

@@ -50,7 +50,7 @@ public class ValueRational extends ValueAbstract {
 	 */
 	private Value tryInt(double v) {
 		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-		    return new ValueInteger((long) Math.floor(v));
+		    return new ValueInteger((int) Math.floor(v));
 		else
 			return new ValueRational(v);
 	}

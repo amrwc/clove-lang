@@ -17,12 +17,6 @@ public class ValueBoolean extends ValueAbstract {
 	public Boolean getRawValue() {
 		return internalValue;
 	}
-
-	/** Convert this to a primitive boolean. */
-	@Override
-	public boolean booleanValue() {
-		return internalValue;
-	}
 	
 	/** Convert this to a primitive string. */
 	@Override
@@ -32,12 +26,12 @@ public class ValueBoolean extends ValueAbstract {
 	
 	@Override
 	public Value or(Value v) {
-		return new ValueBoolean(internalValue || v.booleanValue());
+		return new ValueBoolean(internalValue || (boolean) v.getRawValue());
 	}
 
 	@Override
 	public Value and(Value v) {
-		return new ValueBoolean(internalValue && v.booleanValue());
+		return new ValueBoolean(internalValue && (boolean) v.getRawValue());
 	}
 
 	@Override
@@ -47,7 +41,7 @@ public class ValueBoolean extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == v.booleanValue())
+		if (internalValue == (boolean) v.getRawValue())
 			return 0;
 		else if (internalValue)
 			return 1;

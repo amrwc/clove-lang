@@ -14,13 +14,11 @@ import parser.ast.SimpleNode;
  * @read http://tutorials.jenkov.com/java-reflection/index.html
  * @author amrwc
  * 
- * TODO:
- * - Add a way to instantiate the reflected class
- *   later on (create instantiate() method).
- * - Consider implementing the execProto() method.
- * - Add a constructor to Value that will take Object and do
- *   all the casting that is done in getCorrespondingValue
- *   -- just move this method into the Value interface.
+ *         TODO: - Add a way to instantiate the reflected class later on (create
+ *         instantiate() method). - Consider implementing the execProto()
+ *         method. - Add a constructor to Value that will take Object and do all
+ *         the casting that is done in getCorrespondingValue -- just move this
+ *         method into the Value interface.
  */
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
@@ -52,11 +50,10 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
-	 * Create a new ValueReflection instance using
-	 * the argument of Object type.
+	 * Create a new ValueReflection instance using the argument of Object type.
 	 * 
 	 * @param {Object} newObject
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 */
 	public ValueReflection(Object newObject) throws ClassNotFoundException {
 		theClass = newObject.getClass();
@@ -67,11 +64,12 @@ public class ValueReflection extends ValueAbstract {
 	 * Parses constructor arguments and returns them in the correct form.
 	 * 
 	 * @param {Value[]} ctorArgs
-	 * @returns {HashMap<String, Object[]>} map containing the parameter types
-	 *          and the arguments in their 'raw type'
+	 * @returns {HashMap<String, Object[]>} map containing the parameter types and
+	 *          the arguments in their 'raw type'
 	 * @throws ClassNotFoundException
 	 */
-	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs) throws ClassNotFoundException {
+	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs)
+			throws ClassNotFoundException {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
 		final Class<?>[] paramTypes = new Class[ctorArgs.length];
 		final Object[] args = new Object[ctorArgs.length];
@@ -88,13 +86,12 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
-	 * Invokes a Method from an instance. This method gets
-	 * the Method's name from the ASTFunctionInvocation node,
-	 * parses the arguments from its ASTArgumentList node,
-	 * and returns the resulting Object.
+	 * Invokes a Method from an instance. This method gets the Method's name from
+	 * the ASTFunctionInvocation node, parses the arguments from its ASTArgumentList
+	 * node, and returns the resulting Object.
 	 * 
 	 * @param {SimpleNode (ASTFunctionInvocation)} node
-	 * @param {Parser} p -- the active Parser's instance
+	 * @param {Parser}    p -- the active Parser's instance
 	 * @returns {Object} the Method's result
 	 */
 	public Object invoke(SimpleNode node, Parser p) {
@@ -109,8 +106,8 @@ public class ValueReflection extends ValueAbstract {
 
 		try {
 			var args = parseMethodArgs(argsNode, p);
-			final Method method =
-				theClass.getMethod(methodName, (Class<?>[]) args.get("paramTypes"));
+			final Method method = theClass.getMethod(methodName,
+					(Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
 			final Object result = method.invoke(internalValue, args.get("args"));
 			return getCorrespondingValue(result);
@@ -125,12 +122,13 @@ public class ValueReflection extends ValueAbstract {
 	 * Parses Method arguments and returns them in the correct form.
 	 * 
 	 * @param {SimpleNode (ASTArgumentList)} argsNode -- the Method's arguments
-	 * @param {Parser} p -- active Parser's instance
-	 * @returns {HashMap<String, Object[]>} map containing the parameter types
-	 *          and the arguments in their 'raw type'
+	 * @param {Parser}    p -- active Parser's instance
+	 * @returns {HashMap<String, Object[]>} map containing the parameter types and
+	 *          the arguments in their 'raw type'
 	 * @throws ClassNotFoundException
 	 */
-	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p) throws ClassNotFoundException {
+	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p)
+			throws ClassNotFoundException {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
 
 		// Collect classes of the arguments to later find a matching Method.
@@ -161,41 +159,56 @@ public class ValueReflection extends ValueAbstract {
 	private Class<?> parsePrimitive(Object arg) throws ClassNotFoundException {
 		final Class<?> perhapsPrimitive = Class.forName(arg.getClass().getName());
 
-		if (Boolean.class == perhapsPrimitive) return boolean.class;
-	    if (Byte.class == perhapsPrimitive)    return byte.class;
-	    if (Short.class == perhapsPrimitive)   return short.class;
-	    if (Integer.class == perhapsPrimitive) return int.class;
-	    if (Long.class == perhapsPrimitive)    return long.class;
-	    if (Float.class == perhapsPrimitive)   return float.class;
-	    if (Double.class == perhapsPrimitive)  return double.class;
+		if (Boolean.class == perhapsPrimitive)
+			return boolean.class;
+		if (Byte.class == perhapsPrimitive)
+			return byte.class;
+		if (Short.class == perhapsPrimitive)
+			return short.class;
+		if (Integer.class == perhapsPrimitive)
+			return int.class;
+		if (Long.class == perhapsPrimitive)
+			return long.class;
+		if (Float.class == perhapsPrimitive)
+			return float.class;
+		if (Double.class == perhapsPrimitive)
+			return double.class;
 
-	    return perhapsPrimitive;
+		return perhapsPrimitive;
 	}
 
 	/**
-	 * Creates correct Value-type from primitives, or gives
-	 * a ValueReflection object for everything else.
+	 * Creates correct Value-type from primitives, or gives a ValueReflection object
+	 * for everything else.
 	 * 
-	 * @param {Object} methodResult
+	 * @param {Object} v
 	 * @returns {Value} Value-type corresponding to the resulting primitive
-	 * @throws ClassNotFoundException 
+	 * @throws ClassNotFoundException
 	 */
-	private Value getCorrespondingValue(Object methodResult) throws ClassNotFoundException {
-		if (methodResult instanceof Boolean) return new ValueBoolean((boolean) methodResult);
-	    if (methodResult instanceof Short)   return new ValueInteger((short) methodResult);
-	    if (methodResult instanceof Integer) return new ValueInteger((int) methodResult);
-	    if (methodResult instanceof Long)    return new ValueInteger((long) methodResult);
-	    if (methodResult instanceof Float)   return new ValueRational((float) methodResult);
-	    if (methodResult instanceof Double)  return new ValueRational((double) methodResult);
-	    if (methodResult instanceof String)  return new ValueString((String) methodResult);
+	private Value getCorrespondingValue(Object v) throws ClassNotFoundException {
+		if (v instanceof Boolean)
+			return new ValueBoolean((boolean) v);
+		if (v instanceof Short)
+			return new ValueInteger((short) v);
+		if (v instanceof Integer)
+			return new ValueInteger((int) v);
+		if (v instanceof Long)
+			return new ValueInteger((int) v);
+		if (v instanceof Float)
+			return new ValueRational((float) v);
+		if (v instanceof Double)
+			return new ValueRational((double) v);
+		if (v instanceof String)
+			return new ValueString((String) v);
 
-	    return new ValueReflection(methodResult);
+		return new ValueReflection(v);
 	}
 
 	/**
 	 * Casting ValueReflection to another class.
 	 */
-	public static ValueReflection cast(String targetClassName, ValueReflection objToCast) {
+	public static ValueReflection cast(String targetClassName,
+			ValueReflection objToCast) {
 		try {
 			final Object targetClass = Class.forName(targetClassName);
 			final Object casted = ((Class<?>) targetClass).cast(objToCast.getRawValue());
@@ -232,9 +245,9 @@ public class ValueReflection extends ValueAbstract {
 	 * Dereferences a value in a nested expression.
 	 * 
 	 * @param {SimpleNode} node -- node in question
-	 * @param {Value} v -- value to be dereferenced
-	 * @param {int} currChild -- current child of the node being parsed
-	 * @param {Parser} p -- the instance of Parser currently running
+	 * @param {Value}      v -- value to be dereferenced
+	 * @param {int}        currChild -- current child of the node being parsed
+	 * @param {Parser}     p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
@@ -243,16 +256,16 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
-	 * Returns the whole ValueReflection instance, including class name,
-	 * constructor and the internal value.
+	 * Returns the whole ValueReflection instance, including class name, constructor
+	 * and the internal value.
 	 * 
 	 * @returns {String} key-value pairs in '{key: value}' notation
 	 */
 	public String toObjectString() {
 		if (constructor != null && internalValue != null)
-			return "{\n  class: " + theClass.getCanonicalName()
-				+ ",\n  constructor: " + constructor.toGenericString()
-				+ ",\n  value: " + internalValue.toString() + "\n}";
+			return "{\n  class: " + theClass.getCanonicalName() + ",\n  constructor: "
+					+ constructor.toGenericString() + ",\n  value: "
+					+ internalValue.toString() + "\n}";
 		else
 			return "{class: " + theClass.getCanonicalName() + "}";
 	}
@@ -269,72 +282,136 @@ public class ValueReflection extends ValueAbstract {
 
 	private void checkIfInstantiated(String caller) {
 		if (internalValue == null)
-			throw new ExceptionSemantic("The \"" + theClass + "\" Reflection class "
-				+ "is not instantiated, therefore \"" + caller
-				+ "\" method cannot execute.");
+			throw new ExceptionSemantic("The '" + theClass + "' Reflection class "
+					+ "is not instantiated, therefore '" + caller
+					+ "' method cannot be executed.");
 	}
+
+	/**
+	 * Checks whether the argument is of any number type.
+	 * 
+	 * @param {Object} perhapsNumber
+	 * @returns {boolean}
+	 */
+	private boolean isNumber(Object perhapsNumber) {
+		if (perhapsNumber instanceof Short)
+			return true;
+		if (perhapsNumber instanceof Integer)
+			return true;
+		if (perhapsNumber instanceof Long)
+			return true;
+		if (perhapsNumber instanceof Float)
+			return true;
+		if (perhapsNumber instanceof Double)
+			return true;
+
+		return false;
+	}
+
+	/*********************************
+	 * Operations on the instance(s) *
+	 *********************************/
 
 	@Override
 	public Value or(Value v) {
-		if (theClass.getCanonicalName() == "java.lang.Boolean") {
-			checkIfInstantiated("OR");
-			return new ValueBoolean((boolean) internalValue || (boolean) v.getRawValue());
+		checkIfInstantiated("OR");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.or(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform 'OR' on " + internalValue + " and " + v.getName());
 		}
-
-		throw new ExceptionSemantic("Cannot perform OR on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value and(Value v) {
-		throw new ExceptionSemantic("Cannot perform AND on " + getName() + " and " + v.getName());
+		checkIfInstantiated("AND");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.and(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform 'AND' on " + internalValue + " and " + v.getName());
+		}
 	}
 
 	@Override
 	public Value not() {
-		throw new ExceptionSemantic("Cannot perform NOT on " + getName());
+		checkIfInstantiated("NOT");
+		try {
+			return getCorrespondingValue(internalValue).not();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform 'NOT' on " + internalValue + ".");
+		}
 	}
 
 	@Override
 	public Value add(Value v) {
-		if (theClass.getCanonicalName() == "java.lang.Integer") {
-			checkIfInstantiated("add");
-			return new ValueInteger((int) internalValue + (int) v.getRawValue());
-		} else if (theClass.getCanonicalName() == "java.lang.Long") {
-			checkIfInstantiated("add");
-			return new ValueInteger((long) internalValue + (long) v.getRawValue());
+		checkIfInstantiated("add");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.add(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform '+' on " + internalValue + " and " + v.getName());
 		}
-
-		throw new ExceptionSemantic("Couldn't perform '+' on " + internalValue
-			+ " and " + v.getName());
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		if (theClass.getCanonicalName() == "java.lang.Integer") {
-			checkIfInstantiated("subtract");
-			return new ValueInteger((int) internalValue - (int) v.getRawValue());
-		} else if (theClass.getCanonicalName() == "java.lang.Long") {
-			checkIfInstantiated("subtract");
-			return new ValueInteger((long) internalValue - (long) v.getRawValue());
+		checkIfInstantiated("subtract");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.subtract(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform '-' on " + internalValue + " and " + v.getName());
 		}
-
-		throw new ExceptionSemantic("Couldn't perform '-' on " + internalValue
-			+ " and " + v.getName());
 	}
 
 	@Override
 	public Value mult(Value v) {
-		throw new ExceptionSemantic("Cannot perform * on " + getName() + " and " + v.getName());
+		checkIfInstantiated("mult");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.mult(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform '*' on " + internalValue + " and " + v.getName());
+		}
 	}
 
 	@Override
 	public Value div(Value v) {
-		throw new ExceptionSemantic("Cannot perform / on " + getName() + " and " + v.getName());
+		checkIfInstantiated("div");
+		try {
+			Value v1 = getCorrespondingValue(internalValue);
+			Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.div(v2);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform '/' on " + internalValue + " and " + v.getName());
+		}
 	}
 
 	@Override
 	public Value mod(Value v) {
-		throw new ExceptionSemantic("Cannot perform % on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform % on " + getName() + " and " + v.getName());
 	}
 
 	@Override
@@ -347,22 +424,13 @@ public class ValueReflection extends ValueAbstract {
 		throw new ExceptionSemantic("Cannot perform - on " + getName());
 	}
 
-	/** Convert this to a primitive boolean. */
-	@Override
-	public boolean booleanValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to boolean.");
-	}
-
-	/** Convert this to a primitive long. */
-	@Override
-	public long longValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to integer.");
-	}
-
 	/** Convert this to a primitive double. */
 	@Override
 	public double doubleValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to rational.");
+		checkIfInstantiated("doubleValue");
+		if (isNumber(internalValue))
+			return Double.parseDouble(toString());
+		throw new ExceptionSemantic("Couldn't convert " + theClass + " to rational.");
 	}
 
 	/** Test this value and another for equality. */
@@ -395,7 +463,7 @@ public class ValueReflection extends ValueAbstract {
 		return new ValueBoolean(compare(v) > 0);
 	}
 
-	/** Test this value and another for < */	
+	/** Test this value and another for < */
 	@Override
 	public Value lt(Value v) {
 		return new ValueBoolean(compare(v) < 0);
