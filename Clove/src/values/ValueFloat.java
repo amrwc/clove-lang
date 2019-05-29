@@ -1,21 +1,21 @@
 package values;
 
-public class ValueInteger extends ValueAbstract {
-	private final int internalValue;
+public class ValueFloat extends ValueAbstract {
+	private final float internalValue;
 
-	public ValueInteger(int v) {
-		internalValue = v;
+	public ValueFloat(float b) {
+		internalValue = b;
 	}
 
 	@Override
 	public String getName() {
-		return "integer";
+		return "float";
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public Integer getRawValue() {
-		return internalValue;
+	public Float getRawValue() {
+		return (float) internalValue;
 	}
 
 	/** Convert this to a primitive double. */
@@ -32,17 +32,17 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == (int) v.getRawValue())
+		if (internalValue == v.doubleValue())
 			return 0;
-		else if (internalValue > (int) v.getRawValue())
+		else if (internalValue > v.doubleValue())
 			return 1;
 		else
 			return -1;
 	}
 
 	/**
-	 * Tries to parse a double value to a ValueInteger. If it's impossible, returns
-	 * a ValueRational.
+	 * Tries to parse a double value to a ValueInteger. If it's
+	 * impossible, returns a ValueRational.
 	 * 
 	 * @read https://stackoverflow.com/a/9898528/10620237
 	 * @returns {ValueInteger/ValueRational} cast attempt result
@@ -50,9 +50,9 @@ public class ValueInteger extends ValueAbstract {
 	 */
 	private Value tryInt(double v) {
 		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-			return new ValueInteger((int) Math.floor(v));
+		    return new ValueInteger((int) Math.floor(v));
 		else
-			return new ValueDouble(v);
+			return new ValueFloat((float) v);
 	}
 
 	@Override
@@ -82,12 +82,12 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public Value unary_plus() {
-		return new ValueInteger(internalValue);
+		return new ValueFloat(internalValue);
 	}
 
 	@Override
 	public Value unary_minus() {
-		return new ValueInteger(-internalValue);
+		return new ValueFloat(-internalValue);
 	}
 
 	@Override
