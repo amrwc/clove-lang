@@ -1281,16 +1281,8 @@ public class Parser implements CloveVisitor {
 	// Return float/double literal
 	@Override
 	public Object visit(ASTRational node, Object data) {
-		if (node.optimised == null) {
-			final float vFloat = Float.parseFloat(node.tokenValue);
-			final double vDouble = Double.parseDouble(node.tokenValue);
-
-			// If parsed float's string value is equal to double's,
-			// it's safe to return a float without precision loss.
-			node.optimised = (("" + vFloat).equals("" + vDouble))
-					? new ValueFloat(vFloat)
-					: new ValueDouble(vDouble);
-		}
+		if (node.optimised == null)
+			node.optimised = NumberUtils.tryFloat(node.tokenValue);
 		return node.optimised;
 	}
 
