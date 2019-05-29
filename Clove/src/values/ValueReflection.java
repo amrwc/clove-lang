@@ -44,7 +44,7 @@ public class ValueReflection extends ValueAbstract {
 			// Create an instance of the class using the arguments
 			// and their matching constructor.
 			internalValue = constructor.newInstance(args.get("args"));
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -105,13 +105,13 @@ public class ValueReflection extends ValueAbstract {
 		final SimpleNode argsNode = (SimpleNode) node.jjtGetChild(1);
 
 		try {
-			var args = parseMethodArgs(argsNode, p);
+			final var args = parseMethodArgs(argsNode, p);
 			final Method method = theClass.getMethod(methodName,
 					(Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
 			final Object result = method.invoke(internalValue, args.get("args"));
 			return getCorrespondingValue(result);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
@@ -213,7 +213,7 @@ public class ValueReflection extends ValueAbstract {
 			final Object targetClass = Class.forName(targetClassName);
 			final Object casted = ((Class<?>) targetClass).cast(objToCast.getRawValue());
 			return new ValueReflection(casted);
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
@@ -308,6 +308,15 @@ public class ValueReflection extends ValueAbstract {
 		return false;
 	}
 
+	/** Convert this to a primitive double. */
+	@Override
+	public double doubleValue() {
+		checkIfInstantiated("doubleValue");
+		if (isNumber(internalValue))
+			return Double.parseDouble(toString());
+		throw new ExceptionSemantic("Couldn't convert " + theClass + " to double.");
+	}
+
 	/*********************************
 	 * Operations on the instance(s) *
 	 *********************************/
@@ -316,10 +325,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value or(Value v) {
 		checkIfInstantiated("OR");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.or(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform 'OR' on " + internalValue + " and " + v.getName());
@@ -330,10 +339,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value and(Value v) {
 		checkIfInstantiated("AND");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.and(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform 'AND' on " + internalValue + " and " + v.getName());
@@ -345,7 +354,7 @@ public class ValueReflection extends ValueAbstract {
 		checkIfInstantiated("NOT");
 		try {
 			return getCorrespondingValue(internalValue).not();
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform 'NOT' on " + internalValue + ".");
@@ -356,10 +365,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value add(Value v) {
 		checkIfInstantiated("add");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.add(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform '+' on " + internalValue + " and " + v.getName());
@@ -370,10 +379,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value subtract(Value v) {
 		checkIfInstantiated("subtract");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.subtract(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform '-' on " + internalValue + " and " + v.getName());
@@ -384,10 +393,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value mult(Value v) {
 		checkIfInstantiated("mult");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.mult(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform '*' on " + internalValue + " and " + v.getName());
@@ -398,10 +407,10 @@ public class ValueReflection extends ValueAbstract {
 	public Value div(Value v) {
 		checkIfInstantiated("div");
 		try {
-			Value v1 = getCorrespondingValue(internalValue);
-			Value v2 = getCorrespondingValue(v.getRawValue());
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
 			return v1.div(v2);
-		} catch (ClassNotFoundException e) {
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic(
 					"Couldn't perform '/' on " + internalValue + " and " + v.getName());
@@ -422,15 +431,6 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public Value unary_minus() {
 		throw new ExceptionSemantic("Cannot perform - on " + getName());
-	}
-
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		checkIfInstantiated("doubleValue");
-		if (isNumber(internalValue))
-			return Double.parseDouble(toString());
-		throw new ExceptionSemantic("Couldn't convert " + theClass + " to rational.");
 	}
 
 	/** Test this value and another for equality. */
