@@ -11,7 +11,13 @@ More detailed specification of the language can be found [here](https://github.c
 - Expressions
   - [ ] ternary operator,
   - [ ] null support
-    - `if (result == null)…`.
+    - `if (result == null)…`,
+  - [ ] shorthand modulo reassignment
+    - `%=`,
+  - [ ] root function (n<sup>th</sup> root)
+    - `sqrt()`,
+    - `root(9, 2)` (root of 9, degree 2)
+      - [identities and properties](https://en.wikipedia.org/wiki/Nth_root#Identities_and_properties).
 - Statements
   - [ ] switch,
   - [ ] do-while,
