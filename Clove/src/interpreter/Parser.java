@@ -1257,11 +1257,16 @@ public class Parser implements CloveVisitor {
 	 * Literals *
 	 ***********************************************/
 
-	// Return integer literal
+	// Return integer/long literal
 	@Override
 	public Object visit(ASTInteger node, Object data) {
-		if (node.optimised == null)
-			node.optimised = new ValueInteger(Integer.parseInt(node.tokenValue));
+		if (node.optimised == null) {
+			try {
+				node.optimised = new ValueInteger(Integer.parseInt(node.tokenValue));				
+			} catch (final NumberFormatException e) {
+				node.optimised = new ValueLong(Long.parseLong(node.tokenValue));
+			}
+		}
 		return node.optimised;
 	}
 

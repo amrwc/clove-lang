@@ -47,7 +47,8 @@ log(long1 * long2);
 log(long1 / long2);
 log(long1 % long2);
 log(10 % long2);
-log(long1 % 12);
+log(long1 % 999999999999999); // Parse long literal
+log(999999999999999 % long2);
 log();
 log();
 log();
