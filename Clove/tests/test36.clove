@@ -1,0 +1,18 @@
+/**
+ * Test Reflection API -- booleans
+ */
+
+log("Reflection API -- booleans");
+log();
+
+
+const bool1 = reflect("java.lang.Boolean", [false]);
+const bool2 = reflect("java.lang.Boolean", [true]);
+log(bool1 || bool2); // Operations on ValueReflection(s)
+log(bool1 && bool2);
+log(!bool1);
+log();
+
+log(!bool1 && bool2); // Operations on ValueBoolean and ValueReflection
+log(!bool2 || bool1);
+log(false || bool2);
