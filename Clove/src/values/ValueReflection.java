@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
+import interpreter.NumberUtils;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
 
@@ -185,7 +186,7 @@ public class ValueReflection extends ValueAbstract {
 	 * @returns {Value} Value-type corresponding to the resulting primitive
 	 * @throws ClassNotFoundException
 	 */
-	private Value getCorrespondingValue(Object v) throws ClassNotFoundException {
+	public static Value getCorrespondingValue(Object v) throws ClassNotFoundException {
 		if (v instanceof Boolean)
 			return new ValueBoolean((boolean) v);
 		if (v instanceof Short)
@@ -287,32 +288,11 @@ public class ValueReflection extends ValueAbstract {
 					+ "' method cannot be executed.");
 	}
 
-	/**
-	 * Checks whether the argument is of any number type.
-	 * 
-	 * @param {Object} perhapsNumber
-	 * @returns {boolean}
-	 */
-	private boolean isNumber(Object perhapsNumber) {
-		if (perhapsNumber instanceof Short)
-			return true;
-		if (perhapsNumber instanceof Integer)
-			return true;
-		if (perhapsNumber instanceof Long)
-			return true;
-		if (perhapsNumber instanceof Float)
-			return true;
-		if (perhapsNumber instanceof Double)
-			return true;
-
-		return false;
-	}
-
 	/** Convert this to a primitive double. */
 	@Override
 	public double doubleValue() {
 		checkIfInstantiated("doubleValue");
-		if (isNumber(internalValue))
+		if (NumberUtils.isNumber(internalValue))
 			return Double.parseDouble(toString());
 		throw new ExceptionSemantic("Couldn't convert " + theClass + " to double.");
 	}
