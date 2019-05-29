@@ -1,5 +1,7 @@
 package values;
 
+import interpreter.NumberUtils;
+
 public class ValueInteger extends ValueAbstract {
 	private final int internalValue;
 
@@ -40,44 +42,29 @@ public class ValueInteger extends ValueAbstract {
 			return -1;
 	}
 
-	/**
-	 * Tries to parse a double value to a ValueInteger. If it's impossible, returns
-	 * a ValueRational.
-	 * 
-	 * @read https://stackoverflow.com/a/9898528/10620237
-	 * @returns {ValueInteger/ValueRational} cast attempt result
-	 * @author amrwc
-	 */
-	private Value tryInt(double v) {
-		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-			return new ValueInteger((int) Math.floor(v));
-		else
-			return new ValueDouble(v);
-	}
-
 	@Override
 	public Value add(Value v) {
-		return tryInt(internalValue + v.doubleValue());
+		return NumberUtils.tryInt(internalValue + v.doubleValue());
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		return tryInt(internalValue - v.doubleValue());
+		return NumberUtils.tryInt(internalValue - v.doubleValue());
 	}
 
 	@Override
 	public Value mult(Value v) {
-		return tryInt(internalValue * v.doubleValue());
+		return NumberUtils.tryInt(internalValue * v.doubleValue());
 	}
 
 	@Override
 	public Value div(Value v) {
-		return tryInt(internalValue / v.doubleValue());
+		return NumberUtils.tryInt(internalValue / v.doubleValue());
 	}
 
 	@Override
 	public Value mod(Value v) {
-		return tryInt(internalValue % v.doubleValue());
+		return NumberUtils.tryInt(internalValue % v.doubleValue());
 	}
 
 	@Override

@@ -64,6 +64,8 @@ log();
 log('Float:');
 const float1 = reflect("java.lang.Float", [3.14]);
 const float2 = reflect("java.lang.Float", [1.62]);
+//const float1 = reflect("java.lang.Float", [3.1]);
+//const float2 = reflect("java.lang.Float", [1.0]);
 log(float1 * float2); // Operation on two ValueReflections
 log(3.14 * float2); // Operations on ValueRational and ValueReflection
 log(float2 * 3.14);
