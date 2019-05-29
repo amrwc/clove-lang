@@ -29,15 +29,43 @@ log();
 
 
 const integer1 = reflect("java.lang.Integer", ["10"]);
-//const integer2 = reflect("java.lang.Long", ["12"]); // TODO:
 const integer2 = reflect("java.lang.Integer", ["12"]);
 log(integer1 + integer2); // Operations on two ValueReflections
 log(integer1 - integer2);
 log(integer1 * integer2);
 log(integer1 / integer2);
+log();
 
-const integer3 = 3
-log(integer3 * integer2); // Operation on ValueInteger and ValueReflection
+log(3 * integer2); // Operation on ValueInteger and ValueReflection
+log();
+
+const long1 = reflect("java.lang.Long", ["10"]);
+const long2 = reflect("java.lang.Long", ["12"]);
+log(long1 + long2);
+log(long1 - long2);
+log(long1 * long2);
+log(long1 / long2);
+log(long1 % long2);
+log(10 % long2);
+log(long1 % 12);
+log();
+log();
+log();
+
+
+const float1 = reflect("java.lang.Float", [3.14]);
+const float2 = reflect("java.lang.Float", [1.62]);
+log(float1 * float2); // Operation on two ValueReflections
+log(3.14 * float2); // Operations on ValueRational and ValueReflection
+log(float2 * 3.14);
+log();
+
+const double1 = reflect("java.lang.Double", ["3.14"]);
+const double2 = reflect("java.lang.Double", ["1.62"]);
+log(double1 * double2);
+log(3.14 * double2);
+log(double2 * 3.14);
+log();
 log();
 log();
 
@@ -50,8 +78,9 @@ log(!bool1);
 
 log(!bool1 && bool2); // Operations on ValueBoolean and ValueReflection
 log(!bool2 || bool1);
-//log();
-//log();
-
+log(false || bool2);
+log();
+log();
+log();
 
 
