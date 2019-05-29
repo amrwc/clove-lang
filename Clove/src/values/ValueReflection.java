@@ -195,9 +195,9 @@ public class ValueReflection extends ValueAbstract {
 		if (v instanceof Long)
 			return new ValueLong((long) v);
 		if (v instanceof Float)
-			return new ValueRational((float) v);
+			return new ValueFloat((float) v);
 		if (v instanceof Double)
-			return new ValueRational((double) v);
+			return new ValueDouble((double) v);
 		if (v instanceof String)
 			return new ValueString((String) v);
 

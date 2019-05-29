@@ -80,5 +80,11 @@ const double2 = reflect("java.lang.Double", ["1.62"]);
 log(double1 * double2);
 log(3.14 * double2);
 log(double2 * 3.14);
+log();
 
-
+// Try parse to ValueDouble.
+const double3 = 3.1415926535897932384626433832795028841971693 // double
+log(double3, ' ', double3->getClass());
+const double4 = 3.14; // float
+log(double4, ' ', double4->getClass());
+log(double3 + double4);

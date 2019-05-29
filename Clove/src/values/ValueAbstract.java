@@ -42,8 +42,13 @@ public abstract class ValueAbstract implements Value {
 	 */
 	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
-		throw new ExceptionSemantic("Value type " + getName() + " doesn't support"
-			+ " prototype functions.");
+		switch (protoFunc) {
+			case "getClass":
+				return new ValueString(getName());
+			default:
+				throw new ExceptionSemantic("There is no prototype function \""
+					+ protoFunc + "\" in " + getName() + " class.");
+		}
 	}
 
 	@Override
