@@ -193,7 +193,7 @@ public class ValueReflection extends ValueAbstract {
 		if (v instanceof Integer)
 			return new ValueInteger((int) v);
 		if (v instanceof Long)
-			return new ValueInteger((int) v);
+			return new ValueLong((long) v);
 		if (v instanceof Float)
 			return new ValueRational((float) v);
 		if (v instanceof Double)
@@ -419,8 +419,16 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public Value mod(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform % on " + getName() + " and " + v.getName());
+		checkIfInstantiated("mod");
+		try {
+			final Value v1 = getCorrespondingValue(internalValue);
+			final Value v2 = getCorrespondingValue(v.getRawValue());
+			return v1.mod(v2);
+		} catch (final ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic(
+					"Couldn't perform '%' on " + internalValue + " and " + v.getName());
+		}
 	}
 
 	@Override
