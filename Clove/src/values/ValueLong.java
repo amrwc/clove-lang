@@ -52,7 +52,7 @@ public class ValueLong extends ValueAbstract {
 		if ((v == Math.floor(v)) && !Double.isInfinite(v))
 			return new ValueLong((long) Math.floor(v));
 		else
-			return new ValueRational(v);
+			return new ValueDouble(v);
 	}
 
 	@Override

@@ -1192,11 +1192,11 @@ public class Parser implements CloveVisitor {
 		final Value min = doChild(node, 0);
 		final Value max = doChild(node, 1);
 
-		if (min instanceof ValueRational || max instanceof ValueRational) {
+		if (min instanceof ValueDouble || max instanceof ValueDouble) {
 			final double minDouble = min.doubleValue();
 			final double maxDouble = max.doubleValue();
 			final double result = ThreadLocalRandom.current().nextDouble(minDouble, maxDouble);
-			return new ValueRational(result);
+			return new ValueDouble(result);
 		}
 
 		else if (min instanceof ValueInteger && max instanceof ValueInteger) {
@@ -1278,11 +1278,19 @@ public class Parser implements CloveVisitor {
 		return node.optimised;
 	}
 
-	// Return floating point literal
+	// Return float/double literal
 	@Override
 	public Object visit(ASTRational node, Object data) {
-		if (node.optimised == null)
-			node.optimised = new ValueRational(Double.parseDouble(node.tokenValue));
+		if (node.optimised == null) {
+			final float vFloat = Float.parseFloat(node.tokenValue);
+			final double vDouble = Double.parseDouble(node.tokenValue);
+
+			// If parsed float's string value is equal to double's,
+			// it's safe to return a float without precision loss.
+			node.optimised = (("" + vFloat).equals("" + vDouble))
+					? new ValueFloat(vFloat)
+					: new ValueDouble(vDouble);
+		}
 		return node.optimised;
 	}
 

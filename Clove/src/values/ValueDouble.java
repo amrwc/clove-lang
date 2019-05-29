@@ -1,15 +1,15 @@
 package values;
 
-public class ValueRational extends ValueAbstract {
+public class ValueDouble extends ValueAbstract {
 	private final double internalValue;
 
-	public ValueRational(double b) {
+	public ValueDouble(double b) {
 		internalValue = b;
 	}
 
 	@Override
 	public String getName() {
-		return "rational";
+		return "double";
 	}
 
 	@SuppressWarnings("unchecked")
@@ -52,7 +52,7 @@ public class ValueRational extends ValueAbstract {
 		if ((v == Math.floor(v)) && !Double.isInfinite(v))
 		    return new ValueInteger((int) Math.floor(v));
 		else
-			return new ValueRational(v);
+			return new ValueDouble(v);
 	}
 
 	@Override
@@ -82,12 +82,12 @@ public class ValueRational extends ValueAbstract {
 
 	@Override
 	public Value unary_plus() {
-		return new ValueRational(internalValue);
+		return new ValueDouble(internalValue);
 	}
 
 	@Override
 	public Value unary_minus() {
-		return new ValueRational(-internalValue);
+		return new ValueDouble(-internalValue);
 	}
 
 	@Override
