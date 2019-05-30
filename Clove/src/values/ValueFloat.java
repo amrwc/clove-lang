@@ -1,7 +1,6 @@
 package values;
 
-import interpreter.ExceptionSemantic;
-import interpreter.NumberUtils;
+import interpreter.NumberOperations;
 
 public class ValueFloat extends ValueAbstract {
 	private final float internalValue;
@@ -45,139 +44,27 @@ public class ValueFloat extends ValueAbstract {
 
 	@Override
 	public Value add(Value v) {
-//		return NumberUtils.tryInt(internalValue + v.doubleValue());
-		return doOperation("add", v);
+		return NumberOperations.doOperation(internalValue, "add", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-//		return NumberUtils.tryInt(internalValue - v.doubleValue());
-		return doOperation("subtract", v);
+		return NumberOperations.doOperation(internalValue, "subtract", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-//		return NumberUtils.tryInt(internalValue * v.doubleValue());
-		return doOperation("mult", v);
+		return NumberOperations.doOperation(internalValue, "mult", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-//		return NumberUtils.tryInt(internalValue / v.doubleValue());
-		return doOperation("div", v);
+		return NumberOperations.doOperation(internalValue, "div", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-//		return NumberUtils.tryInt(internalValue % v.doubleValue());
-		return doOperation("mod", v);
-	}
-
-	private Value doOperation(String operation, Value v) {
-		switch (operation) {
-		case "add":
-			if (v instanceof ValueInteger)
-				return NumberUtils.tryInt(internalValue + (int) v.getRawValue());
-			if (v instanceof ValueLong)
-				return NumberUtils.tryInt(internalValue + (long) v.getRawValue());
-			if (v instanceof ValueFloat)
-				return NumberUtils.tryInt(internalValue + (float) v.getRawValue());
-			if (v instanceof ValueDouble)
-				return NumberUtils.tryInt(internalValue + (double) v.getRawValue());
-			if (v instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				return unary_plus().add(temp);
-			}
-			break;
-
-		case "subtract":
-			if (v instanceof ValueInteger)
-				return NumberUtils.tryInt(internalValue - (int) v.getRawValue());
-			if (v instanceof ValueLong)
-				return NumberUtils.tryInt(internalValue - (long) v.getRawValue());
-			if (v instanceof ValueFloat)
-				return NumberUtils.tryInt(internalValue - (float) v.getRawValue());
-			if (v instanceof ValueDouble)
-				return NumberUtils.tryInt(internalValue - (double) v.getRawValue());
-			if (v instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				return unary_plus().subtract(temp);
-			}
-			break;
-
-		case "mult":
-			if (v instanceof ValueInteger)
-				return NumberUtils.tryInt(internalValue * (int) v.getRawValue());
-			if (v instanceof ValueLong)
-				return NumberUtils.tryInt(internalValue * (long) v.getRawValue());
-			if (v instanceof ValueFloat)
-				return NumberUtils.tryInt(internalValue * (float) v.getRawValue());
-			if (v instanceof ValueDouble)
-				return NumberUtils.tryInt(internalValue * (double) v.getRawValue());
-			if (v instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				return unary_plus().mult(temp);
-			}
-			break;
-
-		case "div":
-			if (v instanceof ValueInteger)
-				return NumberUtils.tryInt(internalValue / (int) v.getRawValue());
-			if (v instanceof ValueLong)
-				return NumberUtils.tryInt(internalValue / (long) v.getRawValue());
-			if (v instanceof ValueFloat)
-				return NumberUtils.tryInt(internalValue / (float) v.getRawValue());
-			if (v instanceof ValueDouble)
-				return NumberUtils.tryInt(internalValue / (double) v.getRawValue());
-			if (v instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				return unary_plus().div(temp);
-			}
-			break;
-
-		case "mod":
-			if (v instanceof ValueInteger)
-				return NumberUtils.tryInt(internalValue % (int) v.getRawValue());
-			if (v instanceof ValueLong)
-				return NumberUtils.tryInt(internalValue % (long) v.getRawValue());
-			if (v instanceof ValueFloat)
-				return NumberUtils.tryInt(internalValue % (float) v.getRawValue());
-			if (v instanceof ValueDouble)
-				return NumberUtils.tryInt(internalValue % (double) v.getRawValue());
-			if (v instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				return unary_plus().mod(temp);
-			}
-			break;
-		}
-
-		throw new ExceptionSemantic("Couldn't do operation '" + operation + "' on "
-				+ internalValue + " and " + v);
+		return NumberOperations.doOperation(internalValue, "mod", v);
 	}
 
 	@Override
