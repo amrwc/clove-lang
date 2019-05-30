@@ -1,5 +1,7 @@
 package values;
 
+import interpreter.NumberOperations;
+
 public class ValueLong extends ValueAbstract {
 	private final long internalValue;
 
@@ -40,44 +42,29 @@ public class ValueLong extends ValueAbstract {
 			return -1;
 	}
 
-	/**
-	 * Tries to parse a double value to a ValueLong. If it's impossible, returns
-	 * a ValueRational.
-	 * 
-	 * @read https://stackoverflow.com/a/9898528/10620237
-	 * @returns {ValueInteger/ValueRational} cast attempt result
-	 * @author amrwc
-	 */
-	private Value tryLong(double v) {
-		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-			return new ValueLong((long) Math.floor(v));
-		else
-			return new ValueDouble(v);
-	}
-
 	@Override
 	public Value add(Value v) {
-		return tryLong(internalValue + v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "add", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		return tryLong(internalValue - v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "subtract", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-		return tryLong(internalValue * v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "mult", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-		return tryLong(internalValue / v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "div", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-		return tryLong(internalValue % v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "mod", v);
 	}
 
 	@Override

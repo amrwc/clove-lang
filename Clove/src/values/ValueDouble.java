@@ -1,6 +1,6 @@
 package values;
 
-import interpreter.NumberUtils;
+import interpreter.NumberOperations;
 
 public class ValueDouble extends ValueAbstract {
 	private final double internalValue;
@@ -44,27 +44,27 @@ public class ValueDouble extends ValueAbstract {
 
 	@Override
 	public Value add(Value v) {
-		return NumberUtils.tryInt(internalValue + v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "add", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		return NumberUtils.tryInt(internalValue - v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "subtract", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-		return NumberUtils.tryInt(internalValue * v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "mult", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-		return NumberUtils.tryInt(internalValue / v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "div", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-		return NumberUtils.tryInt(internalValue % v.doubleValue());
+		return NumberOperations.doOperation(internalValue, "mod", v);
 	}
 
 	@Override
