@@ -110,8 +110,37 @@ public class NumberUtils {
 	}
 
 	/**
+	 * Returns a ValueInteger.
+	 * 
+	 * @param {int} v
+	 * @returns {ValueInteger}
+	 */
+	public static Value tryInt(int v) {
+		return new ValueInteger(v);
+	}
+
+	/**
+	 * Tries to parse a value-string to a ValueInteger.
+	 * If it's impossible, returns a ValueLong.
+	 * 
+	 * Used by ASTInteger to parse a string to Value-type.
+	 * 
+	 * @param {String} v
+	 * @returns {ValueInteger/ValueLong} parsed Value-type
+	 */
+	public static Value tryInt(String s) {
+		try {
+			return new ValueInteger(Integer.parseInt(s));				
+		} catch (final NumberFormatException e) {
+			return new ValueLong(Long.parseLong(s));
+		}
+	}
+
+	/**
 	 * Tries to parse a value-string to a ValueFloat.
 	 * If it's impossible, returns a ValueDouble.
+	 * 
+	 * Used by ASTRational to parse a string to Value-type.
 	 * 
 	 * @param {String} v
 	 * @returns {ValueFloat/ValueDouble} parsed Value-type
