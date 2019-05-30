@@ -67,13 +67,13 @@ public class NumberOperations {
 
 		case "div":
 			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 / (int) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (int) v2.getRawValue());
 			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 / (long) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (long) v2.getRawValue());
 			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 / (float) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (float) v2.getRawValue());
 			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
 				Value temp = null;
 				try {
@@ -174,13 +174,13 @@ public class NumberOperations {
 
 		case "div":
 			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 / (int) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (int) v2.getRawValue());
 			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 / (long) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (long) v2.getRawValue());
 			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 / (float) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (float) v2.getRawValue());
 			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
+				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
 				Value temp = null;
 				try {

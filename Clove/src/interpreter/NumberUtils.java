@@ -29,6 +29,13 @@ public class NumberUtils {
 		return false;
 	}
 
+	/**
+	 * Compares the argument with number-classes and returns
+	 * its primitive.
+	 * 
+	 * @param {Object} n
+	 * @returns {Class<?>} primitive type
+	 */
 	public static Class<?> getPrimitiveNumberClass(Object n) {
 		Class<?> perhapsPrimitive = null;
 		try {
@@ -55,32 +62,59 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Tries to parse a double value to a ValueInteger. If it's impossible, returns
-	 * a ValueFloat or ValueDouble.
+	 * Tries to parse a double value to a ValueInteger.
+	 * If it's impossible, returns a ValueLong or ValueDouble.
 	 * 
 	 * @read https://stackoverflow.com/a/9898528/10620237
-	 * @returns {ValueInteger/ValueFloat/ValueDouble} cast attempt result
-	 * @author amrwc
+	 * @param {double} v
+	 * @returns {ValueInteger/ValueLong/ValueDouble} parsed Value-type
 	 */
 	public static Value tryInt(double v) {
-		if ((v == Math.floor(v)) && !Double.isInfinite(v))
-			return new ValueInteger((int) Math.floor(v));
+		final double floored = Math.floor(v);
+
+		if ((v == floored) && !Double.isInfinite(v))
+			return tryInt((long) floored);
 		else
 			return new ValueDouble(v);
 	}
 
+	/**
+	 * Tries to parse a float value to a ValueInteger.
+	 * If it's impossible, returns a ValueFloat.
+	 * 
+	 * @read https://stackoverflow.com/a/9898528/10620237
+	 * @param {float} v
+	 * @returns {ValueInteger/ValueFloat} parsed Value-type
+	 */
 	public static Value tryInt(float v) {
-		if ((v == Math.floor(v)) && !Float.isInfinite(v))
-			return new ValueInteger((int) Math.floor(v));
+		final double floored = Math.floor(v);
+
+		if ((v == floored) && !Float.isInfinite(v))
+			return new ValueInteger((int) floored);
 		else
 			return new ValueFloat(v);
 	}
 
 	/**
-	 * Tries to parse a value-string to a ValueFloat. If it's impossible, returns a
-	 * ValueDouble.
+	 * Compares long-value and down-casted int-value
+	 * and if they're equal, returns a ValueInteger.
 	 * 
-	 * @returns {ValueFloat/ValueDouble} cast attempt result
+	 * @param {long} v
+	 * @returns {ValueInteger/ValueLong} parsed Value-type
+	 */
+	public static Value tryInt(long v) {
+		if ((int) v == v)
+			return new ValueInteger((int) v);
+		else
+			return new ValueLong(v);
+	}
+
+	/**
+	 * Tries to parse a value-string to a ValueFloat.
+	 * If it's impossible, returns a ValueDouble.
+	 * 
+	 * @param {String} v
+	 * @returns {ValueFloat/ValueDouble} parsed Value-type
 	 */
 	public static Value tryFloat(String v) {
 		final float vFloat = Float.parseFloat(v);

@@ -16,6 +16,7 @@ log(integer1 / integer2);
 log();
 
 log(3 * integer2); // Operation on ValueInteger and ValueReflection
+log(999999999999999 * integer1);
 
 
 log();
@@ -67,7 +68,7 @@ const float2 = reflect("java.lang.Float", [1.62]);
 //const float1 = reflect("java.lang.Float", [3.1]);
 //const float2 = reflect("java.lang.Float", [1.0]);
 log(float1 * float2); // Operation on two ValueReflections
-log(3.14 * float2); // Operations on ValueRational and ValueReflection
+log(3.14 * float2); // Operations on ValueFloat and ValueReflection
 log(float2 * 3.14);
 
 
@@ -82,6 +83,12 @@ const double2 = reflect("java.lang.Double", ["1.62"]);
 log(double1 * double2);
 log(3.14 * double2);
 log(double2 * 3.14);
+log();
+
+log('Float / Float:   ', float1 / float2);
+log('Double / Double: ', double1 / double2);
+log('Float / Double:  ', float1 / double2);
+log('Double / Float:  ', double2 / float1);
 log();
 
 // Try parse to ValueDouble.
