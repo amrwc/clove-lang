@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
+import interpreter.NumberUtils;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
 
@@ -200,6 +201,20 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
+		// If one of the values is not a number-type...
+		if (!NumberUtils.isNumber(internalValue)
+				|| !NumberUtils.isNumber(v.getRawValue())) {
+			if (v instanceof ValueReflection)
+				return compareInstances(v);
+			throw new ExceptionSemantic("Couldn't compare '" + theClass + "("
+					+ internalValue + ")' and '" + v + "(" + v.getRawValue() + ")'.");
+		}
+		final double inDouble = Double.parseDouble(stringValue());
+		final double vDouble = Double.parseDouble(v.stringValue());
+		return Double.compare(inDouble, vDouble);
+	}
+
+	public int compareInstances(Value v) {
 		final Class<?> incomingClass = ((ValueReflection) v).theClass;
 		final Object incomingInstance = ((ValueReflection) v).internalValue;
 		if (internalValue != null)
