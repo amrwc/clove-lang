@@ -16,3 +16,37 @@ log();
 log(!bool1 && bool2); // Operations on ValueBoolean and ValueReflection
 log(!bool2 || bool1);
 log(false || bool2);
+
+
+log();
+log();
+log();
+
+
+log("Integer:");
+const integer1 = reflect("java.lang.Integer", ["10"]);
+const integer2 = reflect("java.lang.Integer", ["12"]);
+log(integer1 == integer2);
+
+
+log();
+log();
+log();
+
+
+log("Double:");
+const double1 = reflect("java.lang.Double", [7.1471389700197]);
+const double2 = reflect("java.lang.Double", [7.1471389700197]);
+log(double1 == double2);
+log(7.1471389700197 == double1);
+log(double1 == 7.1471389700197);
+
+
+// Compare mixed types here.
+
+
+
+
+
+
+

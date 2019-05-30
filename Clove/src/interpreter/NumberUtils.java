@@ -26,6 +26,9 @@ public class NumberUtils {
 		if (perhapsNumber instanceof Double)
 			return true;
 
+		if (perhapsNumber instanceof ValueReflection)
+			return isNumber(((ValueReflection) perhapsNumber).getRawValue());
+
 		return false;
 	}
 
