@@ -1182,9 +1182,9 @@ public class Parser implements CloveVisitor {
 	/**
 	 * Returns a random value between min inclusive and max exclusive.
 	 * 
-	 * @param (child0) {int/float/ValueInteger/ValueRational} min
-	 * @param (child1) {int/float/ValueInteger/ValueRational} max
-	 * @returns random value in range
+	 * @param (child0) {Value} min
+	 * @param (child1) {Value} max
+	 * @returns {Value} random value in range
 	 * @author amrwc
 	 */
 	@Override
@@ -1192,23 +1192,27 @@ public class Parser implements CloveVisitor {
 		final Value min = doChild(node, 0);
 		final Value max = doChild(node, 1);
 
-		if (min instanceof ValueDouble || max instanceof ValueDouble) {
-			final double minDouble = min.doubleValue();
-			final double maxDouble = max.doubleValue();
+		// If both arguments are either int or long...
+		if ((min instanceof ValueInteger || min instanceof ValueLong)
+				&& (max instanceof ValueInteger || max instanceof ValueLong)) {
+			final long minLong = min.getRawValue();
+			final long maxLong = max.getRawValue();
+			final long result = ThreadLocalRandom.current().nextLong(minLong, maxLong);
+			return new ValueLong(result);
+		}
+
+		// If one of the arguments is either float or double...
+		else if (min instanceof ValueFloat || min instanceof ValueDouble
+				|| max instanceof ValueFloat || max instanceof ValueDouble) {
+			final double minDouble = min.getRawValue();
+			final double maxDouble = max.getRawValue();
 			final double result = ThreadLocalRandom.current().nextDouble(minDouble, maxDouble);
 			return new ValueDouble(result);
 		}
 
-		else if (min instanceof ValueInteger && max instanceof ValueInteger) {
-			final int minLong = min.getRawValue();
-			final int maxLong = max.getRawValue();
-			final int result = ThreadLocalRandom.current().nextInt(minLong, maxLong);
-			return new ValueInteger(result);
-		}
-
 		else
 			throw new ExceptionSemantic("The random() function requires the"
-				+ " arguments to be either of ValueInteger or ValueRational type.");
+				+ " arguments to be integer, long, float or double type.");
 	}
 
 	/**
