@@ -77,9 +77,6 @@ public interface Value {
 	
 	/** Return unary minus of this value. */
 	public Value unary_minus();
-	
-	/** Convert this to a primitive double. */
-	public double doubleValue();
 
 	/** Convert this to a primitive string. */
 	public String stringValue();
