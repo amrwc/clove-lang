@@ -4,13 +4,14 @@ import parser.ast.ASTCode;
 import parser.ast.Clove;
 import parser.ast.CloveVisitor;
 
+/**
+ * @author dave
+ */
 public class Interpreter {
-
 	private static void usage() {
-		System.out.println("\nUsage: Clove [flags] < <file_name>\n"
-			+ "\nFlags:\n"
-			+ "\t-d1: debug; print the full AST.\n"
-			+ "\t-h, --help: print this message.\n");
+		System.out.println("\nUsage: Clove [flags] < <file_name>\n" + "\nFlags:\n"
+				+ "\t-d1: debug; print the full AST.\n"
+				+ "\t-h, --help: print this message.\n");
 	}
 
 	public static void main(String args[]) {

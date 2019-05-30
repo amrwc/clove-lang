@@ -2,6 +2,9 @@ package values;
 
 import interpreter.NumberOperations;
 
+/**
+ * @author amrwc
+ */
 public class ValueDouble extends ValueAbstract {
 	private final double internalValue;
 
