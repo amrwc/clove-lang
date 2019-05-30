@@ -5,7 +5,6 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
-import interpreter.NumberUtils;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
 
@@ -286,15 +285,6 @@ public class ValueReflection extends ValueAbstract {
 			throw new ExceptionSemantic("The '" + theClass + "' Reflection class "
 					+ "is not instantiated, therefore '" + caller
 					+ "' method cannot be executed.");
-	}
-
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		checkIfInstantiated("doubleValue");
-		if (NumberUtils.isNumber(internalValue))
-			return Double.parseDouble(toString());
-		throw new ExceptionSemantic("Couldn't convert " + theClass + " to double.");
 	}
 
 	/*********************************

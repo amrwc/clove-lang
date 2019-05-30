@@ -5,8 +5,8 @@ import interpreter.NumberOperations;
 public class ValueDouble extends ValueAbstract {
 	private final double internalValue;
 
-	public ValueDouble(double b) {
-		internalValue = b;
+	public ValueDouble(double v) {
+		internalValue = v;
 	}
 
 	@Override
@@ -20,12 +20,6 @@ public class ValueDouble extends ValueAbstract {
 		return internalValue;
 	}
 
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		return internalValue;
-	}
-
 	/** Convert this to a primitive String. */
 	@Override
 	public String stringValue() {
@@ -34,9 +28,9 @@ public class ValueDouble extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == v.doubleValue())
+		if (internalValue == (double) v.getRawValue())
 			return 0;
-		else if (internalValue > v.doubleValue())
+		else if (internalValue > (double) v.getRawValue())
 			return 1;
 		else
 			return -1;

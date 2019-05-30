@@ -20,12 +20,6 @@ public class ValueInteger extends ValueAbstract {
 		return internalValue;
 	}
 
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		return internalValue;
-	}
-
 	/** Convert this to a primitive String. */
 	@Override
 	public String stringValue() {

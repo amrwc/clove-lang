@@ -20,12 +20,6 @@ public class ValueFloat extends ValueAbstract {
 		return internalValue;
 	}
 
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		return internalValue;
-	}
-
 	/** Convert this to a primitive String. */
 	@Override
 	public String stringValue() {
@@ -34,9 +28,9 @@ public class ValueFloat extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == v.doubleValue())
+		if (internalValue == (float) v.getRawValue())
 			return 0;
-		else if (internalValue > v.doubleValue())
+		else if (internalValue > (float) v.getRawValue())
 			return 1;
 		else
 			return -1;

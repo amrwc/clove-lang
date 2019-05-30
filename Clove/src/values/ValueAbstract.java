@@ -101,12 +101,6 @@ public abstract class ValueAbstract implements Value {
 		throw new ExceptionSemantic("Cannot perform - on " + getName());
 	}
 
-	/** Convert this to a primitive double. */
-	@Override
-	public double doubleValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to rational.");
-	}
-
 	/** Convert this to a primitive string. */
 	@Override
 	public String stringValue() {
