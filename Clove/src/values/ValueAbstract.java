@@ -21,21 +21,21 @@ public abstract class ValueAbstract implements Value {
 	 * Dereferences a value in a nested expression.
 	 * 
 	 * @param {SimpleNode} node -- node in question
-	 * @param {Value} v -- value to be dereferenced
-	 * @param {int} currChild -- current child of the node being parsed
-	 * @param {Parser} p -- the instance of Parser currently running
+	 * @param {Value}      v -- value to be dereferenced
+	 * @param {int}        currChild -- current child of the node being parsed
+	 * @param {Parser}     p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		throw new ExceptionSemantic("Value type " + getName() + " doesn't support"
-			+ " custom dereferencing.");
+				+ " custom dereferencing.");
 	}
 
 	/**
 	 * Execute a prototype function.
 	 * 
-	 * @param {String} protoFunc -- prototype function name
+	 * @param {String}           protoFunc -- prototype function name
 	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
 	 * @returns {Value} result of the prototype function
 	 * @author amrwc
@@ -43,22 +43,57 @@ public abstract class ValueAbstract implements Value {
 	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
-			case "getClass":
-				return new ValueString(getName());
-			default:
-				throw new ExceptionSemantic("There is no prototype function \""
-					+ protoFunc + "\" in " + getName() + " class.");
+		case "getClass":
+			return new ValueString(getName());
+		default:
+			throw new ExceptionSemantic("There is no prototype function \"" + protoFunc
+					+ "\" in " + getName() + " class.");
 		}
+	}
+
+	/**
+	 * Creates correct Value-type from primitives, or gives a ValueReflection object
+	 * for everything else.
+	 * 
+	 * @param {Object} v
+	 * @returns {Value} Value-type corresponding to the resulting primitive
+	 * @author amrwc
+	 */
+	public static Value getCorrespondingValue(Object v) {
+		if (v instanceof Boolean)
+			return new ValueBoolean((boolean) v);
+		if (v instanceof Short)
+			return new ValueInteger((short) v);
+		if (v instanceof Integer)
+			return new ValueInteger((int) v);
+		if (v instanceof Long)
+			return new ValueLong((long) v);
+		if (v instanceof Float)
+			return new ValueFloat((float) v);
+		if (v instanceof Double)
+			return new ValueDouble((double) v);
+		if (v instanceof String)
+			return new ValueString((String) v);
+
+		try {
+			return new ValueReflection(v);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		throw new ExceptionSemantic("Coudln't get a corresponding value from " + v + ".");
 	}
 
 	@Override
 	public Value or(Value v) {
-		throw new ExceptionSemantic("Cannot perform OR on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform OR on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value and(Value v) {
-		throw new ExceptionSemantic("Cannot perform AND on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform AND on " + getName() + " and " + v.getName());
 	}
 
 	@Override
@@ -68,27 +103,32 @@ public abstract class ValueAbstract implements Value {
 
 	@Override
 	public Value add(Value v) {
-		throw new ExceptionSemantic("Cannot perform + on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform + on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		throw new ExceptionSemantic("Cannot perform - on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform - on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value mult(Value v) {
-		throw new ExceptionSemantic("Cannot perform * on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform * on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value div(Value v) {
-		throw new ExceptionSemantic("Cannot perform / on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform / on " + getName() + " and " + v.getName());
 	}
 
 	@Override
 	public Value mod(Value v) {
-		throw new ExceptionSemantic("Cannot perform % on " + getName() + " and " + v.getName());
+		throw new ExceptionSemantic(
+				"Cannot perform % on " + getName() + " and " + v.getName());
 	}
 
 	@Override
@@ -137,7 +177,7 @@ public abstract class ValueAbstract implements Value {
 		return new ValueBoolean(compare(v) > 0);
 	}
 
-	/** Test this value and another for < */	
+	/** Test this value and another for < */
 	@Override
 	public Value lt(Value v) {
 		return new ValueBoolean(compare(v) < 0);

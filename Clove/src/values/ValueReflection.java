@@ -178,33 +178,6 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
-	 * Creates correct Value-type from primitives, or gives a ValueReflection object
-	 * for everything else.
-	 * 
-	 * @param {Object} v
-	 * @returns {Value} Value-type corresponding to the resulting primitive
-	 * @throws ClassNotFoundException
-	 */
-	public static Value getCorrespondingValue(Object v) throws ClassNotFoundException {
-		if (v instanceof Boolean)
-			return new ValueBoolean((boolean) v);
-		if (v instanceof Short)
-			return new ValueInteger((short) v);
-		if (v instanceof Integer)
-			return new ValueInteger((int) v);
-		if (v instanceof Long)
-			return new ValueLong((long) v);
-		if (v instanceof Float)
-			return new ValueFloat((float) v);
-		if (v instanceof Double)
-			return new ValueDouble((double) v);
-		if (v instanceof String)
-			return new ValueString((String) v);
-
-		return new ValueReflection(v);
-	}
-
-	/**
 	 * Casting ValueReflection to another class.
 	 */
 	public static ValueReflection cast(String targetClassName,
@@ -294,111 +267,63 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public Value or(Value v) {
 		checkIfInstantiated("OR");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.or(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform 'OR' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.or(v2);
 	}
 
 	@Override
 	public Value and(Value v) {
 		checkIfInstantiated("AND");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.and(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform 'AND' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.and(v2);
 	}
 
 	@Override
 	public Value not() {
 		checkIfInstantiated("NOT");
-		try {
-			return getCorrespondingValue(internalValue).not();
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform 'NOT' on " + internalValue + ".");
-		}
+		return getCorrespondingValue(internalValue).not();
 	}
 
 	@Override
 	public Value add(Value v) {
 		checkIfInstantiated("add");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.add(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform '+' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.add(v2);
 	}
 
 	@Override
 	public Value subtract(Value v) {
 		checkIfInstantiated("subtract");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.subtract(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform '-' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.subtract(v2);
 	}
 
 	@Override
 	public Value mult(Value v) {
 		checkIfInstantiated("mult");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.mult(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform '*' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.mult(v2);
 	}
 
 	@Override
 	public Value div(Value v) {
 		checkIfInstantiated("div");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.div(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform '/' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.div(v2);
 	}
 
 	@Override
 	public Value mod(Value v) {
 		checkIfInstantiated("mod");
-		try {
-			final Value v1 = getCorrespondingValue(internalValue);
-			final Value v2 = getCorrespondingValue(v.getRawValue());
-			return v1.mod(v2);
-		} catch (final ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic(
-					"Couldn't perform '%' on " + internalValue + " and " + v.getName());
-		}
+		final Value v1 = getCorrespondingValue(internalValue);
+		final Value v2 = getCorrespondingValue(v.getRawValue());
+		return v1.mod(v2);
 	}
 
 	@Override
