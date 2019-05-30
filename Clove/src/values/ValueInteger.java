@@ -32,9 +32,10 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == (int) v.getRawValue())
+		final double vDouble = Double.parseDouble(v.stringValue());
+		if (internalValue == vDouble)
 			return 0;
-		else if (internalValue > (int) v.getRawValue())
+		else if (internalValue > vDouble)
 			return 1;
 		else
 			return -1;

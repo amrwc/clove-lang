@@ -1177,20 +1177,20 @@ public class Parser implements CloveVisitor {
 		// If both arguments are either int or long...
 		if ((min instanceof ValueInteger || min instanceof ValueLong)
 				&& (max instanceof ValueInteger || max instanceof ValueLong)) {
-			final long minLong = min.getRawValue();
-			final long maxLong = max.getRawValue();
+			final long minLong = Long.parseLong(min.stringValue());
+			final long maxLong = Long.parseLong(max.stringValue());
 			final long result = ThreadLocalRandom.current().nextLong(minLong, maxLong);
-			return new ValueLong(result);
+			return NumberUtils.tryInt(result);
 		}
 
 		// If one of the arguments is either float or double...
 		else if (min instanceof ValueFloat || min instanceof ValueDouble
 				|| max instanceof ValueFloat || max instanceof ValueDouble) {
-			final double minDouble = min.getRawValue();
-			final double maxDouble = max.getRawValue();
+			final double minDouble = Double.parseDouble(min.stringValue());
+			final double maxDouble = Double.parseDouble(max.stringValue());
 			final double result = ThreadLocalRandom.current().nextDouble(minDouble,
 					maxDouble);
-			return new ValueDouble(result);
+			return NumberUtils.tryInt(result);
 		}
 
 		else

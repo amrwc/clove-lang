@@ -31,12 +31,8 @@ public class ValueDouble extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		if (internalValue == (double) v.getRawValue())
-			return 0;
-		else if (internalValue > (double) v.getRawValue())
-			return 1;
-		else
-			return -1;
+		final double vDouble = Double.parseDouble(v.stringValue());
+		return Double.compare(internalValue, vDouble);
 	}
 
 	@Override
