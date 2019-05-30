@@ -9,6 +9,8 @@ import parser.ast.SimpleNode;
  * An abstract Value, that defines all possible operations on abstract ValueS.
  * 
  * If an operation is not supported, throw SemanticException.
+ * 
+ * @author dave
  */
 public interface Value {
 

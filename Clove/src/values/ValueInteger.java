@@ -2,6 +2,10 @@ package values;
 
 import interpreter.NumberOperations;
 
+/**
+ * @author dave
+ * @author amrwc
+ */
 public class ValueInteger extends ValueAbstract {
 	private final int internalValue;
 

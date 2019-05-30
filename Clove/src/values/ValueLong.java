@@ -2,6 +2,9 @@ package values;
 
 import interpreter.NumberOperations;
 
+/**
+ * @author amrwc
+ */
 public class ValueLong extends ValueAbstract {
 	private final long internalValue;
 

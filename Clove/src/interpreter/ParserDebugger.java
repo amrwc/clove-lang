@@ -2,6 +2,9 @@ package interpreter;
 
 import parser.ast.*;
 
+/**
+ * @author dave
+ */
 public class ParserDebugger implements CloveVisitor {
 	private int indent = 0;
 
@@ -19,7 +22,7 @@ public class ParserDebugger implements CloveVisitor {
 		++indent;
 		data = node.childrenAccept(this, data);
 		--indent;
-		return data;		
+		return data;
 	}
 
 	@Override
@@ -35,11 +38,9 @@ public class ParserDebugger implements CloveVisitor {
 		return data;
 	}
 
-
-
-	/***********************************************
-	 *                 Statements                  *
-	 ***********************************************/
+	/**************
+	 * Statements *
+	 **************/
 
 	// Execute a statement
 	@Override
@@ -67,7 +68,8 @@ public class ParserDebugger implements CloveVisitor {
 		return null;
 	}
 
-	// Execute an assignment statement, by popping a value off the stack and assigning it
+	// Execute an assignment statement, by popping a value off the stack and
+	// assigning it
 	// to a variable.
 	@Override
 	public Object visit(ASTAssignment node, Object data) {
@@ -86,10 +88,10 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTBlock node, Object data) {
 		dump(node, data);
-		return data;	
+		return data;
 	}
 
-	// Execute an IF 
+	// Execute an IF
 	@Override
 	public Object visit(ASTIfStatement node, Object data) {
 		dump(node, data);
@@ -146,14 +148,13 @@ public class ParserDebugger implements CloveVisitor {
 		return null;
 	}
 
-
-
-	/***********************************************
-	 *               Sub-statements                *
-	 ***********************************************/
+	/******************
+	 * Sub-statements *
+	 ******************/
 
 	// Process an identifier
-	// This doesn't do anything, but needs to be here because we need an ASTIdentifier node.
+	// This doesn't do anything, but needs to be here because we need an
+	// ASTIdentifier node.
 	@Override
 	public Object visit(ASTIdentifier node, Object data) {
 		dump(node, data);
@@ -200,11 +201,9 @@ public class ParserDebugger implements CloveVisitor {
 		return data;
 	}
 
-
-
-	/***********************************************
-	 *                Expressions                  *
-	 ***********************************************/
+	/***************
+	 * Expressions *
+	 ***************/
 
 	// OR
 	@Override
@@ -217,7 +216,7 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTAnd node, Object data) {
 		dump(node, data);
-		return data;		
+		return data;
 	}
 
 	// ==
@@ -350,11 +349,9 @@ public class ParserDebugger implements CloveVisitor {
 		return null;
 	}
 
-
-
-	/***********************************************
-	 *                 Literals                    *
-	 ***********************************************/
+	/************
+	 * Literals *
+	 ************/
 
 	@Override
 	public Object visit(ASTInteger node, Object data) {
