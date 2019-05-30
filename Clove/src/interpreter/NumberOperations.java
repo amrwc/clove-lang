@@ -2,7 +2,27 @@ package interpreter;
 
 import values.*;
 
+/**
+ * This class implements all supported operations on two numbers.
+ * 
+ * The doOperation() method is overloaded with the 4 supported primitive types
+ * (int, long, float, and double), which are the left operands in an operation.
+ * Inside of it, the right operand's Value-type is detected and the appropriate
+ * cast is applied for each relevant type. The method returns the right
+ * Value-type to the caller.
+ * 
+ * @author amrwc
+ */
 public class NumberOperations {
+	/**
+	 * Does an arithmetic operation chosen by the 'operation' parameter on a
+	 * primitive and a Value, and returns the right Value.
+	 * 
+	 * @param {int}    v1
+	 * @param {String} operation
+	 * @param {Value}  v2
+	 * @returns {Value} outcome in the right Value-type
+	 */
 	public static Value doOperation(int v1, String operation, Value v2) {
 		switch (operation) {
 		case "add":
@@ -110,6 +130,15 @@ public class NumberOperations {
 				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
+	/**
+	 * Does an arithmetic operation chosen by the 'operation' parameter on a
+	 * primitive and a Value, and returns the right Value.
+	 * 
+	 * @param {long}   v1
+	 * @param {String} operation
+	 * @param {Value}  v2
+	 * @returns {Value} outcome in the right Value-type
+	 */
 	public static Value doOperation(long v1, String operation, Value v2) {
 		switch (operation) {
 		case "add":
@@ -217,6 +246,15 @@ public class NumberOperations {
 				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
+	/**
+	 * Does an arithmetic operation chosen by the 'operation' parameter on a
+	 * primitive and a Value, and returns the right Value.
+	 * 
+	 * @param {float}  v1
+	 * @param {String} operation
+	 * @param {Value}  v2
+	 * @returns {Value} outcome in the right Value-type
+	 */
 	public static Value doOperation(float v1, String operation, Value v2) {
 		switch (operation) {
 		case "add":
@@ -324,6 +362,15 @@ public class NumberOperations {
 				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
+	/**
+	 * Does an arithmetic operation chosen by the 'operation' parameter on a
+	 * primitive and a Value, and returns the right Value.
+	 * 
+	 * @param {double} v1
+	 * @param {String} operation
+	 * @param {Value}  v2
+	 * @returns {Value} outcome in the right Value-type
+	 */
 	public static Value doOperation(double v1, String operation, Value v2) {
 		switch (operation) {
 		case "add":
