@@ -35,12 +35,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "add", temp);
 			}
 			break;
@@ -55,12 +50,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "subtract", temp);
 			}
 			break;
@@ -75,12 +65,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mult", temp);
 			}
 			break;
@@ -95,12 +80,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "div", temp);
 			}
 			break;
@@ -115,12 +95,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mod", temp);
 			}
 			break;
@@ -151,12 +126,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "add", temp);
 			}
 			break;
@@ -171,12 +141,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "subtract", temp);
 			}
 			break;
@@ -191,12 +156,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mult", temp);
 			}
 			break;
@@ -211,12 +171,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "div", temp);
 			}
 			break;
@@ -231,12 +186,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mod", temp);
 			}
 			break;
@@ -267,12 +217,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "add", temp);
 			}
 			break;
@@ -287,12 +232,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "subtract", temp);
 			}
 			break;
@@ -307,12 +247,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mult", temp);
 			}
 			break;
@@ -327,12 +262,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "div", temp);
 			}
 			break;
@@ -347,12 +277,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mod", temp);
 			}
 			break;
@@ -383,12 +308,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "add", temp);
 			}
 			break;
@@ -403,12 +323,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "subtract", temp);
 			}
 			break;
@@ -423,12 +338,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mult", temp);
 			}
 			break;
@@ -443,12 +353,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "div", temp);
 			}
 			break;
@@ -463,12 +368,7 @@ public class NumberOperations {
 			if (v2 instanceof ValueDouble)
 				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
 			if (v2 instanceof ValueReflection) {
-				Value temp = null;
-				try {
-					temp = ValueReflection.getCorrespondingValue(v2.getRawValue());
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
 				return doOperation(v1, "mod", temp);
 			}
 			break;
