@@ -6,6 +6,9 @@ import interpreter.ExceptionSemantic;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
 
+/**
+ * @author dave
+ */
 public abstract class ValueAbstract implements Value {
 
 	@Override

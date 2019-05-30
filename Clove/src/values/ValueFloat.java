@@ -2,6 +2,9 @@ package values;
 
 import interpreter.NumberOperations;
 
+/**
+ * @author amrwc
+ */
 public class ValueFloat extends ValueAbstract {
 	private final float internalValue;
 

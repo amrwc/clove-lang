@@ -15,7 +15,7 @@ import parser.ast.SimpleNode;
 public class ValueArray extends ValueAbstract {
 	private final Vector<Value> internalValue;
 	private int capacity;
-	
+
 	public ValueArray() {
 		internalValue = new Vector<Value>();
 		capacity = 0;
@@ -51,9 +51,9 @@ public class ValueArray extends ValueAbstract {
 	 * Dereferences a value in a nested expression.
 	 * 
 	 * @param {SimpleNode} node -- node in question
-	 * @param {Value} v -- value to be dereferenced
-	 * @param {int} currChild -- current child of the node being parsed
-	 * @param {Parser} p -- the instance of Parser currently running
+	 * @param {Value}      v -- value to be dereferenced
+	 * @param {int}        currChild -- current child of the node being parsed
+	 * @param {Parser}     p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
@@ -66,7 +66,7 @@ public class ValueArray extends ValueAbstract {
 	/**
 	 * Execute a prototype function.
 	 * 
-	 * @param {String} protoFunc -- prototype function name
+	 * @param {String}           protoFunc -- prototype function name
 	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
 	 * @returns {Value} result of the prototype function
 	 * @author amrwc
@@ -74,34 +74,34 @@ public class ValueArray extends ValueAbstract {
 	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
-			case "append":
-			case "push":
-				protoArgs.forEach(arg -> append(arg));
-				break;
-			case "capacity":
-			case "cap":
-				return new ValueInteger(capacity);
-			case "copy":
-				return new ValueArray(new Vector<Value>(internalValue));
-			case "getClass":
-				return new ValueString(getName());
-			case "indexOf":
-				return findIndex(protoArgs.get(0));
-			case "pop":
-				return internalValue.remove(internalValue.size() - 1);
-			case "remove":
-				return internalValue.remove((int) protoArgs.get(0).getRawValue());
-			case "resize":
-				resize(protoArgs.get(0));
-				break;
-			case "shift":
-				return internalValue.remove(0);
-			case "size":
-			case "length":
-				return new ValueInteger(size());
-			default:
-				throw new ExceptionSemantic("There is no prototype function \""
-					+ protoFunc + "\" in ValueArray class.");
+		case "append":
+		case "push":
+			protoArgs.forEach(arg -> append(arg));
+			break;
+		case "capacity":
+		case "cap":
+			return new ValueInteger(capacity);
+		case "copy":
+			return new ValueArray(new Vector<Value>(internalValue));
+		case "getClass":
+			return new ValueString(getName());
+		case "indexOf":
+			return findIndex(protoArgs.get(0));
+		case "pop":
+			return internalValue.remove(internalValue.size() - 1);
+		case "remove":
+			return internalValue.remove((int) protoArgs.get(0).getRawValue());
+		case "resize":
+			resize(protoArgs.get(0));
+			break;
+		case "shift":
+			return internalValue.remove(0);
+		case "size":
+		case "length":
+			return new ValueInteger(size());
+		default:
+			throw new ExceptionSemantic("There is no prototype function \"" + protoFunc
+					+ "\" in ValueArray class.");
 		}
 
 		return null;
@@ -110,17 +110,16 @@ public class ValueArray extends ValueAbstract {
 	public void append(Value v) {
 		if (internalValue.size() + 1 > capacity)
 			throw new ExceptionSemantic("The ValueArray of capacity " + capacity
-				+ " is full and cannot take any more values.");
+					+ " is full and cannot take any more values.");
 		if (v == null)
-			throw new ExceptionSemantic("The argument for ValueArray.append()"
-				+ " cannot be null.");
+			throw new ExceptionSemantic(
+					"The argument for ValueArray.append()" + " cannot be null.");
 
 		internalValue.add(v);
 	}
 
 	/**
-	 * Find the index of a Value in the ValueArray.
-	 * Returns -1 if it's not found.
+	 * Find the index of a Value in the ValueArray. Returns -1 if it's not found.
 	 * 
 	 * @param {Value} v -- Value to be found
 	 * @return {ValueInteger} index of the Value in the ValueArray
@@ -136,19 +135,23 @@ public class ValueArray extends ValueAbstract {
 
 	public Value get(int i) {
 		if (internalValue.size() <= i)
-			throw new ExceptionSemantic("The index " + i + " is out of bounds of the array with length "
-			+ internalValue.size() + ".");
+			throw new ExceptionSemantic(
+					"The index " + i + " is out of bounds of the array with length "
+							+ internalValue.size() + ".");
 
 		final Value val = internalValue.get(i);
-		if (val != null) return val;
-		throw new ExceptionSemantic("Value of index " + i + " in the array is undefined or equal to null.");
+		if (val != null)
+			return val;
+		throw new ExceptionSemantic(
+				"Value of index " + i + " in the array is undefined or equal to null.");
 	}
 
 	public void set(int i, Value v) {
 		if (i < 0)
 			throw new ExceptionSemantic("The index in ValueArray cannot be negative.");
 		if (v == null)
-			throw new ExceptionSemantic("The Value passed into ValueArray.set() cannot be null.");
+			throw new ExceptionSemantic(
+					"The Value passed into ValueArray.set() cannot be null.");
 		internalValue.set(i, v);
 	}
 
@@ -157,8 +160,8 @@ public class ValueArray extends ValueAbstract {
 	}
 
 	/**
-	 * Resizes the ValueArray -- increases the internal capacity
-	 * and the Vector's size.
+	 * Resizes the ValueArray -- increases the internal capacity and the Vector's
+	 * size.
 	 * 
 	 * @param {ValueInteger} len
 	 */
@@ -183,10 +186,8 @@ public class ValueArray extends ValueAbstract {
 	 */
 	@Override
 	public String toString() {
-		final String strVal = internalValue
-							.stream()
-							.map(Object::toString)
-							.collect(Collectors.joining(", "));
+		final String strVal = internalValue.stream().map(Object::toString)
+				.collect(Collectors.joining(", "));
 		return "[" + strVal + "]";
 	}
 

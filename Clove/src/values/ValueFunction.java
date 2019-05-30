@@ -10,7 +10,8 @@ import interpreter.FunctionDefinition;
 public class ValueFunction extends ValueAbstract {
 	private FunctionDefinition functionDefinition;
 
-	public ValueFunction() {}
+	public ValueFunction() {
+	}
 
 	public ValueFunction(FunctionDefinition fndef) {
 		functionDefinition = fndef;

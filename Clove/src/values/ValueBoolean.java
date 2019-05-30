@@ -1,12 +1,15 @@
 package values;
 
+/**
+ * @author dave
+ */
 public class ValueBoolean extends ValueAbstract {
 	private final boolean internalValue;
-	
+
 	public ValueBoolean(boolean b) {
 		internalValue = b;
 	}
-	
+
 	@Override
 	public String getName() {
 		return "boolean";
@@ -17,13 +20,13 @@ public class ValueBoolean extends ValueAbstract {
 	public Boolean getRawValue() {
 		return internalValue;
 	}
-	
+
 	/** Convert this to a primitive string. */
 	@Override
 	public String stringValue() {
 		return (internalValue) ? "true" : "false";
 	}
-	
+
 	@Override
 	public Value or(Value v) {
 		return new ValueBoolean(internalValue || (boolean) v.getRawValue());
@@ -48,7 +51,7 @@ public class ValueBoolean extends ValueAbstract {
 		else
 			return -1;
 	}
-	
+
 	@Override
 	public String toString() {
 		return "" + internalValue;

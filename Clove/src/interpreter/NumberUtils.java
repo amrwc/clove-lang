@@ -137,8 +137,8 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Tries to parse a value-string to a ValueFloat.
-	 * If it's impossible, returns a ValueDouble.
+	 * Tries to parse a value-string to a ValueFloat. If it's impossible, returns a
+	 * ValueDouble.
 	 * 
 	 * Used by ASTRational to parse a string to Value-type.
 	 * 

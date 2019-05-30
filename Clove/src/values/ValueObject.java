@@ -15,10 +15,11 @@ import parser.ast.SimpleNode;
  * @author amrwc
  */
 public class ValueObject extends ValueAbstract {
-	
+
 	private HashMap<String, Value> internalValue = new HashMap<String, Value>();
 
-	public ValueObject() {}
+	public ValueObject() {
+	}
 
 	public ValueObject(HashMap<String, Value> valueObject) {
 		internalValue = valueObject;
@@ -45,24 +46,24 @@ public class ValueObject extends ValueAbstract {
 	 * Dereferences a value in a nested expression.
 	 * 
 	 * @param {SimpleNode} node -- node in question
-	 * @param {Value} v -- value to be dereferenced
-	 * @param {int} currChild -- current child of the node being parsed
-	 * @param {Parser} p -- the instance of Parser currently running
+	 * @param {Value}      v -- value to be dereferenced
+	 * @param {int}        currChild -- current child of the node being parsed
+	 * @param {Parser}     p -- the instance of Parser currently running
 	 * @returns {Value} the dereferenced value
 	 */
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
 		final ValueObject valueObject = (ValueObject) v;
 		final String keyName = (node.jjtGetChild(currChild) instanceof ASTIdentifier)
-			? Parser.getTokenOfChild(node, currChild)
-			: p.doChild(node, currChild).toString();
+				? Parser.getTokenOfChild(node, currChild)
+				: p.doChild(node, currChild).toString();
 		return valueObject.get(keyName);
 	}
 
 	/**
 	 * Execute a prototype function.
 	 * 
-	 * @param {String} protoFunc -- prototype function name
+	 * @param {String}           protoFunc -- prototype function name
 	 * @param {ArrayList<Value>} protoArgs -- arguments for the function
 	 * @returns {Value} result of the prototype function
 	 * @author amrwc
@@ -70,21 +71,22 @@ public class ValueObject extends ValueAbstract {
 	@Override
 	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
 		switch (protoFunc) {
-			case "getClass":
-				return new ValueString(getName());
-			case "keys":
-				return keys();
-			case "remove":
-				protoArgs.forEach(arg -> remove(arg.stringValue()));
-				break;
-			case "size":
-			case "length":
-				return new ValueInteger(size());
-			case "tryRemove":
-				protoArgs.forEach(arg -> tryRemove(arg.stringValue()));
-				break;
-			default:
-				throw new ExceptionSemantic("There is no prototype function \"" + protoFunc + "\" in ValueObject class.");
+		case "getClass":
+			return new ValueString(getName());
+		case "keys":
+			return keys();
+		case "remove":
+			protoArgs.forEach(arg -> remove(arg.stringValue()));
+			break;
+		case "size":
+		case "length":
+			return new ValueInteger(size());
+		case "tryRemove":
+			protoArgs.forEach(arg -> tryRemove(arg.stringValue()));
+			break;
+		default:
+			throw new ExceptionSemantic("There is no prototype function \"" + protoFunc
+					+ "\" in ValueObject class.");
 		}
 
 		return null;
@@ -96,13 +98,16 @@ public class ValueObject extends ValueAbstract {
 
 	public Value get(String name) {
 		final Value value = internalValue.get(name);
-		if (value != null) return value;
-		throw new ExceptionSemantic("Object key \"" + name + "\" is undefined or equal to null.");
+		if (value != null)
+			return value;
+		throw new ExceptionSemantic(
+				"Object key \"" + name + "\" is undefined or equal to null.");
 	}
 
 	public void set(String name, Value v) {
 		if (name == null || name == "null" || v == null)
-			throw new ExceptionSemantic("Neither key nor value of an object can be null.");
+			throw new ExceptionSemantic(
+					"Neither key nor value of an object can be null.");
 		internalValue.put(name, v);
 	}
 
@@ -110,7 +115,8 @@ public class ValueObject extends ValueAbstract {
 		if (internalValue.containsKey(name))
 			internalValue.remove(name);
 		else
-			throw new ExceptionSemantic("This ValueObject does not contain the \"" + name + "\" key.");
+			throw new ExceptionSemantic(
+					"This ValueObject does not contain the \"" + name + "\" key.");
 	}
 
 	private void tryRemove(String name) {
@@ -120,7 +126,8 @@ public class ValueObject extends ValueAbstract {
 	// Returns the key-value pairs in '{key: value}' notation.
 	@Override
 	public String toString() {
-		if (internalValue.size() == 0) return "{}";
+		if (internalValue.size() == 0)
+			return "{}";
 		String result = "{";
 		for (final HashMap.Entry<String, Value> entry : internalValue.entrySet())
 			result += entry.getKey() + ": " + entry.getValue() + ", ";
@@ -141,18 +148,18 @@ public class ValueObject extends ValueAbstract {
 	 */
 	public String toUrlString() {
 		return internalValue.entrySet().stream()
-			.map(p -> urlEncUTF8(p.getKey().toString()) + "=" + urlEncUTF8(p.getValue().toString()))
-			.reduce((p1, p2) -> p1 + "&" + p2)
-			.orElse("");
+				.map(p -> urlEncUTF8(p.getKey().toString()) + "="
+						+ urlEncUTF8(p.getValue().toString()))
+				.reduce((p1, p2) -> p1 + "&" + p2).orElse("");
 	}
-	
+
 	private String urlEncUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        } catch (final UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(e);
-        }
-    }
+		try {
+			return URLEncoder.encode(s, "UTF-8");
+		} catch (final UnsupportedEncodingException e) {
+			throw new UnsupportedOperationException(e);
+		}
+	}
 
 	public int size() {
 		return internalValue.size();
