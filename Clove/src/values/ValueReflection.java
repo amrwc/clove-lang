@@ -209,6 +209,7 @@ public class ValueReflection extends ValueAbstract {
 			throw new ExceptionSemantic("Couldn't compare '" + theClass + "("
 					+ internalValue + ")' and '" + v + "(" + v.getRawValue() + ")'.");
 		}
+
 		final double inDouble = Double.parseDouble(stringValue());
 		final double vDouble = Double.parseDouble(v.stringValue());
 		return Double.compare(inDouble, vDouble);
