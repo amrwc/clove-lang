@@ -6,16 +6,17 @@ log("Reflection API -- booleans");
 log();
 
 
+log("Boolean:");
 const bool1 = reflect("java.lang.Boolean", [false]);
 const bool2 = reflect("java.lang.Boolean", [true]);
-log(bool1 || bool2); // Operations on ValueReflection(s)
-log(bool1 && bool2);
-log(!bool1);
+log('bool1 || bool2: ', bool1 || bool2); // Operations on ValueReflection(s)
+log('bool1 && bool2: ', bool1 && bool2);
+log('!bool1: ', !bool1);
 log();
 
-log(!bool1 && bool2); // Operations on ValueBoolean and ValueReflection
-log(!bool2 || bool1);
-log(false || bool2);
+log('!bool1 && bool2: ', !bool1 && bool2); // Operations on ValueBoolean and ValueReflection
+log('!bool2 || bool1: ', !bool2 || bool1);
+log('false || bool2: ', false || bool2);
 
 
 log();
@@ -26,7 +27,28 @@ log();
 log("Integer:");
 const integer1 = reflect("java.lang.Integer", ["10"]);
 const integer2 = reflect("java.lang.Integer", ["12"]);
-log(integer1 == integer2);
+log('integer1 == integer2: ', integer1 == integer2);
+
+
+log();
+log();
+log();
+
+
+
+log("Float:");
+const float1 = reflect("java.lang.Float", [7.1471]);
+const float2 = reflect("java.lang.Float", [7.1471]);
+log('float1 == float2: ', float1 == float2);
+log('7.1471 == float1: ', 7.1471 == float1);
+log('float1 == 7.1471: ', float1 == 7.1471);
+log();
+
+log('float1 == 7.1471389700197: ', float1 == 7.1471389700197);
+log('float1 < 7.1471389700197: ', float1 < 7.1471389700197);
+log();
+
+log('3.14 == 3.1420957420957: ', 3.14 == 3.1420957420957);
 
 
 log();
@@ -37,9 +59,9 @@ log();
 log("Double:");
 const double1 = reflect("java.lang.Double", [7.1471389700197]);
 const double2 = reflect("java.lang.Double", [7.1471389700197]);
-log(double1 == double2);
-log(7.1471389700197 == double1);
-log(double1 == 7.1471389700197);
+log('double1 == double2: ', double1 == double2);
+log('7.1471389700197 == double1: ', 7.1471389700197 == double1);
+log('double1 == 7.1471389700197: ', double1 == 7.1471389700197);
 
 
 // Compare mixed types here.
