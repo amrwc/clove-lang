@@ -1,5 +1,7 @@
 package values;
 
+import interpreter.ExceptionSemantic;
+
 /**
  * @author dave
  */
@@ -44,6 +46,12 @@ public class ValueBoolean extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
+		if (!(v.getRawValue() instanceof Boolean)) {
+			throw new ExceptionSemantic(
+					"Cannot compare '" + getName() + " (" + internalValue + ")' and '"
+							+ v.getName() + " (" + v.getRawValue() + ")'.");
+		}
+
 		if (internalValue == (boolean) v.getRawValue())
 			return 0;
 		else if (internalValue)
