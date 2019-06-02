@@ -165,24 +165,40 @@ public abstract class ValueAbstract implements Value {
 	/** Test this value and another for >= */
 	@Override
 	public Value gte(Value v) {
+		if (getName().equals("boolean"))
+			throw new ExceptionSemantic(
+					"The operator >= is undefined for the argument type(s) '" + getName()
+							+ "', '" + v.getName() + " (" + v.getRawValue() + ")'.");
 		return new ValueBoolean(compare(v) >= 0);
 	}
 
 	/** Test this value and another for <= */
 	@Override
 	public Value lte(Value v) {
+		if (getName().equals("boolean"))
+			throw new ExceptionSemantic(
+					"The operator <= is undefined for the argument type(s) '" + getName()
+							+ "', '" + v.getName() + " (" + v.getRawValue() + ")'.");
 		return new ValueBoolean(compare(v) <= 0);
 	}
 
 	/** Test this value and another for > */
 	@Override
 	public Value gt(Value v) {
+		if (getName().equals("boolean"))
+			throw new ExceptionSemantic(
+					"The operator > is undefined for the argument type(s) '" + getName()
+							+ "', '" + v.getName() + " (" + v.getRawValue() + ")'.");
 		return new ValueBoolean(compare(v) > 0);
 	}
 
 	/** Test this value and another for < */
 	@Override
 	public Value lt(Value v) {
+		if (getName().equals("boolean"))
+			throw new ExceptionSemantic(
+					"The operator < is undefined for the argument type(s) '" + getName()
+							+ "', '" + v.getName() + " (" + v.getRawValue() + ")'.");
 		return new ValueBoolean(compare(v) < 0);
 	}
 }

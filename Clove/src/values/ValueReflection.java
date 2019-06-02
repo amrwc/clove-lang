@@ -196,7 +196,8 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public String getName() {
-		return "ValueReflection";
+		return (internalValue == null) ? theClass.getName()
+				: internalValue.getClass().toString();
 	}
 
 	@Override
@@ -206,8 +207,9 @@ public class ValueReflection extends ValueAbstract {
 				|| !NumberUtils.isNumber(v.getRawValue())) {
 			if (v instanceof ValueReflection)
 				return compareInstances(v);
-			throw new ExceptionSemantic("Couldn't compare '" + theClass + "("
-					+ internalValue + ")' and '" + v + "(" + v.getRawValue() + ")'.");
+			throw new ExceptionSemantic(
+					"Cannot compare '" + theClass + " (" + internalValue + ")' and '"
+							+ v.getName() + " (" + v.getRawValue() + ")'.");
 		}
 
 		final double inDouble = Double.parseDouble(stringValue());
@@ -350,41 +352,5 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public Value unary_minus() {
 		throw new ExceptionSemantic("Cannot perform - on " + getName());
-	}
-
-	/** Test this value and another for equality. */
-	@Override
-	public Value eq(Value v) {
-		return new ValueBoolean(compare(v) == 0);
-	}
-
-	/** Test this value and another for non-equality. */
-	@Override
-	public Value neq(Value v) {
-		return new ValueBoolean(compare(v) != 0);
-	}
-
-	/** Test this value and another for >= */
-	@Override
-	public Value gte(Value v) {
-		return new ValueBoolean(compare(v) >= 0);
-	}
-
-	/** Test this value and another for <= */
-	@Override
-	public Value lte(Value v) {
-		return new ValueBoolean(compare(v) <= 0);
-	}
-
-	/** Test this value and another for > */
-	@Override
-	public Value gt(Value v) {
-		return new ValueBoolean(compare(v) > 0);
-	}
-
-	/** Test this value and another for < */
-	@Override
-	public Value lt(Value v) {
-		return new ValueBoolean(compare(v) < 0);
 	}
 }
