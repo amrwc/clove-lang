@@ -7,7 +7,9 @@ log();
 
 
 log("Boolean:");
+log('const bool1 = reflect("java.lang.Boolean", [false]);');
 const bool1 = reflect("java.lang.Boolean", [false]);
+log('const bool2 = reflect("java.lang.Boolean", [true]);');
 const bool2 = reflect("java.lang.Boolean", [true]);
 log('bool1 || bool2: ', bool1 || bool2); // Operations on ValueReflection(s)
 log('bool1 && bool2: ', bool1 && bool2);
@@ -17,6 +19,7 @@ log();
 log('!bool1 && bool2: ', !bool1 && bool2); // Operations on ValueBoolean and ValueReflection
 log('!bool2 || bool1: ', !bool2 || bool1);
 log('false || bool2: ', false || bool2);
+log('bool2 || false: ', bool2 || false);
 
 
 log();
@@ -25,20 +28,55 @@ log();
 
 
 log("Integer:");
+log('const integer1 = reflect("java.lang.Integer", ["10"]);');
 const integer1 = reflect("java.lang.Integer", ["10"]);
+log('const integer2 = reflect("java.lang.Integer", ["12"]);');
 const integer2 = reflect("java.lang.Integer", ["12"]);
 log('integer1 == integer2: ', integer1 == integer2);
+log();
+
+log('10 == integer1: ', 10 == integer1);
+log('integer1 == 10: ', integer1 == 10);
 
 
 log();
 log();
 log();
 
+
+log("Long:");
+log('const long1 = reflect("java.lang.Long", ["10"]);');
+const long1 = reflect("java.lang.Long", ["10"]);
+log('const long2 = reflect("java.lang.Long", ["12"]);');
+const long2 = reflect("java.lang.Long", ["12"]);
+log('long1 == long2: ', long1 == long2);
+log();
+
+log('10 == long1: ', 10 == long1);
+log('long1 == 10: ', long1 == 10);
+log();
+
+log('long1 == integer1: ', long1 == integer1);
+log();
+
+log('const long3 = reflect("java.lang.Long", ["99999999999999"]);');
+const long3 = reflect("java.lang.Long", ["99999999999999"]);
+log('10 > long3: ', 10 > long3);
+log('99999999999999 == long3: ', 99999999999999 == long3);
+log('99999999999999 == integer1: ', 99999999999999 == integer1);
+log('99999999999999 > integer1: ', 99999999999999 > integer1);
+
+
+log();
+log();
+log();
 
 
 log("Float:");
 const float1 = reflect("java.lang.Float", [7.1471]);
+log('const float1 = reflect("java.lang.Float", [7.1471]);');
 const float2 = reflect("java.lang.Float", [7.1471]);
+log('const float2 = reflect("java.lang.Float", [7.1471]);');
 log('float1 == float2: ', float1 == float2);
 log('7.1471 == float1: ', 7.1471 == float1);
 log('float1 == 7.1471: ', float1 == 7.1471);
@@ -57,18 +95,23 @@ log();
 
 
 log("Double:");
+log('const double1 = reflect("java.lang.Double", [7.1471389700197]);');
 const double1 = reflect("java.lang.Double", [7.1471389700197]);
+log('const double2 = reflect("java.lang.Double", [7.1471389700197]);');
 const double2 = reflect("java.lang.Double", [7.1471389700197]);
 log('double1 == double2: ', double1 == double2);
 log('7.1471389700197 == double1: ', 7.1471389700197 == double1);
 log('double1 == 7.1471389700197: ', double1 == 7.1471389700197);
 
 
-// Compare mixed types here.
+log();
+log();
+log();
 
 
-
-
-
-
-
+log("Mixed types:");
+log('7.1471389700197 > 7.1472: ', 7.1471389700197 > 7.1472);
+log('7.1471389700197 > 7: ', 7.1471389700197 > 7);
+log('88888888888888888 < 88888888888888888.0000000000001: ', 88888888888888888 < 88888888888888888.0000000000001);
+log('8 > 8.0: ', 8 > 8.0);
+log('8 == 8.0000000001: ', 8 == 8.0000000001);

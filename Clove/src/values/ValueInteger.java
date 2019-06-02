@@ -1,6 +1,8 @@
 package values;
 
+import interpreter.ExceptionSemantic;
 import interpreter.NumberOperations;
+import interpreter.NumberUtils;
 
 /**
  * @author dave
@@ -32,13 +34,16 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
+		// If one of the values is not a number-type...
+		if (!NumberUtils.isNumber(internalValue)
+				|| !NumberUtils.isNumber(v.getRawValue())) {
+			throw new ExceptionSemantic("Couldn't compare '" + internalValue + "' and '"
+					+ v + "(" + v.getRawValue() + ")'.");
+		}
+
+		final double inDouble = Double.parseDouble(stringValue());
 		final double vDouble = Double.parseDouble(v.stringValue());
-		if (internalValue == vDouble)
-			return 0;
-		else if (internalValue > vDouble)
-			return 1;
-		else
-			return -1;
+		return Double.compare(inDouble, vDouble);
 	}
 
 	@Override
