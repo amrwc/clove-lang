@@ -37,8 +37,9 @@ public class ValueInteger extends ValueAbstract {
 		// If one of the values is not a number-type...
 		if (!NumberUtils.isNumber(internalValue)
 				|| !NumberUtils.isNumber(v.getRawValue())) {
-			throw new ExceptionSemantic("Couldn't compare '" + internalValue + "' and '"
-					+ v + "(" + v.getRawValue() + ")'.");
+			throw new ExceptionSemantic(
+					"Cannot compare '" + getName() + " (" + internalValue + ")' and '"
+							+ v.getName() + " (" + v.getRawValue() + ")'.");
 		}
 
 		final double inDouble = Double.parseDouble(stringValue());
