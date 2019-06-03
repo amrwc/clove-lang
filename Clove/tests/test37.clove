@@ -1,0 +1,9 @@
+/**
+ * Test all number operations
+ */
+
+const long1 = reflect("java.lang.Long", ["15"]);
+//const result = 10 + long1;
+log(99999999999 % long1);
+//log(result->getClass());
+log(long1 / 10);

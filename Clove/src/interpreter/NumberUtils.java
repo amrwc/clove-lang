@@ -25,6 +25,22 @@ public class NumberUtils {
 	}
 
 	/**
+	 * Checks whether the argument is of any Value-type of number kind.
+	 * 
+	 * @param {Value} v
+	 * @returns {boolean}
+	 */
+	public static boolean isNumberValue(Value v) {
+		if (v.getRawValue() instanceof Number)
+			return true;
+
+		if (v instanceof ValueReflection)
+			return isNumber(v.getRawValue());
+
+		return false;
+	}
+
+	/**
 	 * Compares the argument with number-classes and returns its primitive.
 	 * 
 	 * @param {Object} n

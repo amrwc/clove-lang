@@ -7,374 +7,157 @@ import values.*;
  * 
  * The doOperation() method is overloaded with the 4 supported primitive types
  * (int, long, float, and double), which are the left operands in an operation.
- * Inside of it, the right operand's Value-type is detected and the appropriate
- * cast is applied for each relevant type. The method returns the right
- * Value-type to the caller.
+ * Right value is turned into a Double and used in the operation. The tryInt
+ * utility method returns the correct Value-type to the caller.
  * 
  * @author amrwc
  */
 public class NumberOperations {
 	/**
 	 * Does an arithmetic operation chosen by the 'operation' parameter on a
-	 * primitive and a Value, and returns the right Value.
+	 * primitive and a Value, and returns the correct Value.
 	 * 
 	 * @param {int}    v1
 	 * @param {String} operation
 	 * @param {Value}  v2
-	 * @returns {Value} outcome in the right Value-type
+	 * @returns {Value} outcome in the correct Value-type
 	 */
 	public static Value doOperation(int v1, String operation, Value v2) {
+		if (!NumberUtils.isNumber(v2.getRawValue()))
+			throw new ExceptionSemantic("Cannot do operation '" + operation + "' on " + v1
+					+ " and '" + v2.getName() + "' (" + v2.getRawValue() + ").");
+
+		final double v2Double = Double.parseDouble(v2.stringValue());
+
 		switch (operation) {
 		case "add":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 + (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 + (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 + (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "add", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 + v2Double);
 
 		case "subtract":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 - (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 - (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 - (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "subtract", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 - v2Double);
 
 		case "mult":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 * (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 * (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 * (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mult", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 * v2Double);
 
 		case "div":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt((double) v1 / (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt((double) v1 / (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt((double) v1 / (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "div", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 / v2Double);
 
 		case "mod":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 % (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 % (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 % (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mod", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 % v2Double);
 		}
 
 		throw new ExceptionSemantic(
-				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
+				"Cannot do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
 	/**
 	 * Does an arithmetic operation chosen by the 'operation' parameter on a
-	 * primitive and a Value, and returns the right Value.
+	 * primitive and a Value, and returns the correct Value.
 	 * 
 	 * @param {long}   v1
 	 * @param {String} operation
 	 * @param {Value}  v2
-	 * @returns {Value} outcome in the right Value-type
+	 * @returns {Value} outcome in the correct Value-type
 	 */
 	public static Value doOperation(long v1, String operation, Value v2) {
+		if (!NumberUtils.isNumber(v2.getRawValue()))
+			throw new ExceptionSemantic("Cannot do operation '" + operation + "' on " + v1
+					+ " and '" + v2.getName() + "' (" + v2.getRawValue() + ").");
+
+		final double v2Double = Double.parseDouble(v2.stringValue());
+
 		switch (operation) {
 		case "add":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 + (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 + (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 + (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "add", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 + v2Double);
 
 		case "subtract":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 - (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 - (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 - (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "subtract", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 - v2Double);
 
 		case "mult":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 * (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 * (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 * (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mult", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 * v2Double);
 
 		case "div":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt((double) v1 / (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt((double) v1 / (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt((double) v1 / (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt((double) v1 / (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "div", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 / v2Double);
 
 		case "mod":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 % (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 % (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 % (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mod", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 % v2Double);
 		}
 
 		throw new ExceptionSemantic(
-				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
+				"Cannot do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
 	/**
 	 * Does an arithmetic operation chosen by the 'operation' parameter on a
-	 * primitive and a Value, and returns the right Value.
+	 * primitive and a Value, and returns the correct Value.
 	 * 
 	 * @param {float}  v1
 	 * @param {String} operation
 	 * @param {Value}  v2
-	 * @returns {Value} outcome in the right Value-type
+	 * @returns {Value} outcome in the correct Value-type
 	 */
 	public static Value doOperation(float v1, String operation, Value v2) {
+		if (!NumberUtils.isNumber(v2.getRawValue()))
+			throw new ExceptionSemantic("Cannot do operation '" + operation + "' on " + v1
+					+ " and '" + v2.getName() + "' (" + v2.getRawValue() + ").");
+
+		final double v2Double = Double.parseDouble(v2.stringValue());
+
 		switch (operation) {
 		case "add":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 + (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 + (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 + (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "add", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 + v2Double);
 
 		case "subtract":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 - (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 - (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 - (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "subtract", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 - v2Double);
 
 		case "mult":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 * (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 * (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 * (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mult", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 * v2Double);
 
 		case "div":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 / (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 / (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 / (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "div", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 / v2Double);
 
 		case "mod":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 % (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 % (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 % (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mod", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 % v2Double);
 		}
 
 		throw new ExceptionSemantic(
-				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
+				"Cannot do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 
 	/**
 	 * Does an arithmetic operation chosen by the 'operation' parameter on a
-	 * primitive and a Value, and returns the right Value.
+	 * primitive and a Value, and returns the correct Value.
 	 * 
 	 * @param {double} v1
 	 * @param {String} operation
 	 * @param {Value}  v2
-	 * @returns {Value} outcome in the right Value-type
+	 * @returns {Value} outcome in the correct Value-type
 	 */
 	public static Value doOperation(double v1, String operation, Value v2) {
+		if (!NumberUtils.isNumber(v2.getRawValue()))
+			throw new ExceptionSemantic("Cannot do operation '" + operation + "' on " + v1
+					+ " and '" + v2.getName() + "' (" + v2.getRawValue() + ").");
+
+		final double v2Double = Double.parseDouble(v2.stringValue());
+
 		switch (operation) {
 		case "add":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 + (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 + (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 + (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 + (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "add", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 + v2Double);
 
 		case "subtract":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 - (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 - (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 - (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 - (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "subtract", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 - v2Double);
 
 		case "mult":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 * (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 * (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 * (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 * (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mult", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 * v2Double);
 
 		case "div":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 / (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 / (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 / (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 / (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "div", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 / v2Double);
 
 		case "mod":
-			if (v2 instanceof ValueInteger)
-				return NumberUtils.tryInt(v1 % (int) v2.getRawValue());
-			if (v2 instanceof ValueLong)
-				return NumberUtils.tryInt(v1 % (long) v2.getRawValue());
-			if (v2 instanceof ValueFloat)
-				return NumberUtils.tryInt(v1 % (float) v2.getRawValue());
-			if (v2 instanceof ValueDouble)
-				return NumberUtils.tryInt(v1 % (double) v2.getRawValue());
-			if (v2 instanceof ValueReflection) {
-				Value temp = ValueAbstract.getCorrespondingValue(v2.getRawValue());
-				return doOperation(v1, "mod", temp);
-			}
-			break;
+			return NumberUtils.tryInt(v1 % v2Double);
 		}
 
 		throw new ExceptionSemantic(
-				"Couldn't do operation '" + operation + "' on " + v1 + " and " + v2);
+				"Cannot do operation '" + operation + "' on " + v1 + " and " + v2);
 	}
 }
