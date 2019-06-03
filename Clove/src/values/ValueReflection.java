@@ -267,7 +267,7 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public String toString() {
-		return internalValue.toString();
+		return (internalValue == null) ? theClass.toString() : internalValue.toString();
 	}
 
 	@Override
