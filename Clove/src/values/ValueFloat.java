@@ -1,7 +1,6 @@
 package values;
 
 import interpreter.ExceptionSemantic;
-import interpreter.NumberOperations;
 import interpreter.NumberUtils;
 
 /**
@@ -58,27 +57,27 @@ public class ValueFloat extends ValueAbstract {
 
 	@Override
 	public Value add(Value v) {
-		return NumberOperations.doOperation(this, "add", v);
+		return NumberUtils.doOperation(this, "add", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		return NumberOperations.doOperation(this, "subtract", v);
+		return NumberUtils.doOperation(this, "subtract", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-		return NumberOperations.doOperation(this, "mult", v);
+		return NumberUtils.doOperation(this, "mult", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-		return NumberOperations.doOperation(this, "div", v);
+		return NumberUtils.doOperation(this, "div", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-		return NumberOperations.doOperation(this, "mod", v);
+		return NumberUtils.doOperation(this, "mod", v);
 	}
 
 	@Override
