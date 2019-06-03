@@ -2,8 +2,84 @@
  * Test all number operations
  */
 
+
+log('Integer:');
+log('9 + 1: ', 9 + 1); // int + int
+log('9 - 8888888888: ', 9 - 8888888888); // int - long
+log('9 * 1.0: ', 9 * 1.0); // int * float
+log('9 / 0.00000000009: ', 9 / 0.00000000009); // int / double
+log();
+
+log('Integer and Reflection:');
+log('const int1 = reflect("java.lang.Integer", ["15"]);');
+const int1 = reflect("java.lang.Integer", ["15"]);
+log('const long1 = reflect("java.lang.Long", ["15"]);');
 const long1 = reflect("java.lang.Long", ["15"]);
-//const result = 10 + long1;
-log(99999999999 % long1);
-//log(result->getClass());
-log(long1 / 10);
+log('const float1 = reflect("java.lang.Float", ["15.0"]);');
+const float1 = reflect("java.lang.Float", ["15.0"]);
+log('const double1 = reflect("java.lang.Double", ["15.00000000000001"]);');
+const double1 = reflect("java.lang.Double", ["15.00000000000001"]);
+log();
+
+log('9 + int1: ', 9 + int1); // int % ValueReflect (Integer)
+log('9 - long1: ', 9 - int1); // int % ValueReflect (Long)
+log('9 * float1: ', 9 * int1); // int % ValueReflect (Float)
+log('9 / double1: ', 9 / int1); // int % ValueReflect (Double)
+log('9 % int1: ', 9 % int1); // int % ValueReflect (Integer)
+
+
+log();
+log();
+log();
+
+
+log('Long:');
+log('99999999999 + 1: ', 99999999999 + 1); // long + int
+log('99999999999 - 8888888888: ', 99999999999 - 8888888888); // long - long
+log('99999999999 * 1.0: ', 99999999999 * 1.0); // long * float
+log('99999999999 / 0.00000000009: ', 99999999999 / 0.00000000009); // long / double
+log();
+
+log('99999999999 + int1: ', 99999999999 + int1); // long % ValueReflect (Integer)
+log('99999999999 - long1: ', 99999999999 - int1); // long % ValueReflect (Long)
+log('99999999999 * float1: ', 99999999999 * int1); // long % ValueReflect (Float)
+log('99999999999 / double1: ', 99999999999 / int1); // long % ValueReflect (Double)
+log('99999999999 % int1: ', 99999999999 % int1); // long % ValueReflect (Integer)
+
+
+log();
+log();
+log();
+
+
+log('Float:');
+log('0.9 + 1: ', 0.9 + 1); // float + int
+log('0.9 - 8888888888: ', 0.9 - 8888888888); // float - long
+log('0.9 * 1.0: ', 0.9 * 1.0); // float * float
+log('0.9 / 0.00000000009: ', 0.9 / 0.00000000009); // float / double
+log();
+
+log('0.9 + int1: ', 0.9 + int1); // float % ValueReflect (Integer)
+log('0.9 - long1: ', 0.9 - int1); // float % ValueReflect (Long)
+log('0.9 * float1: ', 0.9 * int1); // float % ValueReflect (Float)
+log('0.9 / double1: ', 0.9 / int1); // float % ValueReflect (Double)
+log('0.9 % int1: ', 0.9 % int1); // float % ValueReflect (Integer)
+
+
+log();
+log();
+log();
+
+
+log('Double:');
+log('0.00000000009 + 1: ', 0.00000000009 + 1); // double + int
+log('0.00000000009 - 8888888888: ', 0.00000000009 - 8888888888); // double - long
+log('0.00000000009 * 1.0: ', 0.00000000009 * 1.0); // double * float
+log('0.00000000009 / 0.00000000009: ', 0.00000000009 / 0.00000000009); // double / double
+log();
+
+log('0.00000000009 + int1: ', 0.00000000009 + int1); // double % ValueReflect (Integer)
+log('0.00000000009 - long1: ', 0.00000000009 - int1); // double % ValueReflect (Long)
+log('0.00000000009 * float1: ', 0.00000000009 * int1); // double % ValueReflect (Float)
+log('0.00000000009 / double1: ', 0.00000000009 / int1); // double % ValueReflect (Double)
+log('0.00000000009 % int1: ', 0.00000000009 % int1); // double % ValueReflect (Integer)

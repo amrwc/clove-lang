@@ -33,6 +33,16 @@ public class ValueInteger extends ValueAbstract {
 	}
 
 	@Override
+	public String toString() {
+		return stringValue();
+	}
+
+	@Override
+	public double doubleValue() {
+		return internalValue;
+	}
+
+	@Override
 	public int compare(Value v) {
 		// If one of the values is not a number-type...
 		if (!NumberUtils.isNumber(internalValue)
@@ -49,27 +59,27 @@ public class ValueInteger extends ValueAbstract {
 
 	@Override
 	public Value add(Value v) {
-		return NumberOperations.doOperation(internalValue, "add", v);
+		return NumberOperations.doOperation(this, "add", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		return NumberOperations.doOperation(internalValue, "subtract", v);
+		return NumberOperations.doOperation(this, "subtract", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-		return NumberOperations.doOperation(internalValue, "mult", v);
+		return NumberOperations.doOperation(this, "mult", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-		return NumberOperations.doOperation(internalValue, "div", v);
+		return NumberOperations.doOperation(this, "div", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-		return NumberOperations.doOperation(internalValue, "mod", v);
+		return NumberOperations.doOperation(this, "mod", v);
 	}
 
 	@Override
@@ -80,10 +90,5 @@ public class ValueInteger extends ValueAbstract {
 	@Override
 	public Value unary_minus() {
 		return new ValueInteger(-internalValue);
-	}
-
-	@Override
-	public String toString() {
-		return stringValue();
 	}
 }
