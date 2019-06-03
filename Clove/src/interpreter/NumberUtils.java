@@ -202,4 +202,25 @@ public class NumberUtils {
 							+ v1 + ")' and '" + v2.getName() + " (" + v2 + ")'.");
 		}
 	}
+
+	/**
+	 * Compares two Values that are first parsed to Double.
+	 * 
+	 * @param {Value} v1
+	 * @param {Value} v2
+	 * @returns if v1 == v2 := value 0
+	 * @returns if v1 < v2 := value less than 0
+	 * @returns if v1 > v2 := value greater than 0
+	 */
+	public static int compareNumberValues(Value v1, Value v2) {
+		// If one of the values is not a number-type...
+		if (!NumberUtils.isNumberValue(v1) || !NumberUtils.isNumberValue(v2))
+			throw new ExceptionSemantic("Cannot compare '" + v1.getName() + " ("
+					+ v1.getRawValue() + ")' and '" + v2.getName() + " ("
+					+ v2.getRawValue() + ")'.");
+
+		final double v1Double = Double.parseDouble(v1.stringValue());
+		final double v2Double = Double.parseDouble(v2.stringValue());
+		return Double.compare(v1Double, v2Double);
+	}
 }
