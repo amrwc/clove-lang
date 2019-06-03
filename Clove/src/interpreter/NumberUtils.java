@@ -164,4 +164,42 @@ public class NumberUtils {
 		return (("" + vFloat).equals("" + vDouble)) ? new ValueFloat(vFloat)
 				: new ValueDouble(vDouble);
 	}
+
+	/**
+	 * Does an arithmetic operation chosen by the 'operation' parameter on two
+	 * Values, and returns the correct Value.
+	 * 
+	 * @param {Value}  v1
+	 * @param {String} operation
+	 * @param {Value}  v2
+	 * @returns {Value} outcome in the correct Value-type
+	 */
+	public static Value doOperation(Value v1, String operation, Value v2) {
+		if (!isNumber(v2.getRawValue()))
+			throw new ExceptionSemantic(
+					"Cannot do operation '" + operation + "' on '" + v1.getName() + " ("
+							+ v1 + ")' and '" + v2.getName() + " (" + v2 + ")'.");
+
+		switch (operation) {
+		case "add":
+			return tryInt(v1.doubleValue() + v2.doubleValue());
+
+		case "subtract":
+			return tryInt(v1.doubleValue() - v2.doubleValue());
+
+		case "mult":
+			return tryInt(v1.doubleValue() * v2.doubleValue());
+
+		case "div":
+			return tryInt(v1.doubleValue() / v2.doubleValue());
+
+		case "mod":
+			return tryInt(v1.doubleValue() % v2.doubleValue());
+
+		default:
+			throw new ExceptionSemantic(
+					"Cannot do operation '" + operation + "' on '" + v1.getName() + " ("
+							+ v1 + ")' and '" + v2.getName() + " (" + v2 + ")'.");
+		}
+	}
 }

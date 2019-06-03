@@ -17,9 +17,7 @@ import parser.ast.SimpleNode;
  * 
  *         TODO: - Add a way to instantiate the reflected class later on (create
  *         instantiate() method). - Consider implementing the execProto()
- *         method. - Add a constructor to Value that will take Object and do all
- *         the casting that is done in getCorrespondingValue -- just move this
- *         method into the Value interface.
+ *         method.
  */
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
