@@ -31,7 +31,7 @@ public abstract class ValueAbstract implements Value {
 	 */
 	@Override
 	public Value dereference(SimpleNode node, Value v, int currChild, Parser p) {
-		throw new ExceptionSemantic("Value type " + getName() + " doesn't support"
+		throw new ExceptionSemantic("Value type '" + getName() + "' doesn't support"
 				+ " custom dereferencing.");
 	}
 
@@ -49,8 +49,8 @@ public abstract class ValueAbstract implements Value {
 		case "getClass":
 			return new ValueString(getName());
 		default:
-			throw new ExceptionSemantic("There is no prototype function \"" + protoFunc
-					+ "\" in " + getName() + " class.");
+			throw new ExceptionSemantic("There is no prototype function '" + protoFunc
+					+ "' in the '" + getName() + "' class.");
 		}
 	}
 
@@ -84,76 +84,70 @@ public abstract class ValueAbstract implements Value {
 			e.printStackTrace();
 		}
 
-		throw new ExceptionSemantic("Coudln't get a corresponding value from " + v + ".");
+		throw new ExceptionSemantic(
+				"Cannot get a corresponding Value type from '" + v + "'.");
 	}
 
 	@Override
 	public Value or(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform OR on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "OR", v);
 	}
 
 	@Override
 	public Value and(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform AND on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "AND", v);
 	}
 
 	@Override
 	public Value not() {
-		throw new ExceptionSemantic("Cannot perform NOT on " + getName());
+		throw ExceptionSemantic.unaryOperationError(this, "NOT");
 	}
 
 	@Override
 	public Value add(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform + on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "+", v);
 	}
 
 	@Override
 	public Value subtract(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform - on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "-", v);
 	}
 
 	@Override
 	public Value mult(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform * on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "*", v);
 	}
 
 	@Override
 	public Value div(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform / on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "/", v);
 	}
 
 	@Override
 	public Value mod(Value v) {
-		throw new ExceptionSemantic(
-				"Cannot perform % on " + getName() + " and " + v.getName());
+		throw ExceptionSemantic.binaryOperationError(this, "%", v);
 	}
 
 	@Override
 	public Value unary_plus() {
-		throw new ExceptionSemantic("Cannot perform + on " + getName());
+		throw ExceptionSemantic.unaryOperationError(this, "+");
 	}
 
 	@Override
 	public Value unary_minus() {
-		throw new ExceptionSemantic("Cannot perform - on " + getName());
+		throw ExceptionSemantic.unaryOperationError(this, "-");
 	}
 
 	/** Convert this to a primitive string. */
 	@Override
 	public String stringValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to string.");
+		throw new ExceptionSemantic("Cannot convert '" + getName() + "' to string.");
 	}
 
 	/** Convert this to a primitive double. */
 	@Override
 	public double doubleValue() {
-		throw new ExceptionSemantic("Cannot convert " + getName() + " to double.");
+		throw new ExceptionSemantic("Cannot convert '" + getName() + "' to double.");
 	}
 
 	/** Test this value and another for equality. */
