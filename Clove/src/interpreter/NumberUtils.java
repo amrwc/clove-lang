@@ -15,15 +15,7 @@ public class NumberUtils {
 	 * @returns {boolean}
 	 */
 	public static boolean isNumber(Object perhapsNumber) {
-		if (perhapsNumber instanceof Short)
-			return true;
-		if (perhapsNumber instanceof Integer)
-			return true;
-		if (perhapsNumber instanceof Long)
-			return true;
-		if (perhapsNumber instanceof Float)
-			return true;
-		if (perhapsNumber instanceof Double)
+		if (perhapsNumber instanceof Number)
 			return true;
 
 		if (perhapsNumber instanceof ValueReflection)
@@ -33,8 +25,7 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Compares the argument with number-classes and returns
-	 * its primitive.
+	 * Compares the argument with number-classes and returns its primitive.
 	 * 
 	 * @param {Object} n
 	 * @returns {Class<?>} primitive type
@@ -65,8 +56,8 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Tries to parse a double value to a ValueInteger.
-	 * If it's impossible, returns a ValueLong or ValueDouble.
+	 * Tries to parse a double value to a ValueInteger. If it's impossible, returns
+	 * a ValueLong or ValueDouble.
 	 * 
 	 * @read https://stackoverflow.com/a/9898528/10620237
 	 * @param {double} v
@@ -82,8 +73,8 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Tries to parse a float value to a ValueInteger.
-	 * If it's impossible, returns a ValueFloat.
+	 * Tries to parse a float value to a ValueInteger. If it's impossible, returns a
+	 * ValueFloat.
 	 * 
 	 * @read https://stackoverflow.com/a/9898528/10620237
 	 * @param {float} v
@@ -99,8 +90,8 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Compares long-value and down-casted int-value
-	 * and if they're equal, returns a ValueInteger.
+	 * Compares long-value and down-casted int-value and if they're equal, returns a
+	 * ValueInteger.
 	 * 
 	 * @param {long} v
 	 * @returns {ValueInteger/ValueLong} parsed Value-type
@@ -123,8 +114,8 @@ public class NumberUtils {
 	}
 
 	/**
-	 * Tries to parse a value-string to a ValueInteger.
-	 * If it's impossible, returns a ValueLong.
+	 * Tries to parse a value-string to a ValueInteger. If it's impossible, returns
+	 * a ValueLong.
 	 * 
 	 * Used by ASTInteger to parse a string to Value-type.
 	 * 
@@ -133,7 +124,7 @@ public class NumberUtils {
 	 */
 	public static Value tryInt(String s) {
 		try {
-			return new ValueInteger(Integer.parseInt(s));				
+			return new ValueInteger(Integer.parseInt(s));
 		} catch (final NumberFormatException e) {
 			return new ValueLong(Long.parseLong(s));
 		}
