@@ -1,6 +1,5 @@
 package values;
 
-import interpreter.ExceptionSemantic;
 import interpreter.NumberUtils;
 
 /**
@@ -42,16 +41,7 @@ public class ValueDouble extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
-		// If one of the values is not a number-type...
-		if (!NumberUtils.isNumber(internalValue)
-				|| !NumberUtils.isNumber(v.getRawValue())) {
-			throw new ExceptionSemantic(
-					"Cannot compare '" + getName() + " (" + internalValue + ")' and '"
-							+ v.getName() + " (" + v.getRawValue() + ")'.");
-		}
-
-		final double vDouble = Double.parseDouble(v.stringValue());
-		return Double.compare(internalValue, vDouble);
+		return NumberUtils.compareNumberValues(this, v);
 	}
 
 	@Override
