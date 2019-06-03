@@ -202,6 +202,10 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public int compare(Value v) {
+		// If the internal value is a boolean...
+		if (internalValue instanceof Boolean)
+			return new ValueBoolean((boolean) internalValue).compare(v);
+
 		// If one of the values is not a number-type...
 		if (!NumberUtils.isNumber(internalValue)
 				|| !NumberUtils.isNumber(v.getRawValue())) {

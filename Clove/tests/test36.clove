@@ -117,4 +117,4 @@ log('8 > 8.0: ', 8 > 8.0);
 log('8 == 8.0000000001: ', 8 == 8.0000000001);
 log();
 
-log(bool1 == true); // Fix this one
+log('bool1 == true: ', bool1 == true);
