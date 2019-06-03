@@ -266,13 +266,24 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	@Override
+	public String stringValue() {
+		return toString();
+	}
+
+	@Override
 	public String toString() {
 		return (internalValue == null) ? theClass.toString() : internalValue.toString();
 	}
 
 	@Override
-	public String stringValue() {
-		return toString();
+	public double doubleValue() {
+		checkIfInstantiated("doubleValue");
+		try {
+			return Double.parseDouble(toString());
+		} catch (NumberFormatException e) {
+			throw new ExceptionSemantic("The '" + theClass + "' Reflection class "
+					+ "cannot be parsed to Double.");
+		}
 	}
 
 	private void checkIfInstantiated(String caller) {
