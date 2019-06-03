@@ -84,6 +84,9 @@ public interface Value {
 	/** Convert this to a primitive string. */
 	public String stringValue();
 
+	/** Convert this to a primitive double. */
+	public double doubleValue();
+
 	/** Test this value and another for equality. */
 	public Value eq(Value v);
 

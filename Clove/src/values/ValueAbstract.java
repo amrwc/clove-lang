@@ -150,6 +150,12 @@ public abstract class ValueAbstract implements Value {
 		throw new ExceptionSemantic("Cannot convert " + getName() + " to string.");
 	}
 
+	/** Convert this to a primitive double. */
+	@Override
+	public double doubleValue() {
+		throw new ExceptionSemantic("Cannot convert " + getName() + " to double.");
+	}
+
 	/** Test this value and another for equality. */
 	@Override
 	public Value eq(Value v) {
