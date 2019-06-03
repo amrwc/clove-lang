@@ -347,11 +347,15 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public Value unary_plus() {
-		throw new ExceptionSemantic("Cannot perform + on " + getName());
+		checkIfInstantiated("unary_plus");
+		final Value v = getCorrespondingValue(internalValue);
+		return v.unary_plus();
 	}
 
 	@Override
 	public Value unary_minus() {
-		throw new ExceptionSemantic("Cannot perform - on " + getName());
+		checkIfInstantiated("unary_plus");
+		final Value v = getCorrespondingValue(internalValue);
+		return v.unary_minus();
 	}
 }
