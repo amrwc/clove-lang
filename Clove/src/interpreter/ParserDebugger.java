@@ -402,7 +402,7 @@ public class ParserDebugger implements CloveVisitor {
 	}
 
 	@Override
-	public Object visit(ASTValueReflection node, Object data) {
+	public Object visit(ASTValueReflectionCast node, Object data) {
 		dump(node, data);
 		return data;
 	}

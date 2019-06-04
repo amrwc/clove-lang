@@ -78,14 +78,7 @@ public abstract class ValueAbstract implements Value {
 		if (v instanceof String)
 			return new ValueString((String) v);
 
-		try {
-			return new ValueReflection(v);
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
-
-		throw new ExceptionSemantic(
-				"Cannot get a corresponding Value type from '" + v + "'.");
+		return new ValueReflection(v.getClass(), v);
 	}
 
 	@Override

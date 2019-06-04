@@ -661,7 +661,7 @@ void literal() :
   | LOOKAHEAD(2) value_function()
   | value_object()
   | value_list()
-  | value_reflection()
+  | value_reflection_cast()
 }
 
 
@@ -817,8 +817,8 @@ void value_list() #ValueList :
  * 
  * @author amrwc
  */
-void value_reflection() #ValueReflection :
+void value_reflection_cast() #ValueReflectionCast :
 {}
 {
-  "(" character() ")" dereference()
+  "(" character() ")" ( LOOKAHEAD(3) function_invocation() | dereference() )
 }

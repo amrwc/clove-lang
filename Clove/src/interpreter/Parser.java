@@ -92,14 +92,11 @@ public class Parser implements CloveVisitor {
 		// If there's more than 1 child in the left child, then it's not just an
 		// identifier.
 		if (leftNumChildren > 0) {
-			// Check for and call a Reflection Method.
+			// Check for and invoke a method on the Reflection object.
 			final Value perhapsReflection = doChild(node, 0);
 			if (perhapsReflection instanceof ValueReflection) {
-				try {
-					((ValueReflection) perhapsReflection).invoke(node, this);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				((ValueReflection) perhapsReflection).invoke(node, this);
+				return data;
 			}
 
 			fndef = getValueFunction(node);
@@ -107,8 +104,8 @@ public class Parser implements CloveVisitor {
 		}
 
 		if (node.optimised == null) {
-			final String fnname = getTokenOfChild(node, 0); // Child 0 - identifier (fn
-															// name)
+			// Child 0 - identifier (fnname)
+			final String fnname = getTokenOfChild(node, 0);
 			fndef = scope.findFunction(fnname);
 			if (fndef == null)
 				fndef = findValueFunction(fnname);
@@ -1036,15 +1033,10 @@ public class Parser implements CloveVisitor {
 		// If there's more than 1 child in the left child,
 		// then it's not just an identifier.
 		if (leftNumChildren > 0) {
-			// Check for and invoke a Reflection Method.
+			// Check for and invoke a method on the Reflection object.
 			final Value perhapsReflection = doChild(node, 0);
-			if (perhapsReflection instanceof ValueReflection) {
-				try {
-					return ((ValueReflection) perhapsReflection).invoke(node, this);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
+			if (perhapsReflection instanceof ValueReflection)
+				return ((ValueReflection) perhapsReflection).invoke(node, this);
 
 			fndef = getValueFunction(node);
 			node.optimised = fndef;
@@ -1336,7 +1328,7 @@ public class Parser implements CloveVisitor {
 	 * Reflection literal with a cast.
 	 */
 	@Override
-	public Object visit(ASTValueReflection node, Object data) {
+	public Object visit(ASTValueReflectionCast node, Object data) {
 		final String targetClassName = doChild(node, 0).stringValue();
 		final Value objToCast = doChild(node, 1);
 
@@ -1345,6 +1337,6 @@ public class Parser implements CloveVisitor {
 
 		else
 			throw new ExceptionSemantic(
-					"The object to cast must be of" + " ValueReflection type.");
+					"The object to cast must be of ValueReflection type.");
 	}
 }
