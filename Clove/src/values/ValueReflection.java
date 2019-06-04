@@ -348,14 +348,12 @@ public class ValueReflection extends ValueAbstract {
 	@Override
 	public Value unary_plus() {
 		checkIfInstantiated("unary_plus");
-		final Value v = getCorrespondingValue(internalValue);
-		return v.unary_plus();
+		return getCorrespondingValue(internalValue).unary_plus();
 	}
 
 	@Override
 	public Value unary_minus() {
 		checkIfInstantiated("unary_plus");
-		final Value v = getCorrespondingValue(internalValue);
-		return v.unary_minus();
+		return getCorrespondingValue(internalValue).unary_minus();
 	}
 }
