@@ -24,10 +24,26 @@ public class ValueReflection extends ValueAbstract {
 	private Constructor<?> constructor;
 	private Object internalValue;
 
-	public ValueReflection(String className) throws ClassNotFoundException {
-		theClass = Class.forName(className);
+	/**
+	 * Creates a new ValueReflection holding a class, without instantiating.
+	 * 
+	 * @param {String} className
+	 */
+	public ValueReflection(String className) {
+		try {
+			theClass = Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 
+	/**
+	 * Creates a new ValueReflection instance based on the class name and the array
+	 * of arguments for the class's constructor.
+	 * 
+	 * @param {String}  className
+	 * @param {Value[]} ctorArgs
+	 */
 	public ValueReflection(String className, Value[] ctorArgs) {
 		try {
 			// Store the parameters types to choose the right ctor,
@@ -49,13 +65,13 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
-	 * Create a new ValueReflection instance using the argument of Object type.
+	 * Creates a new ValueReflection copy of a passed Object instance.
 	 * 
-	 * @param {Object} newObject
-	 * @throws ClassNotFoundException
+	 * @param {Class<?>} clazz
+	 * @param {Object}   newObject
 	 */
-	public ValueReflection(Object newObject) throws ClassNotFoundException {
-		theClass = newObject.getClass();
+	public ValueReflection(Class<?> clazz, Object newObject) {
+		theClass = clazz;
 		internalValue = newObject;
 	}
 
@@ -105,11 +121,19 @@ public class ValueReflection extends ValueAbstract {
 
 		try {
 			final var args = parseMethodArgs(argsNode, p);
+
+			// Get the method matching the parameter types.
 			final Method method = theClass.getMethod(methodName,
 					(Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
+
+			// Invoke the method with the arguments.
 			final Object result = method.invoke(internalValue, args.get("args"));
-			return getCorrespondingValue(result);
+
+			// If the method returned anything, return the result
+			// in the correct Value-type.
+			if (result != null)
+				return getCorrespondingValue(result);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -182,9 +206,9 @@ public class ValueReflection extends ValueAbstract {
 	public static ValueReflection cast(String targetClassName,
 			ValueReflection objToCast) {
 		try {
-			final Object targetClass = Class.forName(targetClassName);
-			final Object casted = ((Class<?>) targetClass).cast(objToCast.getRawValue());
-			return new ValueReflection(casted);
+			final Class<?> targetClass = Class.forName(targetClassName);
+			final Object casted = targetClass.cast(objToCast.getRawValue());
+			return new ValueReflection(targetClass, casted);
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
@@ -194,8 +218,8 @@ public class ValueReflection extends ValueAbstract {
 
 	@Override
 	public String getName() {
-		return (internalValue == null) ? theClass.getName()
-				: internalValue.getClass().toString();
+		return (internalValue == null) ? theClass.getCanonicalName()
+				: internalValue.getClass().getCanonicalName();
 	}
 
 	@Override
