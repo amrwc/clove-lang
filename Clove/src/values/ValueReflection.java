@@ -90,7 +90,9 @@ public class ValueReflection extends ValueAbstract {
 		final Object[] args = new Object[ctorArgs.length];
 
 		for (int i = 0; i < ctorArgs.length; i++) {
-			paramTypes[i] = parsePrimitive(ctorArgs[i].getRawValue());
+			paramTypes[i] = (ctorArgs[i] instanceof ValueReflection)
+					? ((ValueReflection) ctorArgs[i]).theClass
+					: parsePrimitive(ctorArgs[i].getRawValue());
 			args[i] = ctorArgs[i].getRawValue();
 		}
 
@@ -207,13 +209,49 @@ public class ValueReflection extends ValueAbstract {
 			ValueReflection objToCast) {
 		try {
 			final Class<?> targetClass = Class.forName(targetClassName);
-			final Object casted = targetClass.cast(objToCast.getRawValue());
-			return new ValueReflection(targetClass, casted);
+
+			// If it's a nested class, try casting it to a superclass, using the
+			// targetClass -- if targetClass is a superclass of objToCast, objToCast will
+			// be casted to that superclass.
+			if (objToCast.getRawValue().getClass().toString().contains("$")) {
+				return getInstanceWithClassTypeAsSuperclass(targetClass, objToCast);
+			} else {
+				final Object casted = targetClass.cast(objToCast.getRawValue());
+
+				if (!casted.getClass().equals(targetClass))
+					return getInstanceWithClassTypeAsSuperclass(targetClass, objToCast);
+
+				return new ValueReflection(targetClass, casted);
+			}
 		} catch (final Exception e) {
 			e.printStackTrace();
 		}
 
 		return null;
+	}
+
+	/**
+	 * Returns a new ValueReflection with a superclass of the previous 'theClass',
+	 * if it matches the 'type' argument.
+	 * 
+	 * @param {Class<?>}        type
+	 * @param {ValueReflection} objToCast
+	 * @returns {ValueReflection} new ValueReflection with a new specified inner
+	 *          class
+	 */
+	private static ValueReflection getInstanceWithClassTypeAsSuperclass(Class<?> type,
+			ValueReflection objToCast) {
+		Class<?> superclass = objToCast.theClass.getSuperclass();
+
+		while (superclass != null) {
+			if (superclass.equals(type))
+				return new ValueReflection(type, objToCast.getRawValue());
+
+			superclass = superclass.getSuperclass();
+		}
+
+		throw new ExceptionSemantic("Class '" + type + "' is not a superclass of '"
+				+ objToCast.theClass + "', therefore it cannot be casted.");
 	}
 
 	@Override
