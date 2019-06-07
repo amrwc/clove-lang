@@ -13,24 +13,22 @@ const connection = ("java.net.HttpURLConnection") url.openConnection();
 connection.setRequestMethod("GET");
 
 const inputStream = ("java.io.InputStream") connection.getInputStream();
-//log(inputStream.available());
 const inputStreamReader = reflect("java.io.InputStreamReader", [inputStream]);
 
 const reader = ("java.io.Reader") inputStreamReader;
-log(reader->getClass()); // This should return 'Reader', not 'InputStreamReader'.
-//const bufferedReader = ("java.io.BufferedReader") reader;
+const bufferedReader = reflect("java.io.BufferedReader", [reader]);
+
 
 // All in one line -- add Reflection casting to the expression grammar.
 //const reader = reflect("java.io.BufferedReader", [("java.io.Reader") reflect("java.io.InputStreamReader", [("java.io.InputStream") connection.getInputStream()] ) ]);
 
-//let line = bufferedReader.readLine();
+let line = bufferedReader.readLine();
 
-//result.append(line);
 //while (!(line == "")) {
-//    result.append(line);
-//    line = reader.readLine();
-//}
+while (!(line == "]")) {
+  result.append(line);
+  line = bufferedReader.readLine(); // TODO: Fix this to not throw an error.
+}
 
-//reader.close();
-
-//print(result.toString());
+reader.close();
+log(result.toString());
