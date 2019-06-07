@@ -25,15 +25,24 @@ public class ValueReflection extends ValueAbstract {
 	private Object internalValue;
 
 	/**
-	 * Creates a new ValueReflection holding a class, without instantiating.
+	 * Creates a new ValueReflection holding a class and an instance made with an
+	 * empty constructor.
 	 * 
 	 * @param {String} className
 	 */
 	public ValueReflection(String className) {
 		try {
+			// Store the class.
 			theClass = Class.forName(className);
-		} catch (ClassNotFoundException e) {
+
+			// Get an empty constructor.
+			constructor = theClass.getConstructor();
+
+			// Instantiate the class with the empty constructor.
+			internalValue = constructor.newInstance();
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ExceptionSemantic("");
 		}
 	}
 
@@ -61,6 +70,7 @@ public class ValueReflection extends ValueAbstract {
 			internalValue = constructor.newInstance(args.get("args"));
 		} catch (final Exception e) {
 			e.printStackTrace();
+			throw new ExceptionSemantic("");
 		}
 	}
 
@@ -83,8 +93,7 @@ public class ValueReflection extends ValueAbstract {
 	 *          the arguments in their 'raw type'
 	 * @throws ClassNotFoundException
 	 */
-	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs)
-			throws ClassNotFoundException {
+	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs) {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
 		final Class<?>[] paramTypes = new Class[ctorArgs.length];
 		final Object[] args = new Object[ctorArgs.length];
@@ -121,24 +130,25 @@ public class ValueReflection extends ValueAbstract {
 		// ASTArgumentList
 		final SimpleNode argsNode = (SimpleNode) node.jjtGetChild(1);
 
-		try {
-			final var args = parseMethodArgs(argsNode, p);
+		final var args = parseMethodArgs(argsNode, p);
 
+		Object result = null;
+		try {
 			// Get the method matching the parameter types.
-			final Method method = theClass.getMethod(methodName,
+			Method method = theClass.getMethod(methodName,
 					(Class<?>[]) args.get("paramTypes"));
 			method.setAccessible(true);
 
 			// Invoke the method with the arguments.
-			final Object result = method.invoke(internalValue, args.get("args"));
-
-			// If the method returned anything, return the result
-			// in the correct Value-type.
-			if (result != null)
-				return getCorrespondingValue(result);
-		} catch (final Exception e) {
+			result = method.invoke(internalValue, args.get("args"));
+		} catch (Exception e) {
 			e.printStackTrace();
+			throw new ExceptionSemantic("");
 		}
+
+		// If the method returned anything, return the result in the correct Value-type.
+		if (result != null)
+			return getCorrespondingValue(result);
 
 		return null;
 	}
@@ -152,8 +162,7 @@ public class ValueReflection extends ValueAbstract {
 	 *          the arguments in their 'raw type'
 	 * @throws ClassNotFoundException
 	 */
-	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p)
-			throws ClassNotFoundException {
+	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p) {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
 
 		// Collect classes of the arguments to later find a matching Method.
@@ -181,8 +190,15 @@ public class ValueReflection extends ValueAbstract {
 	 * @returns {Class<?>} adjusted class that will match Method.getMethod()
 	 * @throws ClassNotFoundException
 	 */
-	private Class<?> parsePrimitive(Object arg) throws ClassNotFoundException {
-		final Class<?> perhapsPrimitive = Class.forName(arg.getClass().getName());
+	private Class<?> parsePrimitive(Object arg) {
+		Class<?> perhapsPrimitive = null;
+
+		try {
+			perhapsPrimitive = Class.forName(arg.getClass().getName());
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic("");
+		}
 
 		if (Boolean.class == perhapsPrimitive)
 			return boolean.class;
@@ -207,27 +223,16 @@ public class ValueReflection extends ValueAbstract {
 	 */
 	public static ValueReflection cast(String targetClassName,
 			ValueReflection objToCast) {
+		Class<?> targetClass = null;
+
 		try {
-			final Class<?> targetClass = Class.forName(targetClassName);
-
-			// If it's a nested class, try casting it to a superclass, using the
-			// targetClass -- if targetClass is a superclass of objToCast, objToCast will
-			// be casted to that superclass.
-			if (objToCast.getRawValue().getClass().toString().contains("$")) {
-				return getInstanceWithClassTypeAsSuperclass(targetClass, objToCast);
-			} else {
-				final Object casted = targetClass.cast(objToCast.getRawValue());
-
-				if (!casted.getClass().equals(targetClass))
-					return getInstanceWithClassTypeAsSuperclass(targetClass, objToCast);
-
-				return new ValueReflection(targetClass, casted);
-			}
-		} catch (final Exception e) {
+			targetClass = Class.forName(targetClassName);
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+			throw new ExceptionSemantic("");
 		}
 
-		return null;
+		return getInstanceWithClassTypeAsSuperclass(targetClass, objToCast);
 	}
 
 	/**
