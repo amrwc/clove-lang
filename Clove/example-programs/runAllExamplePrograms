@@ -1,0 +1,24 @@
+#!/bin/sh
+
+function run() {
+	# "${@:2}" -- all arguments starting from 2.
+	java -classpath ../bin Clove < "$1" "${@:2}"
+}
+
+
+for file in *.clove
+do
+	echo "============ "$file" ============"
+
+	if [ "$file" == "example2-vigenere-cipher.clove" ]; then
+		run $file -e tengreenbottlesonthewall athens
+	elif [ "$file" == "example6-reflection.clove" ]; then
+		run $file compareTo example example
+	else
+		run $file
+	fi
+
+	echo ""
+	echo ""
+	echo ""
+done
