@@ -2,6 +2,7 @@ package values;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
@@ -34,13 +35,7 @@ public class ValueReflection extends ValueAbstract {
 		try {
 			// Store the class.
 			theClass = Class.forName(className);
-
-			// Get an empty constructor.
-			constructor = theClass.getConstructor();
-
-			// Instantiate the class with the empty constructor.
-			internalValue = constructor.newInstance();
-		} catch (Exception e) {
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic("");
 		}
@@ -257,6 +252,40 @@ public class ValueReflection extends ValueAbstract {
 
 		throw new ExceptionSemantic("Class '" + type + "' is not a superclass of '"
 				+ objToCast.theClass + "', therefore it cannot be casted.");
+	}
+
+	@Override
+	public Value execProto(String protoFunc, ArrayList<Value> protoArgs) {
+		switch (protoFunc) {
+		case "getClass":
+			return new ValueString(getName());
+		case "instantiate":
+			if (protoArgs == null || protoArgs.size() == 0)
+				instantiateEmpty();
+
+			// TODO: instantiate with the arguments.
+
+			return this;
+		default:
+			throw new ExceptionSemantic("There is no prototype function '" + protoFunc
+					+ "' in the '" + getName() + "' class.");
+		}
+	}
+
+	/**
+	 * Instantiate the class with an empty constructor.
+	 */
+	private void instantiateEmpty() {
+		try {
+			// Get an empty constructor.
+			constructor = theClass.getConstructor();
+
+			// Instantiate the class with the empty constructor.
+			internalValue = constructor.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic("");
+		}
 	}
 
 	@Override

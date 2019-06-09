@@ -8,6 +8,7 @@ log();
 const urlText = "https://my-json-server.typicode.com/typicode/demo/posts";
 
 const result = reflect("java.lang.StringBuilder");
+result->instantiate();
 const url = reflect("java.net.URL", [urlText]);
 const connection = ("java.net.HttpURLConnection") url.openConnection();
 connection.setRequestMethod("GET");
