@@ -1,0 +1,16 @@
+/**
+ * Test late instantiation of an object
+ * using Reflection
+ */
+
+log("Reflection: late instantiation");
+log();
+
+const url = reflect("java.net.URL");
+
+const urlText = "https://my-json-server.typicode.com/typicode/demo/posts";
+
+url->instantiate([urlText]);
+
+log(url);
+log(url->getClass());
