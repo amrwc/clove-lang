@@ -190,8 +190,8 @@ public class Parser implements CloveVisitor {
 
 		Value rightVal = doChild(node, numChildren - 1);
 		if (rightVal == null)
-			throw new ExceptionSemantic(
-					"Right value of the assignment cannot resolve to null.");
+			// Fake the null object with an empty String.
+			rightVal = new ValueString("");
 
 		// Get the reference of the parent value.
 		if (node.optimised == null) {

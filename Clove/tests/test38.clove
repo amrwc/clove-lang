@@ -25,10 +25,9 @@ const bufferedReader = reflect("java.io.BufferedReader", [reader]);
 
 let line = bufferedReader.readLine();
 
-//while (!(line == "")) {
-while (!(line == "]")) {
+while (!(line == "")) {
   result.append(line);
-  line = bufferedReader.readLine(); // TODO: Fix this to not throw an error.
+  line = bufferedReader.readLine();
 }
 
 reader.close();
