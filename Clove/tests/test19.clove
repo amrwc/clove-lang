@@ -1,14 +1,14 @@
 // Test arrow functions
-write("Arrow functions:")
-write()
+log("Arrow functions:")
+log()
 
 
 // Dave's first challenge:
 let myop = (x, y) => {
 	return x + y
 }
-write(myop(2, 3))
-write()
+log(myop(2, 3))
+log()
 
 
 // Nested arrow functions:
@@ -19,28 +19,28 @@ let anon = (x, y) => {
 	
 	return x + y + anonNested(3, 4)
 }
-write(anon(1, 2))
-write()
+log(anon(1, 2))
+log()
 
 
 // Dave's second challenge:
 let myop2 = (x, y) => {
 	return x(22) + y
 }
-write(myop2(
+log(myop2(
 	(p) => {
 		return p * 4
 	},
 	3
 ))
-write()
+log()
 
 
 // Beyond the challenges:
 let singleNested = (a, b, c) => {
 	return a() + b() + c()
 }
-write(singleNested(
+log(singleNested(
 	() => { return 222 },
 	() => { return 777 },
 	() => { return 2+2 }
@@ -49,7 +49,7 @@ write(singleNested(
 let withArguments = (a, b) => {
 	return a(1) + b
 }
-write(withArguments(
+log(withArguments(
 	(x) => { return x + 2 },
 	9
 ))
@@ -57,7 +57,7 @@ write(withArguments(
 let doubleNested = (a, b, c) => {
 	return a(() => { return 44 + 55}) + b + c
 }
-write(doubleNested(
+log(doubleNested(
 	(xyz) => { return xyz() + 11 },
 	22,
 	33

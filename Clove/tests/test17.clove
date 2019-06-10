@@ -1,17 +1,17 @@
 // Test anonymous functions
-write("Anonymous functions:")
-write()
+log("Anonymous functions:")
+log()
 
 
-write("Dave's first challenge:")
+log("Dave's first challenge:")
 let myop = function(x, y) {
 	return x + y
 }
-write(myop(2, 3))
+log(myop(2, 3))
 
 
-write()
-write("Nested anonymous function:")
+log()
+log("Nested anonymous function:")
 let anon = function(x, y) {
 	let anonNested = function(a, b) {
 		return a + b
@@ -19,15 +19,15 @@ let anon = function(x, y) {
 	
 	return x + y + anonNested(3, 4)
 }
-write(anon(1, 2))
+log(anon(1, 2))
 
 
-write()
-write("Dave's second challenge:")
+log()
+log("Dave's second challenge:")
 let myop2 = function(x, y) {
 	return x(22) + y
 }
-write(myop2(
+log(myop2(
 	function(p) {
 		return p * 4
 	},
@@ -35,12 +35,12 @@ write(myop2(
 ))
 
 
-write()
-write("Beyond the challenges:")
+log()
+log("Beyond the challenges:")
 let singleNested = function(a, b, c) {
 	return a() + b() + c()
 }
-write(singleNested(
+log(singleNested(
 	function() { return 222 },
 	function() { return 777 },
 	function() { return 2+2 }
@@ -50,7 +50,7 @@ write(singleNested(
 let withArguments = function(a, b) {
 	return a(1) + b
 }
-write(withArguments(
+log(withArguments(
 	function(x) { return x + 2 },
 	9
 ))
@@ -59,7 +59,7 @@ write(withArguments(
 let doubleNested = function(a, b, c) {
 	return a(function() { return 44 + 55}) + b + c
 }
-write(doubleNested(
+log(doubleNested(
 	function(xyz) { return xyz() + 11 },
 	22,
 	33

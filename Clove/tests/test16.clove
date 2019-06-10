@@ -1,8 +1,8 @@
-write("While loop:")
-write()
+log("While loop:")
+log()
 
 let i = 0
 while (i < 10) {
-	write(321)
+	log(321)
 	i = i + 1
 }

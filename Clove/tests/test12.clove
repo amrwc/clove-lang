@@ -19,4 +19,4 @@ function blah(p) {
 
 let v = 3
 
-write(blah(v))
+log(blah(v))

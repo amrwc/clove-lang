@@ -1,13 +1,13 @@
 let p5 = 10
 
 function test(p1, p2, p3) {
-	write(p1)
-	write(p2)
-	write(p3)
+	log(p1)
+	log(p2)
+	log(p3)
 	let p4 = 2
 	return p1 * p2 * p3 * p4 * p5
 }
 
-write(test(3, 4, 5))
+log(test(3, 4, 5))
 
 test(3, 4, 5)
