@@ -647,6 +647,7 @@ void primary_expression() :
   | file()
   | random()
   | reflect()
+  | LOOKAHEAD(3) value_reflection_cast()
   | "(" expression() ")"
 }
 
@@ -661,7 +662,6 @@ void literal() :
   | LOOKAHEAD(2) value_function()
   | value_object()
   | value_list()
-  | value_reflection_cast()
 }
 
 
@@ -723,6 +723,19 @@ void reflect() #Reflect :
           ( character()  | dereference() )     // Class-name
     [ "," ( value_list() | dereference() ) ]   // Constructor argument types/arguments
   ")"
+}
+
+
+/**
+ * Reflection literal with a cast instead of
+ * using reflect() method.
+ * 
+ * @author amrwc
+ */
+void value_reflection_cast() #ValueReflectionCast :
+{}
+{
+  "(" character() ")" primary_expression()
 }
 
 
@@ -808,17 +821,4 @@ void value_list() #ValueList :
 {}
 {
   "[" [ expression() ( "," expression() )* ] "]"
-}
-
-
-/**
- * Reflection literal with a cast instead of
- * using reflect() method.
- * 
- * @author amrwc
- */
-void value_reflection_cast() #ValueReflectionCast :
-{}
-{
-  "(" character() ")" ( LOOKAHEAD(3) function_invocation() | dereference() )
 }

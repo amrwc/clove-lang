@@ -13,15 +13,15 @@ const url = reflect("java.net.URL", [urlText]);
 const connection = ("java.net.HttpURLConnection") url.openConnection();
 connection.setRequestMethod("GET");
 
-const inputStream = ("java.io.InputStream") connection.getInputStream();
-const inputStreamReader = reflect("java.io.InputStreamReader", [inputStream]);
+// Step-by-step, more readable:
+// const inputStream = ("java.io.InputStream") connection.getInputStream();
+// const inputStreamReader = reflect("java.io.InputStreamReader", [inputStream]);
+// const reader = ("java.io.Reader") inputStreamReader;
+// const bufferedReader = reflect("java.io.BufferedReader", [reader]);
 
-const reader = ("java.io.Reader") inputStreamReader;
-const bufferedReader = reflect("java.io.BufferedReader", [reader]);
+// All in one line (chained expressions):
+const bufferedReader = reflect("java.io.BufferedReader", [("java.io.Reader") reflect("java.io.InputStreamReader", [("java.io.InputStream") connection.getInputStream()])]);
 
-
-// All in one line -- add Reflection casting to the expression grammar.
-//const reader = reflect("java.io.BufferedReader", [("java.io.Reader") reflect("java.io.InputStreamReader", [("java.io.InputStream") connection.getInputStream()] ) ]);
 
 let line = bufferedReader.readLine();
 
@@ -30,5 +30,5 @@ while (!(line == "")) {
   line = bufferedReader.readLine();
 }
 
-reader.close();
+bufferedReader.close();
 log(result.toString());

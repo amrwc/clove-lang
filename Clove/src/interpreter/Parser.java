@@ -1222,6 +1222,22 @@ public class Parser implements CloveVisitor {
 		return data;
 	}
 
+	/**
+	 * A cast of a ValueReflection.
+	 */
+	@Override
+	public Object visit(ASTValueReflectionCast node, Object data) {
+		final String targetClassName = doChild(node, 0).stringValue();
+		final Value objToCast = doChild(node, 1);
+
+		if (objToCast instanceof ValueReflection)
+			return ValueReflection.cast(targetClassName, (ValueReflection) objToCast);
+
+		else
+			throw new ExceptionSemantic(
+					"The object to cast must be of ValueReflection type.");
+	}
+
 	/************
 	 * Literals *
 	 ************/
@@ -1319,21 +1335,5 @@ public class Parser implements CloveVisitor {
 		}
 
 		return valueList;
-	}
-
-	/**
-	 * Reflection literal with a cast.
-	 */
-	@Override
-	public Object visit(ASTValueReflectionCast node, Object data) {
-		final String targetClassName = doChild(node, 0).stringValue();
-		final Value objToCast = doChild(node, 1);
-
-		if (objToCast instanceof ValueReflection)
-			return ValueReflection.cast(targetClassName, (ValueReflection) objToCast);
-
-		else
-			throw new ExceptionSemantic(
-					"The object to cast must be of ValueReflection type.");
 	}
 }
