@@ -68,7 +68,7 @@ TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
 | < ELSE: ("ELSE"|"ALBO") >
 | < FOR: ("FOR"|"DLA") >
 | < WHILE: ("WHILE"|"GDY") >
-| < WRITE: ("WRITE"|"LOG"|"PRINT"|"PRINTLN"|"WYSWIETL"|"POKAZ") >
+| < LOG: ("LOG"|"WYSWIETL"|"POKAZ") >
 | < FUNCTION: ("FUNCTION"|"FUNC"|"FN"|"FUNKCJA") >
 | < RETURN: ("RETURN"|"ZWROC") >
 | < OR: ("||"|"OR"|"BADZ") >
@@ -254,7 +254,7 @@ void statement() #Statement :
   | if_statement()
   | for_loop()
   | while_loop()
-  | write() [";"]
+  | log() [";"]
   | quit() [";"]
   | LOOKAHEAD(postfix_expression()) postfix_expression() [";"]
   | proto_invoke() [";"]
@@ -402,10 +402,10 @@ void while_loop() #WhileLoop :
  * 
  * @author amrwc
  */
-void write() #Write :
+void log() #Log :
 {}
 {
-  <WRITE> "(" [ expression() ( "," expression() )* ] ")"
+  <LOG> "(" [ expression() ( "," expression() )* ] ")"
 }
 
 

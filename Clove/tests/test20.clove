@@ -1,9 +1,9 @@
 // Test token aliases
-log("This text") // write := log, print, println, wyswietl, pokaz
-print("          has been")
-println("                   printed using")
+log("This text") // write := log, wyswietl, pokaz
+log("          has been")
+log("                   printed using")
 wyswietl("                                 different aliases")
-pokaz("                                                   for write().")
+pokaz("                                                   for log().")
 
 log()
 

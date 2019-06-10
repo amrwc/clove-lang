@@ -7,4 +7,4 @@ function sum(n) {
 	return p
 }
 
-write(sum(5)) // 15
+log(sum(5)) // 15

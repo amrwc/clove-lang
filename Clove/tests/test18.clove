@@ -1,20 +1,20 @@
 // Test anonymous objects
-write("Anonymous object initialisation and accessing:")
+log("Anonymous object initialisation and accessing:")
 let obj = {
 	num: 999,
 	str: "Hi"
 }
-write("obj.num: ", obj.num)
-write()
-write("obj.str: ", obj.str)
-write()
+log("obj.num: ", obj.num)
+log()
+log("obj.str: ", obj.str)
+log()
 
 
-write("----------------------------")
+log("----------------------------")
 
 
-write("Nested objects:")
-write()
+log("Nested objects:")
+log()
 let obj2 = {
 	nested: {
 		num2: {
@@ -24,32 +24,32 @@ let obj2 = {
 	},
 	test: "test"
 }
-write("obj2.nested.str2: ", obj2.nested.str2)
-write()
-write("obj2.nested.num2.nines: ", obj2.nested.num2.nines)
-write()
+log("obj2.nested.str2: ", obj2.nested.str2)
+log()
+log("obj2.nested.num2.nines: ", obj2.nested.num2.nines)
+log()
 
 
-write("----------------------------")
+log("----------------------------")
 
 
-write("Key-value pairs reassignment:")
-write()
-write("obj.num = 33")
+log("Key-value pairs reassignment:")
+log()
+log("obj.num = 33")
 obj.num = 33
-write("obj.num: ", obj.num)
-write()
-write("obj2.nested.str2 = Very nice!")
+log("obj.num: ", obj.num)
+log()
+log("obj2.nested.str2 = Very nice!")
 obj2.nested.str2 = "Very nice!"
-write("obj2.nested.str2: ", obj2.nested.str2)
-write()
+log("obj2.nested.str2: ", obj2.nested.str2)
+log()
 
 
-write("----------------------------")
+log("----------------------------")
 
 
-write("Functions in objects:")
-write()
+log("Functions in objects:")
+log()
 let obj3 = {
 	fn1: function(a) {
 		return a + 1
@@ -60,29 +60,29 @@ let obj3 = {
 		}
 	}
 }
-write("obj3.fn1(5): ")
-write(obj3.fn1(5))
-write()
+log("obj3.fn1(5): ")
+log(obj3.fn1(5))
+log()
 
-write("obj3.nested.fn2(10)")
-write(obj3.nested.fn2(10))
-write()
-
-
-write("----------------------------")
+log("obj3.nested.fn2(10)")
+log(obj3.nested.fn2(10))
+log()
 
 
-write("Square-notation:");
-write();
+log("----------------------------")
 
-write('obj3["nested"]: ', obj3["nested"]);
-write('const nest = "nested";')
+
+log("Square-notation:");
+log();
+
+log('obj3["nested"]: ', obj3["nested"]);
+log('const nest = "nested";')
 const nest = "nested";
-write('obj3[nest]: ', obj3[nest]);
-write();
+log('obj3[nest]: ', obj3[nest]);
+log();
 
-write("obj3[nest].fn2(10): ", obj3[nest].fn2(10));
-write('obj3[nest]["fn2"](10): ', obj3[nest]["fn2"](10));
-write('const alias = "fn2";')
+log("obj3[nest].fn2(10): ", obj3[nest].fn2(10));
+log('obj3[nest]["fn2"](10): ', obj3[nest]["fn2"](10));
+log('const alias = "fn2";')
 const alias = "fn2";
-write("obj3[nest][alias](10): ", obj3[nest][alias](10));
+log("obj3[nest][alias](10): ", obj3[nest][alias](10));

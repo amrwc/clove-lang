@@ -1,0 +1,56 @@
+/**
+ * Sends an HTTP request with using an object instance
+ * made with Reflection API and saves the response
+ * to a file, also using Reflection.
+ */
+
+log('Example 7: Sends an HTTP request and writes the response to a file using Reflection');
+log();
+
+
+// Create a connection
+const urlText = "https://jsonplaceholder.typicode.com/posts/2";
+const url = reflect("java.net.URL", [urlText]);
+const connection = ("java.net.HttpURLConnection") url.openConnection();
+connection.setRequestMethod("GET");
+
+// Create a stream
+// Step-by-step, more readable:
+// const inputStream = ("java.io.InputStream") connection.getInputStream();
+// const inputStreamReader = reflect("java.io.InputStreamReader", [inputStream]);
+// const reader = ("java.io.Reader") inputStreamReader;
+// const bufferedReader = reflect("java.io.BufferedReader", [reader]);
+
+// All in one line (chained expressions):
+const bufferedReader = reflect("java.io.BufferedReader", [("java.io.Reader") reflect("java.io.InputStreamReader", [("java.io.InputStream") connection.getInputStream()])]);
+
+// Create a string builder to store the response
+const result = reflect("java.lang.StringBuilder");
+result->instantiate();
+
+let line = bufferedReader.readLine();
+
+while (!(line == "")) {
+  result.append(line);
+  line = bufferedReader.readLine();
+}
+
+bufferedReader.close();
+
+log('Response:');
+log(result.toString());
+log();
+
+
+const fileName = "example7-output.txt";
+
+// Instantiate the FileWriter and BufferedWriter
+const fileWriter = ("java.io.Writer") reflect("java.io.FileWriter", [fileName]);
+const bufferedWriter = reflect("java.io.BufferedWriter", [fileWriter]);
+
+// Execute the BufferedWriter and close the Writers
+bufferedWriter.write(result.toString());
+bufferedWriter.close();
+fileWriter.close();
+
+log('Written the response to the file: ', fileName);

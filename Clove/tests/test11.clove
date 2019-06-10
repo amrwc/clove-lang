@@ -9,5 +9,5 @@ function fib(n) {
 }
 
 for (let i = 0; i < 35; i = i + 1) {
-    write(fib(i))
+    log(fib(i))
 }

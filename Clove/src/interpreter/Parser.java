@@ -479,10 +479,10 @@ public class Parser implements CloveVisitor {
 	}
 
 	/**
-	 * Execute the WRITE statement. Prints out all given arguments.
+	 * Execute the LOG statement. Prints out all given arguments.
 	 */
 	@Override
-	public Object visit(ASTWrite node, Object data) {
+	public Object visit(ASTLog node, Object data) {
 		final int numChildren = node.jjtGetNumChildren();
 		for (int i = 0; i < numChildren; i++)
 			System.out.print(doChild(node, i));

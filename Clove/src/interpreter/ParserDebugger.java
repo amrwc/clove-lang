@@ -112,9 +112,9 @@ public class ParserDebugger implements CloveVisitor {
 		return data;
 	}
 
-	// Execute the WRITE statement
+	// Execute the LOG statement
 	@Override
-	public Object visit(ASTWrite node, Object data) {
+	public Object visit(ASTLog node, Object data) {
 		dump(node, data);
 		return data;
 	}

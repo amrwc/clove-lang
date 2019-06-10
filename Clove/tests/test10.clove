@@ -11,10 +11,10 @@ function blah(start, fin) {
 	}
 
 	for (let i=start; i<=fin; i=i+1) {
-		write(zot(i, p))
+		log(zot(i, p))
 	}
 
-	write(p * 1000)
+	log(p * 1000)
 }
 
 blah(5, 10)

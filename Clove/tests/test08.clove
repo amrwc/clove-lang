@@ -1,12 +1,12 @@
-write(2 + 2)
-write(5 - 3)
-write(2 + 2 > 3 + 3)
-write(77 * 23)
-write(10 / 2)
+log(2 + 2)
+log(5 - 3)
+log(2 + 2 > 3 + 3)
+log(77 * 23)
+log(10 / 2)
 
 let a = 7
 let b = 4
-write(a)
-write(b)
-write(a * b)
+log(a)
+log(b)
+log(a * b)
 
