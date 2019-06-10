@@ -15,10 +15,6 @@ import parser.ast.SimpleNode;
  * @read https://www.geeksforgeeks.org/reflection-in-java/
  * @read http://tutorials.jenkov.com/java-reflection/index.html
  * @author amrwc
- * 
- *         TODO: - Add a way to instantiate the reflected class later on (create
- *         instantiate() method). - Consider implementing the execProto()
- *         method.
  */
 public class ValueReflection extends ValueAbstract {
 	private Class<?> theClass;
@@ -26,8 +22,7 @@ public class ValueReflection extends ValueAbstract {
 	private Object internalValue;
 
 	/**
-	 * Creates a new ValueReflection holding a class and an instance made with an
-	 * empty constructor.
+	 * Creates a new ValueReflection holding a class.
 	 * 
 	 * @param {String} className
 	 */
@@ -50,20 +45,12 @@ public class ValueReflection extends ValueAbstract {
 	 */
 	public ValueReflection(String className, Value[] ctorArgs) {
 		try {
-			// Store the parameters types to choose the right ctor,
-			// and the arguments in their raw form.
-			final HashMap<String, Object[]> args = parseCtorArgs(ctorArgs);
-
-			// Get class using its canonical name.
+			// Store the class.
 			theClass = Class.forName(className);
 
-			// Get constructor matching the parameter classes.
-			constructor = theClass.getConstructor((Class<?>[]) args.get("paramTypes"));
-
-			// Create an instance of the class using the arguments
-			// and their matching constructor.
-			internalValue = constructor.newInstance(args.get("args"));
-		} catch (final Exception e) {
+			// Instantiate the object.
+			instantiateWithArguments(ctorArgs);
+		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic("");
 		}
@@ -81,12 +68,65 @@ public class ValueReflection extends ValueAbstract {
 	}
 
 	/**
+	 * Instantiates the class with an empty constructor.
+	 */
+	private void instantiateEmpty() {
+		try {
+			// Get an empty constructor.
+			constructor = theClass.getConstructor();
+
+			// Instantiate the class with the empty constructor.
+			internalValue = constructor.newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic("");
+		}
+	}
+
+	/**
+	 * Passes the constructor arguments into a Value array and calls the right
+	 * method to instantiate the object.
+	 * 
+	 * @param {ValueList} ctorArgsValue -- ValueList of arguments passed into
+	 *                    instantiate() prototype function
+	 */
+	private void instantiateWithArguments(ValueList ctorArgsValue) {
+		final Value[] ctorArgs = new Value[ctorArgsValue.size()];
+		for (int i = 0; i < ctorArgsValue.size(); i++)
+			ctorArgs[i] = ctorArgsValue.get(i);
+
+		instantiateWithArguments(ctorArgs);
+	}
+
+	/**
+	 * Instantiates the object with the arguments passed in as a Value array.
+	 * 
+	 * @param {Value[]} ctorArgs
+	 */
+	private void instantiateWithArguments(Value[] ctorArgs) {
+		// Store the parameters types to choose the right ctor,
+		// and the arguments in their raw form.
+		final HashMap<String, Object[]> args = parseCtorArgs(ctorArgs);
+
+		try {
+			// Get constructor matching the parameter classes.
+			constructor = theClass.getConstructor((Class<?>[]) args.get("paramTypes"));
+
+			// Create an instance of the class using the arguments
+			// and their matching constructor.
+			internalValue = constructor.newInstance(args.get("args"));
+		} catch (final Exception e) {
+			e.printStackTrace();
+			throw new ExceptionSemantic("");
+		}
+	}
+
+	/**
 	 * Parses constructor arguments and returns them in the correct form.
 	 * 
 	 * @param {Value[]} ctorArgs
 	 * @returns {HashMap<String, Object[]>} map containing the parameter types and
 	 *          the arguments in their 'raw type'
-	 * @throws ClassNotFoundException
 	 */
 	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs) {
 		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
@@ -260,31 +300,21 @@ public class ValueReflection extends ValueAbstract {
 		case "getClass":
 			return new ValueString(getName());
 		case "instantiate":
-			if (protoArgs == null || protoArgs.size() == 0)
+			// If there's no arguments, instantiate the object using an empty constructor.
+			if (protoArgs == null) {
 				instantiateEmpty();
+				return this;
+			}
 
-			// TODO: instantiate with the arguments.
+			// If there are constructor arguments, instantiate the object with the
+			// arguments.
+			if (protoArgs.size() != 0)
+				instantiateWithArguments((ValueList) protoArgs.get(0));
 
 			return this;
 		default:
 			throw new ExceptionSemantic("There is no prototype function '" + protoFunc
 					+ "' in the '" + getName() + "' class.");
-		}
-	}
-
-	/**
-	 * Instantiate the class with an empty constructor.
-	 */
-	private void instantiateEmpty() {
-		try {
-			// Get an empty constructor.
-			constructor = theClass.getConstructor();
-
-			// Instantiate the class with the empty constructor.
-			internalValue = constructor.newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic("");
 		}
 	}
 

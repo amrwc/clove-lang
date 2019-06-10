@@ -1203,23 +1203,19 @@ public class Parser implements CloveVisitor {
 			throw new ExceptionSemantic(
 					"ValueReflection only accepts" + " up to 2 arguments.");
 
-		try {
-			// If there's only a class name...
-			if (numChildren == 1)
-				return new ValueReflection(className);
+		// If there's only a class name...
+		if (numChildren == 1)
+			return new ValueReflection(className);
 
-			// ...or if there's a class name and constructor arguments...
-			else if (numChildren == 2) {
-				// Get all constructor arguments.
-				ValueList ctorArgsValue = (ValueList) doChild(node, 1);
-				final Value[] ctorArgs = new Value[ctorArgsValue.size()];
-				for (int i = 0; i < ctorArgsValue.size(); i++)
-					ctorArgs[i] = ctorArgsValue.get(i);
+		// ...or if there's a class name and constructor arguments...
+		else if (numChildren == 2) {
+			// Get all constructor arguments.
+			ValueList ctorArgsValue = (ValueList) doChild(node, 1);
+			final Value[] ctorArgs = new Value[ctorArgsValue.size()];
+			for (int i = 0; i < ctorArgsValue.size(); i++)
+				ctorArgs[i] = ctorArgsValue.get(i);
 
-				return new ValueReflection(className, ctorArgs);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			return new ValueReflection(className, ctorArgs);
 		}
 
 		return data;
