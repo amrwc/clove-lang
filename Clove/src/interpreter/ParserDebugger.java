@@ -4,6 +4,7 @@ import parser.ast.*;
 
 /**
  * @author dave
+ * @author amrwc
  */
 public class ParserDebugger implements CloveVisitor {
 	private int indent = 0;
@@ -59,13 +60,13 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTDefinition node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTDeclaration node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	// Execute an assignment statement, by popping a value off the stack and
@@ -133,19 +134,19 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTIncrementDecrement node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTHttp node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTFile node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	/******************
@@ -164,13 +165,13 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTConstInit node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTArrayInit node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	// Function argument list
@@ -334,19 +335,25 @@ public class ParserDebugger implements CloveVisitor {
 	@Override
 	public Object visit(ASTGetArgs node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTRandom node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
 	}
 
 	@Override
 	public Object visit(ASTReflect node, Object data) {
 		dump(node, data);
-		return null;
+		return data;
+	}
+
+	@Override
+	public Object visit(ASTValueReflectionCast node, Object data) {
+		dump(node, data);
+		return data;
 	}
 
 	/************
@@ -397,12 +404,6 @@ public class ParserDebugger implements CloveVisitor {
 
 	@Override
 	public Object visit(ASTValueList node, Object data) {
-		dump(node, data);
-		return data;
-	}
-
-	@Override
-	public Object visit(ASTValueReflectionCast node, Object data) {
 		dump(node, data);
 		return data;
 	}
