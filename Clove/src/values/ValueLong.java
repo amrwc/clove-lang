@@ -1,6 +1,6 @@
 package values;
 
-import interpreter.NumberUtils;
+import utils.NumberUtils;
 
 /**
  * @author amrwc

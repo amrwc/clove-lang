@@ -3,12 +3,12 @@ package values;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import interpreter.ExceptionSemantic;
-import interpreter.NumberUtils;
 import interpreter.Parser;
 import parser.ast.SimpleNode;
+import utils.NumberUtils;
+import utils.ReflectionUtils;
 
 /**
  * @read https://www.sitepoint.com/java-reflection-api-tutorial/
@@ -49,7 +49,7 @@ public class ValueReflection extends ValueAbstract {
 			theClass = Class.forName(className);
 
 			// Instantiate the object.
-			instantiateWithArguments(ctorArgs);
+			ReflectionUtils.instantiateWithArguments(this, ctorArgs);
 		} catch (final ClassNotFoundException e) {
 			e.printStackTrace();
 			throw new ExceptionSemantic("");
@@ -67,83 +67,28 @@ public class ValueReflection extends ValueAbstract {
 		internalValue = newObject;
 	}
 
-	/**
-	 * Instantiates the class with an empty constructor.
-	 */
-	private void instantiateEmpty() {
-		try {
-			// Get an empty constructor.
-			constructor = theClass.getConstructor();
-
-			// Instantiate the class with the empty constructor.
-			internalValue = constructor.newInstance();
-		} catch (Exception e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic("");
-		}
+	public Class<?> getTheClass() {
+		return theClass;
 	}
 
-	/**
-	 * Passes the constructor arguments into a Value array and calls the right
-	 * method to instantiate the object.
-	 * 
-	 * @param {ValueList} ctorArgsValue -- ValueList of arguments passed into
-	 *                    instantiate() prototype function
-	 */
-	private void instantiateWithArguments(ValueList ctorArgsValue) {
-		final Value[] ctorArgs = new Value[ctorArgsValue.size()];
-		for (int i = 0; i < ctorArgsValue.size(); i++)
-			ctorArgs[i] = ctorArgsValue.get(i);
-
-		instantiateWithArguments(ctorArgs);
+	public void setTheClass(Class<?> clazz) {
+		theClass = clazz;
 	}
 
-	/**
-	 * Instantiates the object with the arguments passed in as a Value array.
-	 * 
-	 * @param {Value[]} ctorArgs
-	 */
-	private void instantiateWithArguments(Value[] ctorArgs) {
-		// Store the parameters types to choose the right ctor,
-		// and the arguments in their raw form.
-		final HashMap<String, Object[]> args = parseCtorArgs(ctorArgs);
-
-		try {
-			// Get constructor matching the parameter classes.
-			constructor = theClass.getConstructor((Class<?>[]) args.get("paramTypes"));
-
-			// Create an instance of the class using the arguments
-			// and their matching constructor.
-			internalValue = constructor.newInstance(args.get("args"));
-		} catch (final Exception e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic("");
-		}
+	public Constructor<?> getCtor() {
+		return constructor;
 	}
 
-	/**
-	 * Parses constructor arguments and returns them in the correct form.
-	 * 
-	 * @param {Value[]} ctorArgs
-	 * @returns {HashMap<String, Object[]>} map containing the parameter types and
-	 *          the arguments in their 'raw type'
-	 */
-	private HashMap<String, Object[]> parseCtorArgs(Value[] ctorArgs) {
-		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
-		final Class<?>[] paramTypes = new Class[ctorArgs.length];
-		final Object[] args = new Object[ctorArgs.length];
+	public void setCtor(Constructor<?> ctor) {
+		constructor = ctor;
+	}
 
-		for (int i = 0; i < ctorArgs.length; i++) {
-			paramTypes[i] = (ctorArgs[i] instanceof ValueReflection)
-					? ((ValueReflection) ctorArgs[i]).theClass
-					: parsePrimitive(ctorArgs[i].getRawValue());
-			args[i] = ctorArgs[i].getRawValue();
-		}
+	public Object getInternalValue() {
+		return internalValue;
+	}
 
-		result.put("paramTypes", paramTypes);
-		result.put("args", args);
-
-		return result;
+	public void setInternalValue(Object v) {
+		internalValue = v;
 	}
 
 	/**
@@ -165,7 +110,7 @@ public class ValueReflection extends ValueAbstract {
 		// ASTArgumentList
 		final SimpleNode argsNode = (SimpleNode) node.jjtGetChild(1);
 
-		final var args = parseMethodArgs(argsNode, p);
+		final var args = ReflectionUtils.parseMethodArgs(argsNode, p);
 
 		Object result = null;
 		try {
@@ -186,71 +131,6 @@ public class ValueReflection extends ValueAbstract {
 			return getCorrespondingValue(result);
 
 		return null;
-	}
-
-	/**
-	 * Parses Method arguments and returns them in the correct form.
-	 * 
-	 * @param {SimpleNode (ASTArgumentList)} argsNode -- the Method's arguments
-	 * @param {Parser}    p -- active Parser's instance
-	 * @returns {HashMap<String, Object[]>} map containing the parameter types and
-	 *          the arguments in their 'raw type'
-	 * @throws ClassNotFoundException
-	 */
-	private HashMap<String, Object[]> parseMethodArgs(SimpleNode argsNode, Parser p) {
-		final HashMap<String, Object[]> result = new HashMap<String, Object[]>();
-
-		// Collect classes of the arguments to later find a matching Method.
-		final int numArgs = argsNode.jjtGetNumChildren();
-		final Class<?>[] paramTypes = new Class<?>[numArgs];
-		final Object[] args = new Object[numArgs];
-
-		for (int i = 0; i < numArgs; i++) {
-			final Object arg = p.doChild(argsNode, i).getRawValue();
-			paramTypes[i] = parsePrimitive(arg);
-			args[i] = arg;
-		}
-
-		result.put("paramTypes", paramTypes);
-		result.put("args", args);
-
-		return result;
-	}
-
-	/**
-	 * Adjusts class to match Method.getMethod() arguments.
-	 * 
-	 * @read https://stackoverflow.com/a/13943623/10620237
-	 * @param {Object} arg -- source argument whose class is to be returned
-	 * @returns {Class<?>} adjusted class that will match Method.getMethod()
-	 * @throws ClassNotFoundException
-	 */
-	private Class<?> parsePrimitive(Object arg) {
-		Class<?> perhapsPrimitive = null;
-
-		try {
-			perhapsPrimitive = Class.forName(arg.getClass().getName());
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-			throw new ExceptionSemantic("");
-		}
-
-		if (Boolean.class == perhapsPrimitive)
-			return boolean.class;
-		if (Byte.class == perhapsPrimitive)
-			return byte.class;
-		if (Short.class == perhapsPrimitive)
-			return short.class;
-		if (Integer.class == perhapsPrimitive)
-			return int.class;
-		if (Long.class == perhapsPrimitive)
-			return long.class;
-		if (Float.class == perhapsPrimitive)
-			return float.class;
-		if (Double.class == perhapsPrimitive)
-			return double.class;
-
-		return perhapsPrimitive;
 	}
 
 	/**
@@ -302,14 +182,15 @@ public class ValueReflection extends ValueAbstract {
 		case "instantiate":
 			// If there's no arguments, instantiate the object using an empty constructor.
 			if (protoArgs == null) {
-				instantiateEmpty();
+				ReflectionUtils.instantiateEmpty(this);
 				return this;
 			}
 
 			// If there are constructor arguments, instantiate the object with the
 			// arguments.
 			if (protoArgs.size() != 0)
-				instantiateWithArguments((ValueList) protoArgs.get(0));
+				ReflectionUtils.instantiateWithArguments(this,
+						(ValueList) protoArgs.get(0));
 
 			return this;
 		default:
