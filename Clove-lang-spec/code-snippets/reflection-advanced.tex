@@ -1,0 +1,47 @@
+\vspace{-2.25em}
+\begin{center}
+\begin{minipage}[t]{1\textwidth}
+\begin{listing}[H]
+\begin{spacing}{0.6}
+\begin{minted}[frame=single]{JavaScript}
+/** Example 7: Sends an HTTP request and writes
+    the response to a file using Reflection */
+
+// Create a connection
+const urlText = "https://jsonplaceholder.typicode.com/posts/2";
+const url = reflect("java.net.URL", [urlText]);
+const connection = ("java.net.HttpURLConnection") url.openConnection();
+connection.setRequestMethod("GET");
+
+// Create a stream
+const inputStream = ("java.io.InputStream") connection.getInputStream();
+const inputStreamReader =
+    reflect("java.io.InputStreamReader", [inputStream]);
+const reader = ("java.io.Reader") inputStreamReader;
+const bufferedReader = reflect("java.io.BufferedReader", [reader]);
+
+const result = reflect("java.lang.StringBuilder");
+result->instantiate();
+
+let line = bufferedReader.readLine();
+while (!(line == "")) {
+  result.append(line);
+  line = bufferedReader.readLine();
+}
+bufferedReader.close();
+
+// Instantiate the FileWriter and BufferedWriter
+const fileName = "example7-output.txt";
+const fileWriter =
+    ("java.io.Writer") reflect("java.io.FileWriter", [fileName]);
+const bufferedWriter = reflect("java.io.BufferedWriter", [fileWriter]);
+
+// Execute the BufferedWriter and close the Writers
+bufferedWriter.write(result.toString());
+bufferedWriter.close();
+fileWriter.close();
+\end{minted}
+\end{spacing}
+\end{listing}
+\end{minipage}
+\end{center}

@@ -82,7 +82,7 @@ Many keywords included in the language can be expressed in a bunch of ways \==~C
 \subsection*{Data types}
 The following data types are supported:
 
-\vspace{-0.75em}
+\vspace{-0.5em}
 \begin{itemize}
   \itemsep-0.25em
   \item integers,
@@ -91,20 +91,22 @@ The following data types are supported:
   \item booleans,
   \item anonymous objects,
   \item lists,
-  \item arrays, and
-  \item anonymous functions.
+  \item arrays,
+  \item anonymous functions, and
+  \item reflection
 \end{itemize}
 
-\noindent The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Array includes all the list's features, but has a fixed size. Anonymous function is unique in that it is a container for a function definition instead of being a standalone implementation of a type.\par
+\vspace{-0.075em}
+\noindent The integer and rational types are in Java's \emph{long} and \emph{double} ranges respectively, but are downcast to \emph{int} and \emph{float} wherever possible. The list type is similar in functionality to Python's \emph{List} and JavaScript's \emph{Array}. Array includes all the list's features, but has a fixed size. Anonymous function is unique in that it is a container for a function definition instead of being a standalone implementation of a type.\par
 
 All the types evaluate to values that are treated similarly \==~they can be passed around, nested, evaluated, and returned from functions. It applies to both literals and dereferenced values. Some operations, such as addition, can be performed on mixed types, but there are reasonable restrictions, e.g. it is impossible to multiply a string by a number, but it is fine to add a number to a string.\par
 
-Another type supported by the language that is not listed above is \emph{ValueReflection} \==~it is a container for any Java class that is referenced by the \emph{reflect()} built-in function. The container holds the chosen class-name, a constructor found in the class based on the given arguments, and an instance of the class created with the constructor. This feature of the language allows for using virtually any data type supported by Java and leveraging their own built-in methods. Please note that this feature is very early in the development and it does not allow for more advanced operations.
+\emph{Reflection} (ValueReflection) is a container for any Java class that is referenced by the \emph{reflect()} built-in function. The container holds the chosen class-name, a constructor found in the class based on the given arguments, and an instance of the class created with the constructor. This feature of the language allows for using virtually any data type supported by Java and leveraging their own built-in methods. Clove also supports upcasting of the objects, thus allowing for creating sophisticated programs by passing the objects as arguments for further reflection. An example usage can be seen in a later section.
 
 
 
 \subsection*{Declarations and definitions}
-Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their empty literals must be used; empty array can only be declared, not defined. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous \emph{value-function}. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in directories with corresponding names.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' scope in this example. Variables in function invocations or any other block are defined in their corresponding scope (are inaccessible from the outside) and removed after the block is finished.
+Declarations and definitions in Clove are similar to those in JavaScript. To define an empty list or anonymous object, their empty literals must be used; empty array can only be declared, not defined. Functions can be defined in two ways: standalone, with the \emph{function} keyword, or as an anonymous, \emph{value-function}. Examples of some common declarations and definitions can be seen below\footnote{More code snippets and example programs are available in directories with corresponding names.}. The variables defined at the top are accessible from every subsequent block, therefore they have a `global' scope in this example. Variables in function invocations or any other block are defined in their corresponding scope (are inaccessible from the outside) and removed after the block is finished.
 
 \import{./code-snippets/}{declarations-and-definitions.tex}
 
@@ -114,7 +116,7 @@ Declarations and definitions in Clove are similar to those in JavaScript. To def
 
 \vspace{-1.75em}
 \subsection*{Syntax}
-Semi-colons are truly optional; this way anyone used to typing them at the end of statements will not be punished by the parser. Furthermore, it allows some basic JavaScript code snippets to be copy-pasted into a Clove program without special accommodations and rewriting. There are a few shorthand operators for arithmetic operations which can be used in complex expressions. Basic examples shown below.\par
+Semi-colons are truly optional; this way anyone used to typing them at the end of statements will not be punished by the parser. Furthermore, it allows some basic JavaScript code snippets to be copy-pasted into a Clove program without special accommodations and rewriting. There are a few shorthand operators and compound assignment operators for arithmetic operations which can be used conventionally, in more complex expressions. Basic examples shown below.\par
 
 \import{./code-snippets/}{shorthand-operators.tex}
 
@@ -128,7 +130,7 @@ Semi-colons are truly optional; this way anyone used to typing them at the end o
 
 
 \subsection*{Prototype functions}
-The string, list, array and anonymous object value-types have built-in prototype functions that can be accessed using the arrow-notation. Prototype functions are invoked just like normal functions, with the parentheses after the function's name. Examples shown below.
+All the value-types have at least 1 built-in prototype function (getClass()), but list, array, anonymous object and reflection offer more than that. Prototype functions can be accessed using arrow-notation and are invoked just like normal functions, with the parentheses after the function's name; some of the functions can also take arguments. Examples shown below.
 
 \import{./code-snippets/}{prototype-functions.tex}
 
@@ -148,21 +150,21 @@ The supported data types allow for creating compound data structures. The code b
 
 \vspace{-1.75em}
 \subsection*{Built-in functions}
-Clove-lang has some useful built-in features, some of which interact with the outside world.
+Clove-lang has some useful built-in features, some of which can interact with the outside world.
 
 \paragraph*{get\_args()}
 Returns a list of command-line arguments passed into the program.
 
 \vspace{-0.75em}
 \paragraph*{random()}
-Returns a random integer or a rational number in a given range. \mintinline{JavaScript}{random(0, 3.14)} would return a random rational number in the 0 <= x < 3.14 range \==~it recognises a floating-point number in the second argument, therefore the result will also be a float.
+Returns a random integer or a rational number in a given range. \mintinline{JavaScript}{random(0, 3.14)} would return a random rational number in the 0 <= x < 3.14 range \==~it recognises a floating-point number in the second argument, therefore the result will be a double.
 
 \import{./code-snippets/}{random-argument.tex}
 
 
 \vspace{-2.75em}
 \paragraph*{file()}
-It takes three arguments: writing option, path, content. The function's behaviour depends on the first argument which specifies whether the new content should be appended to the file, or replace the old one. If the path does not exist, it will be created, although it is limited to one subdirectory.
+It takes three arguments: writing option, path, content. The function's behaviour depends on the first argument which specifies whether the new content should be appended to the file, or replace the old one. If the path does not exist, it will be created, although it is limited to only 1 subdirectory.
 
 \vspace{-0.75em}
 \paragraph*{http()}
@@ -173,8 +175,13 @@ This function supports four main HTTP requests: GET, POST, PUT, and DELETE, one 
 
 \vspace{-2.75em}
 \paragraph*{reflect()}
-Java's Reflection API is accessible via Clove's reflect() function. It takes one or two arguments, first being a string with a full package name (e.g. ``java.lang.String''), second is a list with arguments which are used to instantiate the class. If the second argument is not supplied, the class is not instantiated. Current implementation only allows for simple tasks, such as string comparison or concatenation.
+Java's Reflection API is accessible via Clove's reflect() function. It takes one or two arguments, first being a string with a full package name (e.g. ``java.lang.String''), second is a list with arguments which are used to instantiate the class. If the second argument is not supplied, the class is not instantiated.
 
 \import{./code-snippets/}{reflection.tex}
+
+\vspace{-1.5em}
+\noindent An example of a more advanced usage of Reflection\footnote{Taken from `example7' in the `example-programs' directory.}:
+
+\import{./code-snippets/}{reflection-advanced.tex}
 
 \end{document}
