@@ -2,9 +2,9 @@
 
 Clove is an interpreted, dynamically typed, general-purpose programming language implemented in Java, based on [Sili](https://github.com/DaveVoorhis/LDI/tree/master/Sili). The grammar defined in [JavaCC](https://javacc.org) with [JJTree](https://javacc.org/jjtree). It is primarily a procedural language, but has functional programming features, such as lambda expressions, and the programs can be composed in ways that utilise the declarative paradigm. The language allows for defining immutable primitive values, but compound structures, such as lists, can still be changed, but not reassigned; otherwise, all values are mutable.
 
-Common statements and expressions, such as loops, if-statements, variable and function declarations/calls/invocations are conventional and similar to other languages, namely JavaScript. Variable names cannot start with a number and must be preceded by either _let_/_const_ keywords or their aliases.
+The language implements a wrapper around [Java Reflection](https://www.oracle.com/technetwork/articles/java/javareflection-1536171.html), which allows for arbitrary programs to be written with Clove, without relying solely on the implemented functionalities.
 
-More detailed specification of the language can be found [here](https://github.com/amrwc/Clove-lang/tree/master/Clove-lang-spec/Clove-lang.pdf).
+_A more detailed specification of the language can be found [here](https://github.com/amrwc/Clove-lang/tree/master/Clove-lang-spec/Clove-lang.pdf)._
 
 ## Feature ideas
 
@@ -12,7 +12,9 @@ More detailed specification of the language can be found [here](https://github.c
   - [ ] ternary operator,
   - [ ] null support
     - `if (result == null)…`,
-  - [ ] shorthand modulo reassignment
+    - ValueNull?,
+    - currently, if the R-value resolves to `null`, an empty ValueString `("")` is returned,
+  - [ ] modulo compound assignment operator
     - `%=`,
   - [ ] root function (n<sup>th</sup> root)
     - `sqrt()`,
@@ -21,8 +23,8 @@ More detailed specification of the language can be found [here](https://github.c
 - Statements
   - [ ] switch,
   - [ ] do-while,
-  - [ ] optional arguments in for-loop
-    - `for(;;)`,
+  - [ ] make the operations/actions in a for-loop optional
+    - to allow for loops such as `for(;;)`,
   - [ ] break,
   - [ ] continue,
   - [ ] chain of declarations/definitions
@@ -48,7 +50,8 @@ More detailed specification of the language can be found [here](https://github.c
         — imitate stack with lists/arrays.
 - Types
   - [ ] ValueTuple,
-  - [ ] break ValueRational into ValueFloat and ValueDouble.
+  - [x] break ValueRational into ValueFloat and ValueDouble,
+  - [x] break ValueInteger into ValueInteger and ValueLong.
 
 ## Known bugs
 
@@ -56,6 +59,7 @@ More detailed specification of the language can be found [here](https://github.c
   - Variables defined inside a FunctionInvocation are being found deeper in the recursion, therefore, they throw ‘variable already defined’ error.
   - The workaround is to modify variables defined outside of the outermost FunctionDefinition – before the recursion starts.
 - [ ] Higher-order functions
+
   - When an anonymous function is passed to any FunctionDefinition, the argument (callback function) works correctly only on the first occurrence. Subsequent calls to the first argument of the function will result in calling the argument first used, regardless of the new declaration.
 
   ```JavaScript
