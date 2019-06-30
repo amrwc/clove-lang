@@ -1,0 +1,23 @@
+#!/bin/sh
+
+# Usage:
+# ./takeSnapshot <number>
+# where 'number' is the test's number.
+
+testNum="$1"                      # Get the first command line argument.
+
+if [[ -n "$testNum" ]]; then      # If testNum is not empty...
+
+  if [ $testNum -gt 9 ]; then     # If testNum > 9...
+    file=test$testNum.clove       # Get the file name.
+  else
+    file=test0$testNum.clove      # Prepend the test number with 0.
+  fi
+
+  printf "Snapshotting '"$file"'... "
+  # "${@:2}" -- all arguments starting from 2.
+  java -classpath ../bin Clove < "$file" "${@:2}" > "$file".snapshot
+  printf "DONE!\n"
+else
+  echo "ERROR: Specify the test number in the first argument."
+fi

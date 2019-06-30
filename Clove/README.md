@@ -24,17 +24,17 @@ cd Clove
 java -classpath ./bin Clove < [file_name].clove [args]
 ```
 
-You can also use the `run` scripts placed in the `examples` directory. Please note that the second example ('vigenere-cipher') requires 3 arguments; read the brief at the top fo the file.
+You can also use the `run` scripts placed in the `examples` directory. Please note that the second example ('vigenere-cipher') requires 3 arguments; read the brief at the top of the file.
 
 #### Mac
 
 Terminal:
 
 ```bash
-./run [file_name].clove [args]
+./run [file_name] [args]
 ```
 
-If you get `-bash: ./run: Permission denied` error, do:
+If you get `-bash: ./run: Permission denied` error, run:
 
 ```bash
 chmod 555 run
@@ -45,7 +45,7 @@ chmod 555 run
 cmd/PowerShell:
 
 ```PowerShell
-run [file_name].clove [args]
+run [file_name] [args]
 ```
 
 If you get `'java' is not recognized as an internal or external command` error, you need to add Java to your path. Follow the steps from [this short tutorial](https://stackoverflow.com/a/28451116).
