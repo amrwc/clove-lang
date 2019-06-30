@@ -1,0 +1,34 @@
+ValueList:
+
+list1: [hello 1, 1, {num: 55}]
+list1[0]: hello 1
+list1[2].num: 55
+
+nestedList: {list2: [hello 2, 2, 3, 4, {deep: 777}]}
+nestedList.list2[4].deep: 777
+
+list3: [100, 200, 300]
+list3[1] = 888
+list3: [100, 888, 300]
+
+
+
+ValueList prototype functions:
+[0, false, 2, [1, 111], temp, 14, 50, 777, 100]
+
+[0, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100]
+
+[0, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100]
+
+[0, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100]
+
+[0, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100, false, 2, [1, 111], temp, 14, 50, 777, 100]
+
+
+listProto3[1]->append(1300)
+listProto3: [33, [40, 50, 1300]]
+
+
+Invoke ValueFn inside of ValueList:
+listFn: [13, values.ValueFunction@4c873330, 77]
+listFn[1](7): 70

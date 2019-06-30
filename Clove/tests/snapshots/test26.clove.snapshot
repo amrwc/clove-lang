@@ -1,0 +1,33 @@
+GET request response: 200
+{
+"userId": 1,
+"id": 1,
+"title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+"body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+
+
+
+POST request response: 201
+{"name":"John Doe","job":"director","id":"78","createdAt":"2019-06-30T12:24:17.119Z"}
+
+
+
+PUT request response: 200
+{"updatedAt":"2019-06-30T12:24:17.198Z"}
+
+
+
+DELETE request response: 200
+{
+"userId": 1,
+"id": 1,
+"title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+"body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
+}
+
+
+
+POST request with a ValueObject as body response: 201
+{"name":"John Doe","job":"director","id":"414","createdAt":"2019-06-30T12:24:17.264Z"}
+

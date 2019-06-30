@@ -1,0 +1,8 @@
+#!/bin/sh
+
+for file in *.clove
+do
+  echo "============ "$file" ============"
+  java -classpath ../bin Clove < "$file"
+  printf "\n\n"
+done

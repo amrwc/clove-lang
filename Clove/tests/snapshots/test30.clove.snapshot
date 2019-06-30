@@ -1,0 +1,74 @@
+ValueArray:
+
+const arr[10] = [10, 20, [30, 40]]
+arr[2][0]: 30
+
+Before appending with resizing: [10, 20, [30, 40]]
+After: [10, 20, [30, 40], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+
+
+let arr2[10] = [10, [20, "foo"], "bar"]
+arr2[1][1]: foo
+
+let arr3[20]
+arr3: []
+arr3->getClass(): ValueArray
+arr3->cap(): 20
+arr3->append({ten: 10})
+arr3: [{ten: 10}]
+
+
+
+Array reassignment at an index:
+arr[0] = 12
+arr: [12, 20, [30, 40], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+arr2[2] = "baz"
+arr2: [10, [20, foo], baz]
+
+arr3[0].ten = 13
+arr3: [{ten: 13}]
+
+
+
+
+Shorthand reassignments on arrays:
+arr[0] -= 2
+arr: [10, 20, [30, 40], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+arr2[1][0] *= 1.5
+arr2: [10, [30, foo], baz]
+
+arr3[0].ten /= 4
+arr3: [{ten: 3.25}]
+
+
+
+Increment/decrement array values:
+arr[1]++: 20
+arr: [10, 21, [30, 40], 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+--arr2[1][0]: 29
+arr2: [10, [29, foo], baz]
+
+arr3[0].ten--: 3.25
+arr3: [{ten: 2.25}]
+
+++arr3[0]["ten"]: 3.25
+arr3: [{ten: 3.25}]
+
+
+
+Declaring/defining arrays without specifying the capacity explicitly:
+const arr5[] = {100, 200, 300, "four", {five: 5}, [6, 7]}
+arr5: [100, 200, 300, four, {five: 5}, [6, 7]]
+arr5->cap(): 6
+
+let arr6[] = {{five: 5}, [6, 7], 100, 200, 300, "four"}
+arr6: [{five: 5}, [6, 7], 100, 200, 300, four]
+arr6->cap(): 6
+
+let arr7[]
+arr7: []
+arr7->cap(): 0

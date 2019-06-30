@@ -1,0 +1,41 @@
+Anonymous object initialisation and accessing:
+obj.num: 999
+
+obj.str: Hi
+
+----------------------------
+Nested objects:
+
+obj2.nested.str2: Hello
+
+obj2.nested.num2.nines: 9999999
+
+----------------------------
+Key-value pairs reassignment:
+
+obj.num = 33
+obj.num: 33
+
+obj2.nested.str2 = Very nice!
+obj2.nested.str2: Very nice!
+
+----------------------------
+Functions in objects:
+
+obj3.fn1(5): 
+6
+
+obj3.nested.fn2(10)
+20
+
+----------------------------
+Square-notation:
+
+obj3["nested"]: {fn2: values.ValueFunction@72ea2f77}
+const nest = "nested";
+obj3[nest]: {fn2: values.ValueFunction@72ea2f77}
+
+obj3[nest].fn2(10): 20
+obj3[nest]["fn2"](10): 20
+const alias = "fn2";
+obj3[nest][alias](10): 20

@@ -1,0 +1,9 @@
+Declarations:
+
+let foo
+foo = "text content"
+foo: text content
+
+
+const bar
+Constants must be initialised. Change the "const" keyword before "bar" to "let".

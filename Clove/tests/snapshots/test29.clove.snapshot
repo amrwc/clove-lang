@@ -1,0 +1,60 @@
+obj: {ten: 10, nested: {nested2: {sixty: 60, fifty: 50}, thirty: 30, forty: 40}, twenty: 20}
+
+obj.ten = 11
+obj: {ten: 11, nested: {nested2: {sixty: 60, fifty: 50}, thirty: 30, forty: 40}, twenty: 20}
+
+obj.nested.thirty = 33
+obj: {ten: 11, nested: {nested2: {sixty: 60, fifty: 50}, thirty: 33, forty: 40}, twenty: 20}
+
+obj.nested.nested2.fifty = 55
+obj: {ten: 11, nested: {nested2: {sixty: 60, fifty: 55}, thirty: 33, forty: 40}, twenty: 20}
+
+obj['ten'] = 12
+obj: {ten: 12, nested: {nested2: {sixty: 60, fifty: 55}, thirty: 33, forty: 40}, twenty: 20}
+
+obj['nested'].thirty = 37
+obj: {ten: 12, nested: {nested2: {sixty: 60, fifty: 55}, thirty: 37, forty: 40}, twenty: 20}
+
+obj[alias1].nested2['fifty'] = 52
+obj: {ten: 12, nested: {nested2: {sixty: 60, fifty: 52}, thirty: 37, forty: 40}, twenty: 20}
+
+
+
+list: [10, 20, [30, 40, [50, 60]]]
+
+list[1] = 22
+list: [10, 22, [30, 40, [50, 60]]]
+
+list[2][1] = 44
+list: [10, 22, [30, 44, [50, 60]]]
+
+list[2][2][1] = 66
+list: [10, 22, [30, 44, [50, 66]]]
+
+
+
+obj.twenty += 2
+obj: {ten: 12, nested: {nested2: {sixty: 60, fifty: 52}, thirty: 37, forty: 40}, twenty: 22}
+
+obj.nested.forty -= 4
+obj: {ten: 12, nested: {nested2: {sixty: 60, fifty: 52}, thirty: 37, forty: 36}, twenty: 22}
+
+obj.nested.nested2.sixty *= 6
+obj: {ten: 12, nested: {nested2: {sixty: 360, fifty: 52}, thirty: 37, forty: 36}, twenty: 22}
+
+obj.ten /= 5
+obj: {ten: 2.4, nested: {nested2: {sixty: 360, fifty: 52}, thirty: 37, forty: 36}, twenty: 22}
+
+
+
+list[0] += 1
+list: [11, 22, [30, 44, [50, 66]]]
+
+list[2][0] -= 3
+list: [11, 22, [27, 44, [50, 66]]]
+
+list[2][2][0] *= 5
+list: [11, 22, [27, 44, [250, 66]]]
+
+list[2][1] /= 3
+list: [11, 22, [27, 14.666666666666666, [250, 66]]]
