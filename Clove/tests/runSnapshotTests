@@ -1,13 +1,38 @@
 #!/bin/sh
 
-for file in *.clove
-do
-  cmdOutput=$(java -classpath ../bin Clove < "$file")
-  snapshot=$(<"./snapshots/$file".snapshot)
-
-  if [ "$snapshot" == "$cmdOutput" ]; then
+# Compares two strings for equality.
+compare() {
+  if [ "$1" == "$2" ]; then
     echo ""$file": PASS"
   else
     echo ""$file": FAIL <--"
+  fi
+}
+
+# Test files that include randomness,
+# or simply have different outputs every time.
+# They will be tested by checking the line count.
+EXCEPTIONS=("test26.clove" "test28.clove" "test31.clove" "test32.clove")
+
+for file in *.clove
+do
+  # If the test is one of the exceptions,
+  # perform the line count check.
+  # https://stackoverflow.com/a/15394738/10620237
+  if [[ " ${EXCEPTIONS[@]} " =~ " ${file} " ]]; then
+
+    # "| wc -l" -- https://stackoverflow.com/a/12457470/10620237
+    cmdOutputLC=$(java -classpath ../bin Clove < "$file" | wc -l)
+    snapshotLC=$(wc -l < ./snapshots/"$file".snapshot)
+
+    echo $(compare "$snapshotLC" "$cmdOutputLC")
+
+  else
+
+    cmdOutput=$(java -classpath ../bin Clove < "$file")
+    snapshot=$(<"./snapshots/$file".snapshot)
+
+    echo $(compare "$snapshot" "$cmdOutput")
+
   fi
 done

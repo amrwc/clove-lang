@@ -4,6 +4,20 @@
 # ./runSnapshotTest <number>
 # where 'number' is the test's number.
 
+# Compares two strings for equality.
+compare() {
+  if [ "$1" == "$2" ]; then
+    echo ""$file": PASS"
+  else
+    echo ""$file": FAIL <--"
+  fi
+}
+
+# Numbers of tests that include randomness,
+# or simply have different outputs every time.
+# They will be tested by checking the line count.
+EXCEPTIONS=("26" "28" "31" "32")
+
 testNum="$1"                      # Get the first command line argument.
 
 if [[ -n "$testNum" ]]; then      # If testNum is not empty...
@@ -14,14 +28,26 @@ if [[ -n "$testNum" ]]; then      # If testNum is not empty...
     file=test0$testNum.clove      # Prepend the test number with 0.
   fi
 
-  # "${@:2}" -- all arguments starting from 2.
-  cmdOutput=$(java -classpath ../bin Clove < "$file" "${@:2}")
-  snapshot=$(<"./snapshots/$file".snapshot)
+  # If the test is one of the exceptions,
+  # perform the line count check.
+  # https://stackoverflow.com/a/15394738/10620237
+  if [[ " ${EXCEPTIONS[@]} " =~ " ${testNum} " ]]; then
 
-  if [ "$snapshot" == "$cmdOutput" ]; then
-    echo ""$file": PASS"
+    # "${@:2}" -- all arguments starting from 2.
+    # "| wc -l" -- https://stackoverflow.com/a/12457470/10620237
+    cmdOutputLC=$(java -classpath ../bin Clove < "$file" "${@:2}" | wc -l)
+    snapshotLC=$(wc -l < ./snapshots/"$file".snapshot)
+
+    echo $(compare "$snapshotLC" "$cmdOutputLC")
+
   else
-    echo ""$file": FAIL <--"
+
+    # "${@:2}" -- all arguments starting from 2.
+    cmdOutput=$(java -classpath ../bin Clove < "$file" "${@:2}")
+    snapshot=$(<"./snapshots/$file".snapshot)
+
+    echo $(compare "$snapshot" "$cmdOutput")
+
   fi
 else
   echo "ERROR: Specify the test number in the first argument."
