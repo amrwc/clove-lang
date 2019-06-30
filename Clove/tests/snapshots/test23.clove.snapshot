@@ -31,6 +31,8 @@ mult: 10
 mult *= mult: 100
 div: 10
 div /= div: 1
+mod: 10
+mod %= 3: 1
 
 
 

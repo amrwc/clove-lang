@@ -69,6 +69,11 @@ log("div: ", div)
 div /= div
 log("div /= div: ", div)
 
+let mod = 10
+log("mod: ", mod)
+mod %= 3
+log("mod %= 3: ", mod)
+
 
 
 log()

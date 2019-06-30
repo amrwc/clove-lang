@@ -294,8 +294,10 @@ public class Parser implements CloveVisitor {
 			return val.mult(rightVal);
 		case "/=":
 			return val.div(rightVal);
+		case "%=":
+			return val.mod(rightVal);
 		default:
-			throw new ExceptionSemantic("Operator \"" + operator + "\" cannot be used on "
+			throw new ExceptionSemantic("Operator '" + operator + "' cannot be used on "
 					+ val + " and " + rightVal + ".");
 		}
 	}

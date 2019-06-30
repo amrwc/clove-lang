@@ -203,6 +203,7 @@ TOKEN : /* OPERATOR SYMBOLS */
 | < MEQ: "-=" >
 | < TEQ: "*=" >
 | < DEQ: "/=" >
+| < MODEQ: "%=" >
 | < UEQ: "@=" >
 | < EQ: "==" >
 | < GT: ">" >
@@ -342,12 +343,19 @@ void assignment() #Assignment :
   	  {jjtThis.shorthandOperator = operator.image;}
     )
     |
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "/=")
     (
 	  // identifier /= expression
       identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
       operator = <DEQ> expression()
   	  {jjtThis.shorthandOperator = operator.image;}
     )
+    |
+    (
+      // identifier %= expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <MODEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}    )
   )
 }
 
