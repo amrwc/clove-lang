@@ -4,69 +4,69 @@ list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 
 Stack:
-	list->push(87006)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006]
-	array->push(87006)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006]
+	list->push(56290)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290]
+	array->push(56290)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290]
 
-	list->push(79539)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539]
-	array->push(79539)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539]
+	list->push(82503)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503]
+	array->push(82503)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503]
 
-	list->push(88305)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539, 88305]
-	array->push(88305)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539, 88305]
+	list->push(26375)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503, 26375]
+	array->push(26375)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503, 26375]
 
 
 
-	list->pop(): 88305
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539]
-	array->pop(): 88305
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006, 79539]
+	list->pop(): 26375
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503]
+	array->pop(): 26375
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290, 82503]
 
-	list->pop(): 79539
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006]
-	array->pop(): 79539
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 87006]
+	list->pop(): 82503
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290]
+	array->pop(): 82503
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 56290]
 
-	list->pop(): 87006
+	list->pop(): 56290
 	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
-	array->pop(): 87006
+	array->pop(): 56290
 	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9]
 
 
 
 Queue:
-	list->push(23192)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192]
-	array->push(23192)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192]
+	list->push(17449)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449]
+	array->push(17449)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449]
 
-	list->push(44896)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896]
-	array->push(44896)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896]
+	list->push(24321)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321]
+	array->push(24321)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321]
 
-	list->push(50743)
-	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
-	array->push(50743)
-	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	list->push(49347)
+	list:  [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
+	array->push(49347)
+	array: [v0, v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 
 
 
 	list->shift(): v0
-	list:  [v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	list:  [v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 	array->shift(): v0
-	array: [v1, v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	array: [v1, v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 
 	list->shift(): v1
-	list:  [v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	list:  [v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 	array->shift(): v1
-	array: [v2, v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	array: [v2, v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 
 	list->shift(): v2
-	list:  [v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	list:  [v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
 	array->shift(): v2
-	array: [v3, v4, v5, v6, v7, v8, v9, 23192, 44896, 50743]
+	array: [v3, v4, v5, v6, v7, v8, v9, 17449, 24321, 49347]
