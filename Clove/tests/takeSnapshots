@@ -1,8 +1,13 @@
 #!/bin/sh
 
+if [ ! -d "snapshots" ]; then
+  mkdir snapshots
+  echo "Created 'snapshots' subdirectory."
+fi
+
 for file in *.clove
 do
   printf "Snapshotting '"$file"'... "
-  java -classpath ../bin Clove < "$file" > "$file".snapshot
+  java -classpath ../bin Clove < "$file" > ./snapshots/"$file".snapshot
   printf "DONE!\n"
 done

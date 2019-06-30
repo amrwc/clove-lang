@@ -16,7 +16,7 @@ if [[ -n "$testNum" ]]; then      # If testNum is not empty...
 
   # "${@:2}" -- all arguments starting from 2.
   cmdOutput=$(java -classpath ../bin Clove < "$file" "${@:2}")
-  snapshot=$(<"$file".snapshot)
+  snapshot=$(<"./snapshots/$file".snapshot)
 
   if [ "$snapshot" == "$cmdOutput" ]; then
     echo ""$file": PASS"

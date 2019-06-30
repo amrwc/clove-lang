@@ -21,7 +21,7 @@ After setting up and building, do:
 
 ```PowerShell
 cd Clove
-java -classpath ./bin Clove < [file_name].clove [args]
+java -classpath ./bin Clove < [file_name] [args]
 ```
 
 You can also use the `run` scripts placed in the `examples` directory. Please note that the second example ('vigenere-cipher') requires 3 arguments; read the brief at the top of the file.
@@ -30,13 +30,13 @@ You can also use the `run` scripts placed in the `examples` directory. Please no
 
 Terminal:
 
-```bash
+```PowerShell
 ./run [file_name] [args]
 ```
 
 If you get `-bash: ./run: Permission denied` error, run:
 
-```bash
+```PowerShell
 chmod 555 run
 ```
 

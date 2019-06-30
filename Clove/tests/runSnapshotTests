@@ -3,7 +3,7 @@
 for file in *.clove
 do
   cmdOutput=$(java -classpath ../bin Clove < "$file")
-  snapshot=$(<"$file".snapshot)
+  snapshot=$(<"./snapshots/$file".snapshot)
 
   if [ "$snapshot" == "$cmdOutput" ]; then
     echo ""$file": PASS"
