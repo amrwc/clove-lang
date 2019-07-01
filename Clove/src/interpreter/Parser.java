@@ -1240,6 +1240,23 @@ public class Parser implements CloveVisitor {
 					"The object to cast must be of ValueReflection type.");
 	}
 
+	/**
+	 * Do a ternary expression.
+	 */
+	@Override
+	public Object visit(ASTTernaryExpression node, Object data) {
+		final Value condition = doChild(node, 0);
+
+		if (!(condition instanceof ValueBoolean))
+			throw new ExceptionSemantic(
+					"The test expression of an if statement must be boolean.");
+
+		if (((ValueBoolean) condition).getRawValue())
+			return doChild(node, 1);
+		else
+			return doChild(node, 2);
+	}
+
 	/************
 	 * Literals *
 	 ************/

@@ -67,3 +67,4 @@
 /ASTValueReflection.java
 /ASTValueReflectionCast.java
 /ASTLog.java
+/ASTTernaryExpression.java

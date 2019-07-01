@@ -1,0 +1,12 @@
+/**
+ * Test ternary expression/operator
+ */
+
+log("Ternary operator");
+
+log(<< 1 > 3 >> ? 'bob' : 'jon');
+
+function test(v1, v2) {
+  return << v1 >= v2 >> ? 'first' : 'second';
+}
+log(test(1, 3));

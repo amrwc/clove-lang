@@ -656,6 +656,10 @@ void primary_expression() :
   | random()
   | reflect()
   | LOOKAHEAD(3) value_reflection_cast()
+  //| ternary_expression()
+  //| LOOKAHEAD(expression() "?") ternary_expression()
+  //| LOOKAHEAD("(" expression() ")" "?") ternary_expression()
+  | LOOKAHEAD("<<" expression() ">>" "?") ternary_expression()
   | "(" expression() ")"
 }
 
@@ -744,6 +748,14 @@ void value_reflection_cast() #ValueReflectionCast :
 {}
 {
   "(" character() ")" primary_expression()
+}
+
+
+void ternary_expression() #TernaryExpression :
+{}
+{
+  //"(" expression() ")" "?" expression() ":" expression()
+  "<<" expression() ">>" "?" expression() ":" expression()
 }
 
 
