@@ -14,7 +14,7 @@ _A more detailed specification of the language can be found [here](https://githu
     - `if (result == null)…`,
     - ValueNull?,
     - currently, if the R-value resolves to `null`, an empty ValueString `("")` is returned,
-  - [ ] modulo compound assignment operator
+  - [x] modulo compound assignment operator
     - `%=`,
   - [ ] root function (n<sup>th</sup> root)
     - `sqrt()`,
