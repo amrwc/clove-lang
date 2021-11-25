@@ -17,7 +17,9 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-20.04
-    working-directory: ./Clove
+    defaults:
+      run:
+        working-directory: ./Clove
     steps:
       - name: Clone the repository
         uses: actions/checkout@v2
@@ -52,7 +54,9 @@ jobs:
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-20.04
-    working-directory: ./Clove
+    defaults:
+      run:
+        working-directory: ./Clove
     steps:
       - name: Clone the repository
         uses: actions/checkout@v2
