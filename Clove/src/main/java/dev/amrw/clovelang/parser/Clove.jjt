@@ -1,0 +1,833 @@
+/*
+ * A simple expression parser and evaluator
+ *
+ */
+
+options {
+  LOOKAHEAD = 1;
+  CHOICE_AMBIGUITY_CHECK = 2;
+  OTHER_AMBIGUITY_CHECK = 1;
+  STATIC = false;
+  DEBUG_PARSER = false;
+  DEBUG_LOOKAHEAD = false;
+  DEBUG_TOKEN_MANAGER = false;
+  ERROR_REPORTING = true;
+  JAVA_UNICODE_ESCAPE = false;
+  UNICODE_INPUT = false;
+  IGNORE_CASE = false;
+  USER_TOKEN_MANAGER = false;
+  USER_CHAR_STREAM = false;
+  BUILD_PARSER = true;
+  BUILD_TOKEN_MANAGER = true;
+  SANITY_CHECK = true;
+  FORCE_LA_CHECK = false;
+  MULTI = true;
+  VISITOR = true;
+  JDK_VERSION = "1.8";
+  NODE_DEFAULT_VOID = true;
+  NODE_EXTENDS = "dev.amrw.clovelang.interpreter.BaseASTNode";
+  NODE_PACKAGE = "dev.amrw.clovelang.parser.ast";
+  JJTREE_OUTPUT_DIRECTORY = "./ast";
+}
+
+PARSER_BEGIN(Clove)
+package dev.amrw.clovelang.parser.ast;
+public class Clove {}
+PARSER_END(Clove)
+
+/*
+ *
+ * Lexer definitions
+ *
+ */
+
+SKIP : /* WHITE SPACE */
+{
+  " "
+| "\t"
+| "\n"
+| "\r"
+| "\f"
+}
+
+SPECIAL_TOKEN : /* COMMENTS */
+{
+  <SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")>
+| <FORMAL_COMMENT: "/**" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+| <MULTI_LINE_COMMENT: "/*" (~["*"])* "*" ("*" | (~["*","/"] (~["*"])* "*"))* "/">
+}
+
+/**
+ * These tokens include many aliases for versatility, including some in Polish.
+ * 
+ * @author amrwc
+ */
+TOKEN [IGNORE_CASE] : /* RESERVED WORDS AND LITERALS */
+{
+  < IF: ("IF"|"JESLI") >
+| < ELSE: ("ELSE"|"ALBO") >
+| < FOR: ("FOR"|"DLA") >
+| < WHILE: ("WHILE"|"GDY") >
+| < LOG: ("LOG"|"WYSWIETL"|"POKAZ") >
+| < FUNCTION: ("FUNCTION"|"FUNC"|"FN"|"FUNKCJA") >
+| < RETURN: ("RETURN"|"ZWROC") >
+| < OR: ("||"|"OR"|"BADZ") >
+| < AND: ("&&"|"AND"|"ORAZ") >
+| < NOT: ("!"|"NOT"|"NEGACJA"|"ZANEGUJ") >
+| < TRUE: ("TRUE"|"PRAWDA") >
+| < FALSE: ("FALSE"|"FALSZ") >
+| < QUIT: ("QUIT"|"ZAKONCZ"|"WYJDZ") >
+| < LET: ("LET"|"VAR"|"ZADEKLARUJ"|"NOWE"|"NOWY") >
+| < CONST: ("CONST"|"CONSTANT"|"STALA") >
+| < GETARGS: ("GET_ARGS"|"WCZYTAJ_ARGUMENTY") >
+| < HTTP: "HTTP" >
+| < FILE: ("FILE"|"PLIK") >
+| < RANDOM: ("RANDOM"|"LOSUJ") >
+| < REFLECT: "REFLECT" >
+}
+
+TOKEN : /* LITERALS */
+{
+  < INTEGER_LITERAL:
+        <DECIMAL_LITERAL> (["l","L"])?
+      | <HEX_LITERAL> (["l","L"])?
+      | <OCTAL_LITERAL> (["l","L"])?
+  >
+|
+  < #DECIMAL_LITERAL: ["1"-"9"] (["0"-"9"])* >
+|
+  < #HEX_LITERAL: "0" ["x","X"] (["0"-"9","a"-"f","A"-"F"])+ >
+|
+  < #OCTAL_LITERAL: "0" (["0"-"7"])* >
+|
+  < FLOATING_POINT_LITERAL:
+        (["0"-"9"])+ "." (["0"-"9"])* (<EXPONENT>)? (["f","F","d","D"])?
+      | "." (["0"-"9"])+ (<EXPONENT>)? (["f","F","d","D"])?
+      | (["0"-"9"])+ <EXPONENT> (["f","F","d","D"])?
+      | (["0"-"9"])+ (<EXPONENT>)? ["f","F","d","D"]
+  >
+|
+  < #EXPONENT: ["e","E"] (["+","-"])? (["0"-"9"])+ >
+|
+  < STRING_LITERAL:
+     ( 
+      "\""
+      (   (~["\"","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "\""
+     )
+   | (
+      "'"
+      (   (~["\'","\\","\n","\r"])
+        | ("\\"
+            ( ["n","t","b","r","f","\\","'","\""]
+            | ["0"-"7"] ( ["0"-"7"] )?
+            | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+            )
+          )
+      )*
+      "'"
+     )
+  >
+}
+
+TOKEN : /* IDENTIFIERS */
+{
+  < IDENTIFIER: <LETTER> (<LETTER>|<DIGIT>|"#")* >
+| < #LETTER:
+      [
+       "\u0024",
+       "\u0041"-"\u005a",
+       "\u005f",
+       "\u0061"-"\u007a",
+       "\u00c0"-"\u00d6",
+       "\u00d8"-"\u00f6",
+       "\u00f8"-"\u00ff",
+       "\u0100"-"\u1fff",
+       "\u3040"-"\u318f",
+       "\u3300"-"\u337f",
+       "\u3400"-"\u3d2d",
+       "\u4e00"-"\u9fff",
+       "\uf900"-"\ufaff"
+      ]
+  >
+|
+  < #DIGIT:
+      [
+       "\u0030"-"\u0039",
+       "\u0660"-"\u0669",
+       "\u06f0"-"\u06f9",
+       "\u0966"-"\u096f",
+       "\u09e6"-"\u09ef",
+       "\u0a66"-"\u0a6f",
+       "\u0ae6"-"\u0aef",
+       "\u0b66"-"\u0b6f",
+       "\u0be7"-"\u0bef",
+       "\u0c66"-"\u0c6f",
+       "\u0ce6"-"\u0cef",
+       "\u0d66"-"\u0d6f",
+       "\u0e50"-"\u0e59",
+       "\u0ed0"-"\u0ed9",
+       "\u1040"-"\u1049"
+      ]
+  >
+}
+
+TOKEN : /* SEPARATORS */
+{
+  < LPAREN: "(" >
+| < RPAREN: ")" >
+| < LBRACE: "{" >
+| < RBRACE: "}" >
+| < LBRACKET: "[" >
+| < RBRACKET: "]" >
+| < SEMICOLON: ";" >
+| < COMMA: "," >
+| < DOT: "." >
+| < PP: "++" >
+| < MM: "--" >
+| < ARROW1: "=>" > // Used for arrow functions.
+| < ARROW2: "->" > // Used for prototype functions.
+}
+
+TOKEN : /* OPERATOR SYMBOLS */
+{
+  < ASSIGN: "=" >
+| < PEQ: "+=" >
+| < MEQ: "-=" >
+| < TEQ: "*=" >
+| < DEQ: "/=" >
+| < MODEQ: "%=" >
+| < UEQ: "@=" >
+| < EQ: "==" >
+| < GT: ">" >
+| < LT: "<" >
+| < LE: "<=" >
+| < GE: ">=" >
+| < NE: ("!="|"<>") >
+| < HOOK: "?" >
+| < COLON: ":" >
+| < PLUS: "+" >
+| < SUBT: "-" >
+| < STAR: "*" >
+| < SLASH: "/" >
+| < REM: "%" >
+}
+
+
+
+
+
+/***********************************************
+ *          THE GRAMMAR STARTS HERE            *
+ ***********************************************/
+
+ASTCode code() #Code :
+{}
+{
+  statement() ( statement() )* <EOF> {return jjtThis;}
+}
+
+
+
+
+
+
+/***********************************************
+ *                 Statements                  *
+ ***********************************************/
+
+void statement() #Statement :
+{}
+{
+    LOOKAHEAD(call()) call() [";"]
+  | LOOKAHEAD(definition()) definition() [";"]
+  | LOOKAHEAD(declaration()) declaration() [";"]
+  | LOOKAHEAD(assignment()) assignment() [";"]
+  | function_definition()
+  | block()
+  | if_statement()
+  | for_loop()
+  | while_loop()
+  | log() [";"]
+  | quit() [";"]
+  | LOOKAHEAD(postfix_expression()) postfix_expression() [";"]
+  | proto_invoke() [";"]
+  | prefix_expression() [";"]
+  | http() [";"]
+  | file() [";"]
+}
+
+
+void call() #Call :
+{}
+{
+  dereference() argument_list()
+}
+
+
+/**
+ * Definition using the <LET> or <CONST> keywords.
+ * 
+ * @author amrwc
+ */
+void definition() #Definition :
+{}
+{
+  <LET> ( LOOKAHEAD(3) array_init() | assignment() )
+  {jjtThis.defType = "variable";}
+
+| <CONST> ( LOOKAHEAD(2) array_init() | const_init() )
+  {jjtThis.defType = "constant";}
+}
+
+
+/**
+ * Declaration of a variable using the <LET> keyword.
+ * 
+ * @author amrwc
+ */
+void declaration() #Declaration :
+{}
+{
+  // If the declaration has two children, it's a ValueArray declaration.
+  <LET> identifier() [
+    "[" [ add_expression() {jjtThis.isArrayWithCap = true;} ] "]"
+    {jjtThis.isArrayDeclaration = true;}
+  ]
+  {jjtThis.defType = "variable";}
+
+  // This will give an error since constants must be initialised.
+| <CONST> identifier() [ "[" [ add_expression() ] "]" ]
+  {jjtThis.defType = "constant";}
+}
+
+
+void assignment() #Assignment :
+{Token operator;}
+{
+  LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "=")
+  (
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+    "=" expression()
+  )
+  |
+  (
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "+=")
+    (
+	  // identifier += expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <PEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "-=")
+    (
+	  // identifier -= expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <MEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "*=")
+    (
+	  // identifier *= expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <TEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "/=")
+    (
+	  // identifier /= expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <DEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+    |
+    (
+      // identifier %= expression
+      identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+      operator = <MODEQ> expression()
+  	  {jjtThis.shorthandOperator = operator.image;}
+    )
+  )
+}
+
+
+void function_definition() #FunctionDefinition :
+{}
+{
+  <FUNCTION> identifier() parameter_list() "{" 
+    function_body()
+    [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ] 
+  "}"
+}
+
+
+void block() #Block :
+{}
+{
+  "{" ( statement() )* "}"
+}
+
+
+void if_statement() #IfStatement :
+{}
+{
+  <IF> "(" expression() ")" statement() 
+  [ LOOKAHEAD(1) <ELSE> statement() {jjtThis.ifHasElse = true;} ]
+}
+
+
+void for_loop() #ForLoop :
+{}
+{
+  <FOR> "("
+    definition() ";"
+    expression() ";"
+    ( LOOKAHEAD(3) assignment() | expression() )
+  ")"
+  statement()
+}
+
+
+void while_loop() #WhileLoop :
+{}
+{
+  <WHILE> "(" expression() ")" statement()
+}
+
+
+/**
+ * Write all the arguments to the command line.
+ * If there is no arguments, it will print a new line.
+ * 
+ * @author amrwc
+ */
+void log() #Log :
+{}
+{
+  <LOG> "(" [ expression() ( "," expression() )* ] ")"
+}
+
+
+void quit() #Quit :
+{}
+{
+  <QUIT> "(" [ expression() ( "," expression() )* ] ")"
+}
+
+
+void postfix_expression() #IncrementDecrement :
+{Token operator;}
+{
+  LOOKAHEAD(identifier() (<DOT> identifier() | "[" add_expression() "]")* "++")
+  (
+	// dereference++
+  	identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+  	operator = <PP>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
+  |
+  (
+	// dereference--
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+    operator = <MM>
+  	{jjtThis.shorthandOperator = "post" + operator.image;}
+  )
+}
+
+
+/**
+ * Invoke a prototype function.
+ * It can be a statement() or a primary_expression().
+ * 
+ * @author amrwc
+ */
+void proto_invoke() #ProtoInvoke :
+{Token t;}
+{
+  dereference() <ARROW2> t = <IDENTIFIER> "("
+    [ expression() ( "," expression() )* ]
+  ")"
+  {jjtThis.tokenValue = t.image;}
+}
+
+
+void prefix_expression() #IncrementDecrement :
+{Token operator;}
+{
+  LOOKAHEAD("++" identifier() (<DOT> identifier() | "[" add_expression() "]")*)
+  (
+	// ++dereference
+  	operator = <PP>
+  	identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
+  )
+  |
+  (
+	// --dereference
+    operator = <MM>
+    identifier() ( <DOT> identifier() | "[" add_expression() "]" )*
+  	{jjtThis.shorthandOperator = "pre" + operator.image;}
+  )
+}
+
+
+/**
+ * Sends an HTTP request. Available methods:
+ * GET, POST, PUT, DELETE
+ * 
+ * @author amrwc
+ */
+void http() #Http :
+{}
+{
+  <HTTP> "("
+          ( character() | dereference() )    // Method ("GET"|"POST"|"PUT"|"DELETE")
+      "," ( character() | dereference() )    // Url
+    ( "," ( character() | dereference() ) )* // Request body
+  ")"
+}
+
+
+/**
+ * Creates a new file and writes to it.
+ * 
+ * Usage:
+ * file("open", "file.txt", "content")
+ * 
+ * @author amrwc
+ */
+void file() #File :
+{}
+{
+  <FILE> "("
+        ( character() | dereference() ) // Option ("create"/"overwrite"|"open"/"append")
+    "," ( character() | dereference() ) // File path
+    "," ( character() | dereference() ) // Content
+  ")"
+}
+
+
+
+
+
+
+/***********************************************
+ *               Sub-statements                *
+ ***********************************************/
+
+void identifier() #Identifier :
+{Token t;}
+{
+  t = <IDENTIFIER> {jjtThis.tokenValue = t.image;}
+}
+
+
+void const_init() #ConstInit :
+{}
+{
+  identifier() "=" expression()
+}
+
+
+void array_init() #ArrayInit :
+{}
+{
+  identifier() "[" [ add_expression() {jjtThis.isArrayWithCap = true;} ] "]" "="
+  "{" expression() ( "," expression() )* "}"
+}
+
+
+void argument_list() #ArgumentList :
+{}
+{
+  "(" [ expression() ] ( "," expression() )* ")"
+}
+
+
+void parameter_list() #ParameterList :
+{}
+{
+  "(" [ identifier() ( "," identifier() )* ] ")"
+}
+
+
+void function_body() #FunctionBody :
+{}
+{
+  ( statement() )* 
+}
+
+
+void return_expression() #ReturnExpression :
+{}
+{
+  expression() [";"]
+}
+
+
+
+
+
+
+/***********************************************
+ *                Expressions                  *
+ ***********************************************/
+
+void expression() :
+{}
+{
+  or_expression()
+}
+
+void or_expression() :
+{}
+{
+  and_expression() ( <OR> and_expression() #Or(2) )*
+}
+
+void and_expression() :
+{}
+{
+  compare_expression() ( <AND> compare_expression() #And(2) )*
+}
+
+void compare_expression() :
+{}
+{
+  add_expression() [
+      <EQ> add_expression() #CompEqual(2)
+    | <NE> add_expression() #CompNequal(2)
+    | <GE> add_expression() #CompGTE(2)
+    | <LE> add_expression() #CompLTE(2)
+    | <GT> add_expression() #CompGT(2)
+    | <LT> add_expression() #CompLT(2)
+  ]
+}
+
+void add_expression() :
+{}
+{
+  mul_expression() (
+      "+"  mul_expression() #Add(2)
+    | "-"  mul_expression() #Subtract(2)
+  )*
+}
+
+void mul_expression() :
+{}
+{
+  unary_expression() (
+      "*" unary_expression() #Times(2)
+    | "/" unary_expression() #Divide(2)
+    | "%" unary_expression() #Modulo(2)
+  )*
+}
+
+void unary_expression() :
+{}
+{
+    <NOT> unary_expression() #UnaryNot(1)
+  | "+"   unary_expression() #UnaryPlus(1)
+  | "-"   unary_expression() #UnaryMinus(1)
+  | primary_expression()
+}
+
+void primary_expression() :
+{}
+{
+    prefix_expression()
+  | LOOKAHEAD(postfix_expression()) postfix_expression()
+  | LOOKAHEAD(literal()) literal()
+  | LOOKAHEAD(function_invocation()) function_invocation()
+  | LOOKAHEAD(proto_invoke()) proto_invoke()
+  | LOOKAHEAD(dereference()) dereference()
+  | get_args()
+  | http()
+  | file()
+  | random()
+  | reflect()
+  | LOOKAHEAD(3) value_reflection_cast()
+  | "(" expression() ")"
+}
+
+
+void literal() :
+{}
+{
+    integer()
+  | character()
+  | rational()
+  | bool()
+  | LOOKAHEAD(2) value_function()
+  | value_object()
+  | value_list()
+}
+
+
+void function_invocation() #FunctionInvocation :
+{}
+{
+  dereference() argument_list()
+}
+
+
+void dereference() #Dereference :
+{Token t;}
+{
+  t = <IDENTIFIER> ( <DOT> identifier() | "[" add_expression() "]" )*
+  {jjtThis.tokenValue = t.image;}
+}
+
+
+/**
+ * Get ValueList of command-line arguments.
+ *
+ * @author amrwc
+ */
+void get_args() #GetArgs :
+{}
+{
+  <GETARGS> "(" ")"
+}
+
+
+/**
+ * Get a random value between min inclusive and max exclusive.
+ *
+ * Example usage:
+ * const rand = random(1, 50)
+ *
+ * @author amrwc
+ */
+void random() #Random :
+{}
+{
+  <RANDOM> "("
+        add_expression() // Min value
+    "," add_expression() // Max value
+  ")"
+}
+
+
+/**
+ * Instantiates a class requested at run-time
+ * and stores it in the ValueReflection type.
+ *
+ * @author amrwc
+ */
+void reflect() #Reflect :
+{}
+{
+  <REFLECT> "("
+          ( character()  | dereference() )     // Class-name
+    [ "," ( value_list() | dereference() ) ]   // Constructor argument types/arguments
+  ")"
+}
+
+
+/**
+ * Reflection literal with a cast instead of
+ * using reflect() method.
+ * 
+ * @author amrwc
+ */
+void value_reflection_cast() #ValueReflectionCast :
+{}
+{
+  "(" character() ")" primary_expression()
+}
+
+
+
+
+
+
+/***********************************************
+ *                 Literals                    *
+ ***********************************************/
+
+void integer() #Integer : 
+{Token t;} 
+{ 
+  t = <INTEGER_LITERAL> {jjtThis.tokenValue = t.image;}
+}
+
+
+void character() #Character :
+{Token t;}
+{
+  t = <STRING_LITERAL> {jjtThis.tokenValue = t.image;}
+}
+
+
+void rational() #Rational : 
+{Token t;} 
+{ 
+  t = <FLOATING_POINT_LITERAL> {jjtThis.tokenValue = t.image;}
+}
+
+
+void bool() : 
+{} 
+{ 
+    <TRUE> #True
+  | <FALSE> #False
+}
+
+
+/**
+ * Anonymous function.
+ * 
+ * @author amrwc
+ */
+void value_function() #ValueFunction :
+{}
+{
+  (
+    <FUNCTION> parameter_list() "{"
+      function_body()
+      [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+  |
+  ( // Arrow function:
+    parameter_list() <ARROW1> "{"
+      function_body()
+      [ <RETURN> return_expression() {jjtThis.fnHasReturn = true;} ]
+  	"}"
+  )
+}
+
+
+/**
+ * Anonymous object literal.
+ * 
+ * @author amrwc
+ */
+void value_object() #ValueObject :
+{}
+{
+  "{" [ identifier() ":" expression() ( "," identifier() ":" expression() )* ] "}"
+}
+
+
+/**
+ * List literal.
+ * 
+ * @author amrwc
+ */
+void value_list() #ValueList :
+{}
+{
+  "[" [ expression() ( "," expression() )* ] "]"
+}

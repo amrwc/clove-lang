@@ -28,20 +28,45 @@
 
 ## Project setup and compiling
 
+### Gradle
+
 ```console
-cd Clove/src/parser
+# TODO: Create a Gradle task to do this
+
+cd Clove/src/main/java/dev/amrw/clovelang/parser
 jjtree -STATIC=false Clove.jjt
+
 cd ast
 javacc Clove.jj
-cd ../..
-javac Clove.java
+
+cd ../../../../..  # Clove/src/main/java
+javac CloveMain.java
 ```
 
-Test whether it works:
+Test it:
 
 ```console
-cd tests
-java -classpath ../src Clove < test01.clove
+./gradlew run < tests/test01.clove
+```
+
+### Manual
+
+```console
+cd Clove/src/main/java/dev/amrw/clovelang/parser
+jjtree -STATIC=false Clove.jjt
+
+cd ast
+javacc Clove.jj
+
+cd ../../../../..  # Clove/src/main/java
+javac CloveMain.java
+```
+
+Test it:
+
+```console
+cd Clove
+java --class-path src/main/java dev.amrw.clovelang.CloveMain < tests/test01.clove
 ```
 
 ### Eclipse IDE
@@ -56,7 +81,7 @@ java -classpath ../src Clove < test01.clove
 1. Make sure the project is built, if it didn't happen automatically:
    1. Project → Build All (`cmd + B` on Mac, `ctrl + B` on Windows).
 
-## Running `.clove` files
+## Running `.clove` files (OUTDATED, see above)
 
 ```console
 cd Clove
