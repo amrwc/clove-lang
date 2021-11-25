@@ -4,20 +4,47 @@
 
 - JDK 12 or above
 
-   ```console
-   sdk install java 17.0.1.12.1-amzn
-   ```
+  ```console
+  sdk install java 17.0.1.12.1-amzn
+  ```
+
+- [JavaCC](https://github.com/javacc/javacc) – for compiling abstract syntax
+  tree, unless using Eclipse IDE with JavaCC plugin.
+
+  ```console
+  brew install javacc
+  ```
+
+### Optional
 
 - Eclipse IDE
 
-   ```console
-   brew install --cask eclipse-java
-   ```
+  ```console
+  brew install --cask eclipse-java
+  ```
 
 - Eclipse
   [JavaCC plugin](https://marketplace.eclipse.org/content/javacc-eclipse-plug)
 
-## Project setup
+## Project setup and compiling
+
+```console
+cd Clove/src/parser
+jjtree -STATIC=false Clove.jjt
+cd ast
+javacc Clove.jj
+cd ../..
+javac Clove.java
+```
+
+Test whether it works:
+
+```console
+cd tests
+java -classpath ../src Clove < test01.clove
+```
+
+### Eclipse IDE
 
 1. Open the project:
    1. Go to File → Import… → General → Existing projects into workspace.
