@@ -3,12 +3,12 @@ name: Unit and Integration Tests
 on:
   push:
     paths:
-      - '.github/workflows/unit-and-unit-and-integration-tests.yml'
-      - 'gradle/**'
-      - 'src/**'
-      - 'build.gradle'
-      - 'gradle.properties'
-      - 'settings.gradle'
+      - 'Clove/.github/workflows/unit-and-unit-and-integration-tests.yml'
+      - 'Clove/gradle/**'
+      - 'Clove/src/**'
+      - 'Clove/build.gradle'
+      - 'Clove/gradle.properties'
+      - 'Clove/settings.gradle'
 
 env:
   GRADLE_CACHE: 'cache-gradle'
@@ -17,6 +17,7 @@ jobs:
   unit-tests:
     name: Unit tests
     runs-on: ubuntu-20.04
+    working-directory: ./Clove
     steps:
       - name: Clone the repository
         uses: actions/checkout@v2
@@ -51,6 +52,7 @@ jobs:
   integration-tests:
     name: Integration tests
     runs-on: ubuntu-20.04
+    working-directory: ./Clove
     steps:
       - name: Clone the repository
         uses: actions/checkout@v2
