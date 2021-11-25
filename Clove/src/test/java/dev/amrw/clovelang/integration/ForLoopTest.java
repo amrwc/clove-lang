@@ -10,8 +10,10 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+@Tag("integration-test")
 public class ForLoopTest {
 
   @Test

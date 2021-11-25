@@ -39,6 +39,21 @@ javacc {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+test {
+    useJUnitPlatform {
+        excludeTags 'integration-test'
+    }
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'integration-test'
+    }
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        // Display `unchecked` warnings
+        options.compilerArgs << '-Xlint:unchecked'
+    }
 }
