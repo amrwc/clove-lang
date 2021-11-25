@@ -3,7 +3,7 @@ name: Unit and Integration Tests
 on:
   push:
     paths:
-      - '.github/workflows/unit-and-unit-and-integration-tests.yml'
+      - '.github/workflows/unit-and-integration-tests.yml'
       - 'Clove/gradle/**'
       - 'Clove/src/**'
       - 'Clove/build.gradle'
