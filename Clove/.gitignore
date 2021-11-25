@@ -1,6 +1,17 @@
+*.class
+*.war
+*.ear
+
 /bin/
 .metadata
 .settings
+.recommenders
+.classpath
+.project
+
+**/src/parser/ast/*.java
+**/src/parser/ast/*.jj
+
 /code-snippets/*.txt
 /example-programs/*.txt
 /example-programs/*.json
