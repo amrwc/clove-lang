@@ -1,5 +1,6 @@
 plugins {
     id 'application'
+    id 'com.intershop.gradle.javacc' version '4.0.0'
 }
 
 repositories {
@@ -8,6 +9,8 @@ repositories {
 
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+
+    compileOnly 'net.java.dev.javacc:javacc:7.0.10'
 }
 
 application {
@@ -17,6 +20,23 @@ application {
 run {
     // Let `stdin` through.
     standardInput = System.in
+}
+
+javacc {
+    configs {
+        javaCCVersion = '7.0.10'
+        main {
+            staticParam = 'false'
+            jjtree {
+                inputFile = file('src/main/java/dev/amrw/clovelang/parser/Clove.jjt')
+                outputDir = file('src/main/java/dev/amrw/clovelang/parser/ast')
+            }
+        }
+    }
+
+    clean {
+        delete file('src/main/java/dev/amrw/clovelang/parser/ast')
+    }
 }
 
 tasks.named('test') {

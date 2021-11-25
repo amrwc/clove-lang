@@ -34,4 +34,4 @@ out/
 .vscode/
 
 ### Clove-lang ###
-**/parser/ast/*
+**/parser/ast/

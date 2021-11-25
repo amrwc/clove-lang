@@ -27,7 +27,7 @@ options {
   NODE_DEFAULT_VOID = true;
   NODE_EXTENDS = "dev.amrw.clovelang.interpreter.BaseASTNode";
   NODE_PACKAGE = "dev.amrw.clovelang.parser.ast";
-  JJTREE_OUTPUT_DIRECTORY = "./ast";
+  // JJTREE_OUTPUT_DIRECTORY = "ast";
 }
 
 PARSER_BEGIN(Clove)
