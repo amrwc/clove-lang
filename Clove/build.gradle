@@ -45,12 +45,18 @@ test {
     useJUnitPlatform {
         excludeTags 'integration-test'
     }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
     exclude 'dev/amrw/clovelang/integration/**'
 }
 
 task integrationTest(type: Test) {
     useJUnitPlatform {
         includeTags 'integration-test'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
     }
     include 'dev/amrw/clovelang/integration/**'
 }
