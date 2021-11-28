@@ -1,6 +1,7 @@
 package dev.amrw.clovelang.integration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
@@ -52,6 +53,7 @@ class SnapshotTest {
   })
   void fastTests(final String filename) throws IOException {
     snapshotTest("integration/" + filename);
+    fail("testing");
   }
 
   @Nested
