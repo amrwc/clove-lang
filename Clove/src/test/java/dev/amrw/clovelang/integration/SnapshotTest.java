@@ -44,11 +44,11 @@ class SnapshotTest {
       "for-loop-classic2.clove",
       "for-loop-nested.clove",
       "if-else-statement.clove",
-      "test06.clove",
-      "test07.clove",
-      "test08.clove",
-      "test09.clove",
-      "test10.clove"
+      "block-statement.clove",
+      "function.clove",
+      "unary-expressions.clove",
+      "function-for-loop.clove",
+      "function-defined-inside-function.clove"
   })
   void fastTests(final String filename) throws IOException {
     snapshotTest("integration/" + filename);
