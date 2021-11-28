@@ -39,11 +39,11 @@ class SnapshotTest {
   @DisplayName("Fast tests")
   @ParameterizedTest(name = "[{index}] filename: {0}")
   @CsvSource({
-      "test01.clove",
-      "test02.clove",
-      "test03.clove",
-      "test04.clove",
-      "test05.clove",
+      "for-loop-classic.clove",
+      "for-loop-expression.clove",
+      "for-loop-classic2.clove",
+      "for-loop-nested.clove",
+      "if-else-statement.clove",
       "test06.clove",
       "test07.clove",
       "test08.clove",
