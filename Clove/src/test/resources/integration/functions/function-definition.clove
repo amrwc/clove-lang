@@ -1,0 +1,14 @@
+log('Void function:')
+function void_function(parameter1, parameter2) {
+  log(parameter1)
+  log(parameter2)
+}
+void_function(10, 'twenty')
+
+log()
+
+log('Function with return:')
+function multiply(parameter1, parameter2) {
+  return parameter1 * parameter2
+}
+log(multiply(5, 6))

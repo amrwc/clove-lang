@@ -1,9 +1,0 @@
-let p = 3
-
-function blah(start, fin) {
-	for (let i=start; i<=fin; i=i+1)
-		log(i)
-	log(p + 2)
-}
-
-blah(5, 10)

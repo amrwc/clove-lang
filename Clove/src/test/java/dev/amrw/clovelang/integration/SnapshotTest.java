@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
+import dev.amrw.clovelang.extension.TimingExtension;
 import dev.amrw.clovelang.interpreter.Interpreter;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -37,18 +39,17 @@ class SnapshotTest {
   }
 
   @DisplayName("Fast tests")
-  @ParameterizedTest(name = "[{index}] filename: {0}")
+  @ParameterizedTest(name = "[{index}] path: {0}")
   @CsvSource({
+      "functions/function-definition.clove",
+      "functions/nested-function-definition.clove",
       "for-loop-classic.clove",
       "for-loop-expression.clove",
       "for-loop-classic2.clove",
       "for-loop-nested.clove",
       "if-else-statement.clove",
       "block-statement.clove",
-      "function.clove",
       "unary-expressions.clove",
-      "function-for-loop.clove",
-      "function-defined-inside-function.clove"
   })
   void fastTests(final String filename) throws IOException {
     snapshotTest("integration/" + filename);
@@ -58,12 +59,19 @@ class SnapshotTest {
   @Timeout(60)
   @Tag("integration-test")
   @DisplayName("Slow tests")
+  @ExtendWith(TimingExtension.class)
   class SlowTests {
 
     @Test
     @DisplayName("Fibonacci")
     void fibonacci() throws IOException {
-      snapshotTest("integration/fibonacci.clove");
+      snapshotTest("integration/slow/fibonacci.clove");
+    }
+
+    @Test
+    @DisplayName("Long loop")
+    void longLoop() throws IOException {
+      snapshotTest("integration/slow/long-loop.clove");
     }
   }
 
