@@ -6,6 +6,7 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import dev.amrw.clovelang.extension.TimingExtension;
 import dev.amrw.clovelang.interpreter.Interpreter;
+import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -14,14 +15,13 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Timeout;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-@Tag("integration-test")
+@IntegrationTest
 @DisplayName("Snapshot tests")
 class SnapshotTest {
 
@@ -57,7 +57,7 @@ class SnapshotTest {
 
   @Nested
   @Timeout(60)
-  @Tag("integration-test")
+  @IntegrationTest
   @DisplayName("Slow tests")
   @ExtendWith(TimingExtension.class)
   class SlowTests {
