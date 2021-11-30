@@ -1,0 +1,6 @@
+const functionExpression = function(parameter1) {
+  log('inside function expression')
+  log(parameter1)
+}
+
+functionExpression('some parameter')

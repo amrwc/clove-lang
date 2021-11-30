@@ -43,6 +43,7 @@ class SnapshotTest {
   @CsvSource({
       "functions/function-definition.clove",
       "functions/nested-function-definition.clove",
+      "functions/function-expression.clove",
       "for-loop-classic.clove",
       "for-loop-expression.clove",
       "for-loop-classic2.clove",
@@ -51,8 +52,8 @@ class SnapshotTest {
       "block-statement.clove",
       "unary-expressions.clove",
   })
-  void fastTests(final String filename) throws IOException {
-    snapshotTest("integration/" + filename);
+  void fastTests(final String filePath) throws IOException {
+    snapshotTest("integration/" + filePath);
   }
 
   @Nested
