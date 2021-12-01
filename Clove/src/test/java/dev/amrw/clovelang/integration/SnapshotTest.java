@@ -22,7 +22,7 @@ public interface SnapshotTest {
     assertThat(result).isEqualTo(expectedOutput);
   }
 
-  default String executeClove(final String filePath) throws IOException {
+  private String executeClove(final String filePath) throws IOException {
     final var stdin = System.in;
     final var stdout = System.out;
     try (
