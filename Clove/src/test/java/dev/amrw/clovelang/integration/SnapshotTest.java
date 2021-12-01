@@ -4,82 +4,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
-import dev.amrw.clovelang.extension.TimingExtension;
 import dev.amrw.clovelang.interpreter.Interpreter;
 import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 @IntegrationTest
 @DisplayName("Snapshot tests")
-class SnapshotTest {
+public interface SnapshotTest {
 
-  private static PrintStream stdout;
-
-  @BeforeAll
-  static void beforeAll() {
-    stdout = System.out;
-  }
-
-  @AfterAll
-  static void afterAll() {
-    // Restore standard output stream
-    System.setOut(stdout);
-  }
-
-  @DisplayName("Fast tests")
-  @ParameterizedTest(name = "[{index}] path: {0}")
-  @CsvSource({
-      "functions/function-definition.clove",
-      "functions/nested-function-definition.clove",
-      "functions/function-expression.clove",
-      "loops/for-loop.clove",
-      "if-else-statement.clove",
-      "block-statement.clove",
-      "unary-expressions.clove",
-  })
-  void fastTests(final String filePath) throws IOException {
-    snapshotTest("integration/" + filePath);
-  }
-
-  @Nested
-  @Timeout(60)
-  @IntegrationTest
-  @DisplayName("Slow tests")
-  @ExtendWith(TimingExtension.class)
-  class SlowTests {
-
-    @Test
-    @DisplayName("Fibonacci")
-    void fibonacci() throws IOException {
-      snapshotTest("integration/slow/fibonacci.clove");
-    }
-
-    @Test
-    @DisplayName("Long loop")
-    void longLoop() throws IOException {
-      snapshotTest("integration/slow/long-loop.clove");
-    }
-  }
-
-  private void snapshotTest(final String resourcePath) throws IOException {
+  default void snapshotTest(final String resourcePath) throws IOException {
     final var result = executeClove(resourcePath);
     final var expectedOutput = getResourceAsString(resourcePath + ".snapshot");
     assertThat(result).isEqualTo(expectedOutput);
   }
 
-  private String executeClove(final String filePath) throws IOException {
+  default String executeClove(final String filePath) throws IOException {
+    final var stdin = System.in;
+    final var stdout = System.out;
     try (
         final var fileStream = gerResourceAsStream(filePath);
         final var outputStream = new ByteArrayOutputStream();
@@ -88,6 +33,7 @@ class SnapshotTest {
       System.setIn(fileStream);
       System.setOut(printStream);
       Interpreter.main(new String[]{});
+      System.setIn(stdin);
       System.setOut(stdout);
       return outputStream.toString();
     }
