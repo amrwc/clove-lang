@@ -1,0 +1,16 @@
+2 + 2 := 4
+5 - 3 := 2
+11 * 22 := 242
+10 / 2 := 5
+
+true == false := false
+true || false := true
+false || true := true
+true && false := false
+false && true := false
+
+2 > 3 := false
+2 >= 3 := false
+2 < 3 := true
+2 <= 3 := true
+2 + 2 > 3 + 3 := false

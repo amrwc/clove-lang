@@ -14,9 +14,9 @@ class FastTest implements SnapshotTest {
       "functions/nested-function-definition.clove",
       "functions/function-expression.clove",
       "loops/for-loop.clove",
-      "if-else-statement.clove",
-      "block-statement.clove",
-      "unary-expressions.clove",
+      "miscellaneous/block-statement.clove",
+      "miscellaneous/if-statement.clove",
+      "miscellaneous/simple-expressions.clove",
   })
   void fastTests(final String filePath) throws IOException {
     snapshotTest("integration/" + filePath);
