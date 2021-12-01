@@ -1,0 +1,12 @@
+log('For loop with block:')
+for (let i = 0; i < 10; i = i + 1) {
+  log(i)
+}
+
+log('For loop with without a block:')
+for (let i = 9; i >= 0; i = i - 1) log(i)
+
+log('Nested for loop:')
+for (let i = 0; i < 10; i = i + 1)
+  for (let j = i; j < 10; j = j + 1)
+    log(i * j)
