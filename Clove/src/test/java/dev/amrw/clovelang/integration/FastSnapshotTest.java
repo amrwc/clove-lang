@@ -14,6 +14,7 @@ class FastSnapshotTest implements SnapshotTest {
       "functions/nested-function-definition.clove",
       "functions/function-expression.clove",
       "loops/for.clove",
+      "loops/while.clove",
       "miscellaneous/block-statement.clove",
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",

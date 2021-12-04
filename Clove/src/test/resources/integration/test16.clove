@@ -1,8 +1,0 @@
-log("While loop:")
-log()
-
-let i = 0
-while (i < 10) {
-	log(321)
-	i = i + 1
-}

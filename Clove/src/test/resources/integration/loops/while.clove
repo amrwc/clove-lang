@@ -1,0 +1,17 @@
+log('While loop:')
+let i = 0
+while (i < 10) {
+  log(i)
+  i = i + 1
+}
+
+log('Nested while loop:')
+let j = 0
+while (j < 10) {
+  let k = 0
+  while (k < 10) {
+    log(j * k)
+    k = k + 1
+  }
+  j = j + 1
+}
