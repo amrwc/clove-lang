@@ -5,7 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-class FastTest implements SnapshotTest {
+class FastSnapshotTest implements SnapshotTest {
 
   @DisplayName("Fast tests")
   @ParameterizedTest(name = "[{index}] {0}")
