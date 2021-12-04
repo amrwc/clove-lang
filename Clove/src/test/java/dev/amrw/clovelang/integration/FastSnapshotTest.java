@@ -18,6 +18,7 @@ class FastSnapshotTest implements SnapshotTest {
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",
       "miscellaneous/simple-expressions.clove",
+      "statements/declarations.clove",
   })
   void fastTests(final String filePath) throws IOException {
     snapshotTest("integration/" + filePath);

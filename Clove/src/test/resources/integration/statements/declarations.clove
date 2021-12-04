@@ -1,0 +1,16 @@
+log('Declarations:')
+
+let var1
+
+// Fetching an undefined variable causes an 'Array index out of range' error. Check how it's
+// fetched, and perhaps introduce a 'nil' value.
+/*
+log(var1)
+*/
+
+var1 = 1
+log('var1 := ', var1)
+
+var var2
+var2 = 2
+log('var2 := ', var2)
