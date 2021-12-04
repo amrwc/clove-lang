@@ -16,6 +16,7 @@ class FastSnapshotTest implements SnapshotTest {
       "loops/for-loop.clove",
       "miscellaneous/block-statement.clove",
       "miscellaneous/if-statement.clove",
+      "miscellaneous/recursion.clove",
       "miscellaneous/simple-expressions.clove",
   })
   void fastTests(final String filePath) throws IOException {

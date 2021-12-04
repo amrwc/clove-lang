@@ -1,0 +1,21 @@
+log('Recursion:')
+
+// The following doesn't work. Figure out why the return statement doesn't get processed
+// in recursive calls.
+/*
+function sum_down(n) {
+  if (n > 0)
+    return n + sum_down(n - 1)
+  else
+    return 0
+}
+*/
+
+let result = 0
+function sum_down(n) {
+  if (n > 0)
+    result = n + sum_down(n - 1)
+  return result
+}
+
+log(sum_down(5))
