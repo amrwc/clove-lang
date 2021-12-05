@@ -1,6 +1,27 @@
-const functionExpression = function(parameter1) {
-  log('inside function expression')
-  log(parameter1)
-}
+log('Function expression:')
 
-functionExpression('some parameter')
+const funExpr1 = function(parameter1) {
+  log('inside funExpr1(parameter1)')
+  log('parameter1 := ', parameter1)
+}
+funExpr1('example1')
+
+log()
+
+const funExpr2 = function(callback) {
+  log('inside funExpr2(callback)')
+  log('callback() := ', callback())
+}
+funExpr2(function() {
+  return 'example2'
+})
+
+log()
+
+const funExpr3 = function(callback) {
+  log('inside funExpr3(callback)')
+  log('callback() := ', callback())
+}
+funExpr3(() => {
+  return 'example3'
+})
