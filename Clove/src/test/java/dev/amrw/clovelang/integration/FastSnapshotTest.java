@@ -25,6 +25,7 @@ class FastSnapshotTest implements SnapshotTest {
       "scope/block-let-definition.clove",
       "scope/block-var-declaration.clove",
       "scope/block-var-definition.clove",
+      "scope/function-definition.clove",
       "statements/declarations.clove",
   })
   void fastTests(final String filePath) throws IOException {

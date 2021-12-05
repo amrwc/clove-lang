@@ -1,0 +1,18 @@
+function funLevel0() {
+  log('Level 1:')
+  const level1 = 'level1'
+  log('level1 := ', level1)
+
+  function funLevel1() {
+    log('Level 2:')
+    log('level1 := ', level1)
+    return 'funLevel1'
+  }
+  funLevel1()
+
+  return 'funLevel0'
+}
+funLevel0()
+
+log('Level 0:')
+log('funLevel1() := ', funLevel1())
