@@ -1,0 +1,24 @@
+log('Level 0:')
+const level0 = 'level0'
+log('level0 := ', level0)
+
+{
+  log()
+  log('Level 1:')
+  log('level0 := ', level0)
+
+  const level1 = 'level1'
+  log('level1 := ', level1)
+
+  {
+    log()
+    log('Level 2:')
+    log('level0 := ', level0)
+    log('level1 := ', level1)
+  }
+}
+
+log()
+log('Level 0:')
+log('level0 := ', level0)
+log('level1 := ', level1)

@@ -19,6 +19,12 @@ class FastSnapshotTest implements SnapshotTest {
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",
       "miscellaneous/simple-expressions.clove",
+      "scope/block-const.clove",
+      "scope/block-function.clove",
+      "scope/block-let-declaration.clove",
+      "scope/block-let-definition.clove",
+      "scope/block-var-declaration.clove",
+      "scope/block-var-definition.clove",
       "statements/declarations.clove",
   })
   void fastTests(final String filePath) throws IOException {

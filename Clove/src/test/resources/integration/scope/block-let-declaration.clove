@@ -1,0 +1,27 @@
+log('Level 0:')
+let level0
+level0 = 'level0'
+log('level0 := ', level0)
+
+{
+  log()
+  log('Level 1:')
+  log('level0 := ', level0)
+
+  let level1
+  level1 = 'level1'
+  log('level1 := ', level1)
+
+  {
+    log()
+    log('Level 2:')
+    log('level0 := ', level0)
+    log('level1 := ', level1)
+  }
+}
+
+log()
+log('Level 0:')
+log('level0 := ', level0)
+// This should throw an error:
+log('level1 := ', level1)
