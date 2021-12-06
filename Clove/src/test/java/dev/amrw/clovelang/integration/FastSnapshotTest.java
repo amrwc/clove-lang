@@ -20,6 +20,7 @@ class FastSnapshotTest implements SnapshotTest {
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",
       "miscellaneous/simple-expressions.clove",
+      "objects/anonymous-object.clove",
       "scope/block-const.clove",
       "scope/block-function.clove",
       "scope/block-let-declaration.clove",

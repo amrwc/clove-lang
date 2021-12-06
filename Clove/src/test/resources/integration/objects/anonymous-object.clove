@@ -1,0 +1,42 @@
+log('Anonymous object:')
+log()
+
+const obj1 = {
+  num: 999,
+  foo: 'Foo'
+}
+log('obj1.num := ', obj1.num)
+log('obj1.str := ', obj1.foo)
+
+log()
+
+const obj2 = {
+  twelve: 12
+}
+log("obj2['twelve'] := ", obj2['twelve'])
+
+log()
+
+const obj3 = {
+  fun1: function() {
+    return 'inside obj3.fun1'
+  },
+  fun2: () => {
+    return 'inside obj3.fun2'
+  }
+}
+log('obj3.fun1() := ', obj3.fun1())
+log("obj3['fun2']() := ", obj3['fun2']())
+
+log()
+
+const obj4 = {
+  nested: {
+    fun1: function() {
+      return 'inside obj4.nested.fun1'
+    }
+  }
+}
+log('obj4.nested.fun1() := ', obj4.nested.fun1())
+log("obj4['nested'].fun1() := ", obj4['nested'].fun1())
+log("obj4['nested']['fun1']() := ", obj4['nested']['fun1']())

@@ -1,0 +1,13 @@
+Anonymous object:
+
+obj1.num := 999
+obj1.str := Foo
+
+obj2['twelve'] := 12
+
+obj3.fun1() := inside obj3.fun1
+obj3['fun2']() := inside obj3.fun2
+
+obj4.nested.fun1() := inside obj4.nested.fun1
+obj4['nested'].fun1() := inside obj4.nested.fun1
+obj4['nested']['fun1']() := inside obj4.nested.fun1
