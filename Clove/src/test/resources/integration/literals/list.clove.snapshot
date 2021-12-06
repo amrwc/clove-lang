@@ -1,0 +1,17 @@
+List:
+
+list1[0] := first element
+list1[1] := 1
+list1[2] := {num: 2}
+list1[2].num := 2
+list1[2]['num'] := 2
+list1[3]() := 3
+list1[4][0] := 4
+
+List->append():
+list2->append('zero')
+list2[0] := zero
+
+Overwrite value:
+list2[0] = 'one'
+list2[0] := one
