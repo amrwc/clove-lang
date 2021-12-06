@@ -1,0 +1,9 @@
+Arrow function:
+inside arrowFun1(parameter1)
+parameter1 := example1
+
+inside arrowFun2(callback)
+callback() := example2
+
+inside arrowFun3(callback)
+callback() := example3
