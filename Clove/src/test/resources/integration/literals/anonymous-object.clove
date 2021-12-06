@@ -1,18 +1,19 @@
 log('Anonymous object:')
+
 log()
 
 const obj1 = {
   num: 999,
   foo: 'Foo'
 }
-log('obj1.num := ', obj1.num)
-log('obj1.str := ', obj1.foo)
+log('obj1 := ', obj1)
 
 log()
 
 const obj2 = {
   twelve: 12
 }
+log('obj2 := ', obj2)
 log("obj2['twelve'] := ", obj2['twelve'])
 
 log()
@@ -40,3 +41,16 @@ const obj4 = {
 log('obj4.nested.fun1() := ', obj4.nested.fun1())
 log("obj4['nested'].fun1() := ", obj4['nested'].fun1())
 log("obj4['nested']['fun1']() := ", obj4['nested']['fun1']())
+
+log()
+
+const obj5 = {
+  inside: 'foo'
+}
+log('obj5 := ', obj5)
+log("obj5->remove('inside')")
+obj5->remove('inside')
+log('obj5 := ', obj5)
+log("obj5->tryRemove('inside')")
+obj5->tryRemove('inside')
+log('obj5 := ', obj5)
