@@ -1,0 +1,45 @@
+log('Constant reassignment:')
+
+log()
+
+log("It's allowed to reassign nested values of 'constant' objects...")
+
+log()
+
+log('const list = [10, 20, 30]')
+const list = [10, 20, 30]
+log('list := ', list)
+log('list[1] = -17')
+list[1] = -17
+log('list := ', list)
+
+log()
+
+log("const obj = { foo: 'abc', bar: 123 }")
+const obj = { foo: 'abc', bar: 123 }
+log('obj := ', obj)
+
+log('obj.foo = -20')
+obj.foo = -20
+log('obj := ', obj)
+
+log("obj['bar'] += 7")
+obj['bar'] += 7
+log('obj := ', obj)
+
+log()
+
+log("...because they're not really 'constant', only the reference to them is.")
+
+log()
+
+log("Therefore, it's not allowed to reassign a 'primitive' constant:")
+
+log()
+
+log('const primitive = 789')
+const primitive = 789
+log('primitive := ', primitive)
+
+log("primitive = 'something else'")
+primitive = 'something else'

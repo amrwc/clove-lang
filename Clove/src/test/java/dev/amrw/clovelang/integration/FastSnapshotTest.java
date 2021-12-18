@@ -23,6 +23,7 @@ class FastSnapshotTest implements SnapshotTest {
       "loops/for.clove",
       "loops/while.clove",
       "miscellaneous/block-statement.clove",
+      "miscellaneous/constant-reassignment.clove",
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",
       "scope/block-const.clove",
