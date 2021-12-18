@@ -12,6 +12,7 @@ class FastSnapshotTest implements SnapshotTest {
   @CsvSource({
       "expressions/assignment-operator.clove",
       "expressions/binary-operator.clove",
+      "expressions/logical-operator.clove",
       "expressions/unary-operator.clove",
       "functions/arrow-function.clove",
       "functions/function-definition.clove",
@@ -24,7 +25,6 @@ class FastSnapshotTest implements SnapshotTest {
       "miscellaneous/block-statement.clove",
       "miscellaneous/if-statement.clove",
       "miscellaneous/recursion.clove",
-      "miscellaneous/simple-expressions.clove",
       "scope/block-const.clove",
       "scope/block-function.clove",
       "scope/block-let-declaration.clove",
