@@ -1,0 +1,27 @@
+Assignment:
+
+let num = 1
+num := 4
+
+num += 2
+num := 6
+
+num -= 3
+num := 3
+
+num *= 3
+num := 9
+
+num /= 2
+num := 4.5
+
+num %= 1.25
+num := 0.75
+
+Appending to string:
+let str = 'str'
+str := str
+str += num
+str := str0.75
+str += 'foo'
+str := str0.75foo
