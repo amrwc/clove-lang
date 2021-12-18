@@ -4,6 +4,8 @@ obj1 := {num: 999, foo: Foo}
 
 obj2 := {twelve: 12}
 obj2['twelve'] := 12
+obj2[('twel' + 've')] := 12
+obj2['twel' + 've'] := 12
 
 obj3.fun1() := inside obj3.fun1
 obj3['fun2']() := inside obj3.fun2

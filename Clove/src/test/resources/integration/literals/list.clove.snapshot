@@ -8,6 +8,11 @@ list1[2]['num'] := 2
 list1[3]() := 3
 list1[4][0] := 4
 
+zero := 0
+list1[zero] := first element
+list1[(1 - 1)] := first element
+list1[1 - 1] := first element
+
 List->append():
 list2->append('zero')
 list2[0] := zero
