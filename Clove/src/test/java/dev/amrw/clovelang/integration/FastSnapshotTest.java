@@ -10,6 +10,7 @@ class FastSnapshotTest implements SnapshotTest {
   @DisplayName("Fast tests")
   @ParameterizedTest(name = "[{index}] {0}")
   @CsvSource({
+      "expressions/unary-operator.clove",
       "functions/arrow-function.clove",
       "functions/function-definition.clove",
       "functions/nested-function-definition.clove",
