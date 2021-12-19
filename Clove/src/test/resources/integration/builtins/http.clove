@@ -10,6 +10,7 @@ log()
 
 log("const res2 = http('POST', 'https://reqres.in/api/users', 'name=John Doe&job=director')")
 const res2 = http('POST', 'https://reqres.in/api/users', 'name=John Doe&job=director')
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
 log('res2.code := ', res2.code)
 
 log()
@@ -21,12 +22,14 @@ const requestBody = {
 log('requestBody := ', requestBody)
 log("const res3 = http('POST', 'https://reqres.in/api/users', requestBody)")
 const res3 = http('POST', 'https://reqres.in/api/users', requestBody)
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
 log('res3.code := ', res3.code)
 
 log()
 
 log("const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')")
 const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
 log('res4.code := ', res4.code)
 
 log()
