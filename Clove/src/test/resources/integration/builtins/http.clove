@@ -34,7 +34,6 @@ log('res4.code := ', res4.code)
 
 log()
 
-log(
-    "http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1') := ",
-    http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')
-)
+log("const res5 = http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')")
+const res5 = http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')
+log('res5 := ', res5)

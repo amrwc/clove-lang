@@ -19,7 +19,8 @@ res3.code := 201
 const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')
 res4.code := 200
 
-http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1') := {code: 200, body: {
+const res5 = http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')
+res5 := {code: 200, body: {
 "userId": 1,
 "id": 1,
 "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
