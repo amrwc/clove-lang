@@ -61,6 +61,16 @@ task integrationTest(type: Test) {
     include 'dev/amrw/clovelang/integration/**'
 }
 
+task onlineTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'online-test'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    include 'dev/amrw/clovelang/integration/**'
+}
+
 gradle.projectsEvaluated {
     tasks.withType(JavaCompile) {
         // Display `unchecked` warnings

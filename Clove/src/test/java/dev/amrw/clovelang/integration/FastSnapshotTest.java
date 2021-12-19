@@ -1,16 +1,17 @@
 package dev.amrw.clovelang.integration;
 
+import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+@IntegrationTest
 class FastSnapshotTest implements SnapshotTest {
 
   @DisplayName("Fast tests")
   @ParameterizedTest(name = "[{index}] {0}")
   @CsvSource({
-      "builtins/http.clove",
       "expressions/assignment-operator.clove",
       "expressions/binary-operator.clove",
       "expressions/logical-operator.clove",

@@ -87,3 +87,6 @@ jobs:
 
       - name: Run integration tests
         run: ./gradlew integrationTest --info
+
+      - name: Run online integration tests
+        run: ./gradlew onlineTest --info

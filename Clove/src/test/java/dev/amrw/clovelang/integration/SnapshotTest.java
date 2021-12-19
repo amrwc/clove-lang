@@ -5,14 +5,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import dev.amrw.clovelang.interpreter.Interpreter;
-import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import org.junit.jupiter.api.DisplayName;
 
-@IntegrationTest
 @DisplayName("Snapshot tests")
 public interface SnapshotTest {
 

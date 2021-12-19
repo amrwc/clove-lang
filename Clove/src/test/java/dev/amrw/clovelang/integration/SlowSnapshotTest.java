@@ -2,6 +2,7 @@ package dev.amrw.clovelang.integration;
 
 import dev.amrw.clovelang.extension.TimingExtension;
 import dev.amrw.clovelang.namegenerator.SlowTestDisplayNameGenerator;
+import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.IOException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -20,6 +21,7 @@ import org.junit.jupiter.params.provider.CsvSource;
  * <code>float</code>, use <code>double</code>.
  */
 @Timeout(60)
+@IntegrationTest
 @ExtendWith(TimingExtension.class)
 @DisplayNameGeneration(SlowTestDisplayNameGenerator.class)
 class SlowSnapshotTest implements SnapshotTest {
