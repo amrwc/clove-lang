@@ -1,33 +1,28 @@
-GET request response: 200
-{
+HTTP requests:
+
+const res1 = http('GET', 'https://jsonplaceholder.typicode.com/posts/1')
+res1 := {code: 200, body: {
 "userId": 1,
 "id": 1,
 "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
 "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
 }
+}
 
+const res2 = http('POST', 'https://reqres.in/api/users', 'name=John Doe&job=director')
+res2.code := 201
 
+requestBody := {name: Jane Smith, job: chair}
+const res3 = http('POST', 'https://reqres.in/api/users', requestBody)
+res3.code := 201
 
-POST request response: 201
-{"name":"John Doe","job":"director","id":"666","createdAt":"2019-06-30T12:59:31.119Z"}
+const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')
+res4.code := 200
 
-
-
-PUT request response: 200
-{"updatedAt":"2019-06-30T12:59:31.198Z"}
-
-
-
-DELETE request response: 200
-{
+http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1') := {code: 200, body: {
 "userId": 1,
 "id": 1,
 "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
 "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
 }
-
-
-
-POST request with a ValueObject as body response: 201
-{"name":"John Doe","job":"director","id":"977","createdAt":"2019-06-30T12:59:31.300Z"}
-
+}
