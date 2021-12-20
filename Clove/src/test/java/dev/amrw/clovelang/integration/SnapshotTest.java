@@ -42,6 +42,8 @@ public interface SnapshotTest {
   }
 
   private static String getResourceAsString(final String path) throws IOException {
+    // It doesn't seem to find files that have been created during Clove execution. Use new IO
+    // classes in those cases.
     return Resources.toString(Resources.getResource(path), Charsets.UTF_8);
   }
 }

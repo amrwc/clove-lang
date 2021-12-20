@@ -1,8 +1,13 @@
 package dev.amrw.clovelang.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import dev.amrw.clovelang.tag.IntegrationTest;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
@@ -40,5 +45,30 @@ class FastSnapshotTest implements SnapshotTest {
   })
   void fastTests(final String filePath) throws IOException {
     snapshotTest("integration/" + filePath);
+  }
+
+  @Test
+  @DisplayName("File test (builtins/file.clove)")
+  void fileTest() throws IOException {
+    snapshotTest("integration/builtins/file.clove");
+
+    final var builtinsPath = Path.of("src/test/resources/integration/builtins/");
+    final var testFilePath = builtinsPath.resolve("file-test-output.txt");
+    final var testNestedFilePath = builtinsPath.resolve("file-test/file-test-output-nested.txt");
+
+    final var testFileContents = Files.readString(testFilePath);
+    final var testNestedFileContents = Files.readString(testNestedFilePath);
+    final var testFileSnapshot = Files.readString(Path.of(testFilePath + ".snapshot"));
+
+    assertThat(testFileContents).isEqualTo(testFileSnapshot);
+    assertThat(testNestedFileContents).isEqualTo(testFileSnapshot);
+
+    if (!Files.deleteIfExists(testFilePath)
+        || !Files.deleteIfExists(testNestedFilePath)
+        || !Files.deleteIfExists(testNestedFilePath.getParent())
+    ) {
+      throw new IOException(
+          "Failed to delete the test output file. Has the file been created correctly?");
+    }
   }
 }
