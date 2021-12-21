@@ -9,3 +9,5 @@ path1 := ./src/test/resources/integration/builtins/file-test-output.txt
 nestedTestFilePath := ./src/test/resources/integration/builtins/file-test/file-test-output-nested.txt
 const path2 = file('create', nestedTestFilePath, obj)
 path2 := ./src/test/resources/integration/builtins/file-test/file-test-output-nested.txt
+
+file('append', nestedTestFilePath, 'appended text')

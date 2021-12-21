@@ -52,23 +52,26 @@ class FastSnapshotTest implements SnapshotTest {
   void fileTest() throws IOException {
     snapshotTest("integration/builtins/file.clove");
 
-    final var builtinsPath = Path.of("src/test/resources/integration/builtins/");
-    final var testFilePath = builtinsPath.resolve("file-test-output.txt");
-    final var testNestedFilePath = builtinsPath.resolve("file-test/file-test-output-nested.txt");
+    final var builtinsPath = "src/test/resources/integration/builtins/";
+    final var createdFilePath = Path.of(builtinsPath + "file-test-output.txt");
+    final var createdNestedFilePath = Path.of(
+        builtinsPath + "file-test/file-test-output-nested.txt");
+    final var snapshotPath = Path.of(createdFilePath + ".snapshot");
+    final var nestedSnapshotPath = Path.of(builtinsPath + "file-test-output-nested.txt.snapshot");
 
-    final var testFileContents = Files.readString(testFilePath);
-    final var testNestedFileContents = Files.readString(testNestedFilePath);
-    final var testFileSnapshot = Files.readString(Path.of(testFilePath + ".snapshot"));
+    assertSameContents(createdFilePath, snapshotPath);
+    assertSameContents(createdNestedFilePath, nestedSnapshotPath);
 
-    assertThat(testFileContents).isEqualTo(testFileSnapshot);
-    assertThat(testNestedFileContents).isEqualTo(testFileSnapshot);
-
-    if (!Files.deleteIfExists(testFilePath)
-        || !Files.deleteIfExists(testNestedFilePath)
-        || !Files.deleteIfExists(testNestedFilePath.getParent())
+    if (!Files.deleteIfExists(createdFilePath)
+        || !Files.deleteIfExists(createdNestedFilePath)
+        || !Files.deleteIfExists(createdNestedFilePath.getParent())
     ) {
       throw new IOException(
           "Failed to delete the test output file. Has the file been created correctly?");
     }
+  }
+
+  private void assertSameContents(final Path path, final Path other) throws IOException {
+    assertThat(Files.readString(path)).isEqualTo(Files.readString(other));
   }
 }

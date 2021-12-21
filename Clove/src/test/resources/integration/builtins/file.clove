@@ -27,3 +27,8 @@ log('nestedTestFilePath := ', nestedTestFilePath)
 log("const path2 = file('create', nestedTestFilePath, obj)")
 const path2 = file('overwrite', nestedTestFilePath, obj)
 log('path2 := ', path2)
+
+log()
+
+log("file('append', nestedTestFilePath, 'appended text')")
+file('append', nestedTestFilePath, 'appended text')
