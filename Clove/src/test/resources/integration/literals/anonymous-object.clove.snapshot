@@ -1,6 +1,12 @@
 Anonymous object:
 
 obj1 := {num: 999, foo: Foo}
+obj1.foo = { bar: 'new nested' }
+obj1 := {num: 999, foo: {bar: new nested}}
+obj1.foo['bar'] = ['nested changed']
+obj1 := {num: 999, foo: {bar: [nested changed]}}
+obj1.foo['bar'][0] += 12.0
+obj1 := {num: 999, foo: {bar: [nested changed12.0]}}
 
 obj2 := {twelve: 12}
 obj2['twelve'] := 12
