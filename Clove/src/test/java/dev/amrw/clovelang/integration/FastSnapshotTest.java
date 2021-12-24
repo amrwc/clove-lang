@@ -9,14 +9,14 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 @IntegrationTest
 class FastSnapshotTest implements SnapshotTest {
 
   @DisplayName("Fast tests")
   @ParameterizedTest(name = "[{index}] {0}")
-  @CsvSource({
+  @ValueSource(strings = {
       "expressions/assignment-operator.clove",
       "expressions/binary-operator.clove",
       "expressions/logical-operator.clove",
@@ -69,6 +69,17 @@ class FastSnapshotTest implements SnapshotTest {
       throw new IOException(
           "Failed to delete the test output file. Has the file been created correctly?");
     }
+  }
+
+  @DisplayName("Known bugs")
+  @ParameterizedTest(name = "[{index}] {0}")
+  @ValueSource(strings = {
+      "comments-illegal-characters.clove",
+      "empty-script.clove",
+      "strings-illegal-characters.clove",
+  })
+  void knownBugs(final String filePath) throws IOException {
+    snapshotTest("integration/known-bugs/" + filePath);
   }
 
   private void assertSameContents(final Path path, final Path other) throws IOException {
