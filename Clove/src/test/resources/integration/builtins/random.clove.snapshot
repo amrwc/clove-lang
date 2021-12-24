@@ -1,0 +1,6 @@
+Random:
+
+let randInt = random(0, 10)
+randInt := 5
+
+randFloat := 0.15000000000005556
