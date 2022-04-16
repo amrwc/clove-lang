@@ -1,0 +1,27 @@
+log('Arrow function:')
+
+const arrowFun1 = (parameter1) => {
+  log('inside arrowFun1(parameter1)')
+  log('parameter1 := ', parameter1)
+}
+arrowFun1('example1')
+
+log()
+
+const arrowFun2 = (callback) => {
+  log('inside arrowFun2(callback)')
+  log('callback() := ', callback())
+}
+arrowFun2(function() {
+  return 'example2'
+})
+
+log()
+
+const arrowFun3 = function(callback) {
+  log('inside arrowFun3(callback)')
+  log('callback() := ', callback())
+}
+arrowFun3(() => {
+  return 'example3'
+})

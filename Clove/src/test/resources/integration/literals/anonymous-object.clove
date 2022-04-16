@@ -1,0 +1,67 @@
+log('Anonymous object:')
+
+log()
+
+const obj1 = {
+  num: 999,
+  foo: 'Foo'
+}
+log('obj1 := ', obj1)
+log("obj1.foo = { bar: 'new nested' }")
+obj1.foo = { bar: 'new nested' }
+log('obj1 := ', obj1)
+log("obj1.foo['bar'] = ['nested changed']")
+obj1.foo['bar'] = ['nested changed']
+log('obj1 := ', obj1)
+log("obj1.foo['bar'][0] += 12.0")
+obj1.foo['bar'][0] += 12.0
+log('obj1 := ', obj1)
+
+log()
+
+const obj2 = {
+  twelve: 12
+}
+log('obj2 := ', obj2)
+log("obj2['twelve'] := ", obj2['twelve'])
+log("obj2[('twel' + 've')] := ", obj2['twelve'])
+log("obj2['twel' + 've'] := ", obj2['twelve'])
+
+log()
+
+const obj3 = {
+  fun1: function() {
+    return 'inside obj3.fun1'
+  },
+  fun2: () => {
+    return 'inside obj3.fun2'
+  }
+}
+log('obj3.fun1() := ', obj3.fun1())
+log("obj3['fun2']() := ", obj3['fun2']())
+
+log()
+
+const obj4 = {
+  nested: {
+    fun1: function() {
+      return 'inside obj4.nested.fun1'
+    }
+  }
+}
+log('obj4.nested.fun1() := ', obj4.nested.fun1())
+log("obj4['nested'].fun1() := ", obj4['nested'].fun1())
+log("obj4['nested']['fun1']() := ", obj4['nested']['fun1']())
+
+log()
+
+const obj5 = {
+  inside: 'foo'
+}
+log('obj5 := ', obj5)
+log("obj5->remove('inside')")
+obj5->remove('inside')
+log('obj5 := ', obj5)
+log("obj5->tryRemove('inside')")
+obj5->tryRemove('inside')
+log('obj5 := ', obj5)

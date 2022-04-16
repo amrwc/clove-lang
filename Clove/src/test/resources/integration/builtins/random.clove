@@ -1,0 +1,32 @@
+log('Random:')
+
+log()
+
+// Can't snapshot-test random values, because they're just that, random. But we can do some
+// gymnastics around the fact that the return value is a number.
+
+const MAX_TRIES = 1234567
+
+log('let randInt = random(0, 10)')
+let randInt = random(0, 10)
+let counter1 = 0
+while (randInt != 5 && counter1 < MAX_TRIES) {
+  if (counter1++ > MAX_TRIES) {
+    log('Either something went wrong, or you were very unlucky. MAX_TRIES := ', MAX_TRIES)
+  }
+  randInt = random(0, 10)
+}
+log('randInt := ', randInt)
+
+log()
+
+let randFloat = random(0.15000000000000000, 0.15000000000009999)
+let counter2 = 0
+// Notice the floating point precision error. We expect 0.15000000000005556 inside the snapshot.
+while (randFloat != 0.15000000000005555 && counter1 < MAX_TRIES) {
+  if (counter2++ > MAX_TRIES) {
+    log('Either something went wrong, or you were very unlucky. MAX_TRIES := ', MAX_TRIES)
+  }
+  randFloat = random(0.15000000000000000, 0.15000000000009999)
+}
+log('randFloat := ', randFloat)

@@ -1,0 +1,37 @@
+Unary operators:
+
+num := 2
++num := 2
+-num := -2
++(-num) := -2
+-(-num) := 2
+num + (-num) := 0
+
+num2 := 4
+num2++ := 4
+num2 := 5
+++num2 := 6
+num2 := 6
+
+num3 := 10
+num3-- := 10
+num3 := 9
+--num3 := 8
+num3 := 8
+
+num2 := 6, num3 := 8
+num2++ + num3-- := 14
+num2 := 7, num3 := 7
+--num2 + ++num3 := 14
+num2 := 6, num3 := 8
+
+str := str
+str++ := str
+str := str1
+++str := str11
+str := str11
+
+bool := true
+!bool := false
+!!bool := true
+!(!bool) := true

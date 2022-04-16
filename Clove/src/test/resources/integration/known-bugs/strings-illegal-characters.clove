@@ -1,0 +1,3 @@
+// https://github.com/amrwc/clove-lang/issues/22
+
+log('Can’t use curly quotes')

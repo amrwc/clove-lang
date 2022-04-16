@@ -1,0 +1,13 @@
+Logical operators:
+
+true == false := false
+true || false := true
+false || true := true
+true && false := false
+false && true := false
+
+2 > 3 := false
+2 >= 3 := false
+2 < 3 := true
+2 <= 3 := true
+2 + 2 > 3 + 3 := false

@@ -1,0 +1,13 @@
+File writes:
+
+obj := {key1: 10, key2: {subkey1: word, subkey2: number}, key3: [listItem1, 23, [nestedListItem]]}
+
+testFilePath := ./src/test/resources/integration/builtins/file-test-output.txt
+const path = file('create', testFilePath, obj)
+path1 := ./src/test/resources/integration/builtins/file-test-output.txt
+
+nestedTestFilePath := ./src/test/resources/integration/builtins/file-test/file-test-output-nested.txt
+const path2 = file('create', nestedTestFilePath, obj)
+path2 := ./src/test/resources/integration/builtins/file-test/file-test-output-nested.txt
+
+file('append', nestedTestFilePath, 'appended text')

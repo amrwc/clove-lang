@@ -1,0 +1,2 @@
+log('Quit:')
+quit('Exit message')

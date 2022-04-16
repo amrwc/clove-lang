@@ -1,0 +1,6 @@
+// https://github.com/amrwc/clove-lang/issues/20
+
+// Normal quotes are fine: '', ""
+// Can't use curly quotes: ‘’, “”
+
+log("Won't reach here")

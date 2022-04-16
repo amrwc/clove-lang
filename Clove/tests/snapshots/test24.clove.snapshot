@@ -1,6 +1,0 @@
-Constants:
-
-const exampleConst = 10
-exampleConst: 10
-exampleConst = 1
-"exampleConst" is a constant and cannot be reassigned.

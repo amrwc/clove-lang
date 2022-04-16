@@ -1,0 +1,20 @@
+Binary operator:
+
+one := 1, two := 2
+
+one + two := 3
+one + 2 := 3
+
+'foo' + 'bar' := foobar
+
+one - two := -1
+1 - two := -1
+
+one * two := 2
+1 * two := 2
+
+one / two := 0.5
+one / 2 := 0.5
+
+one % two := 1
+1 % two := 1

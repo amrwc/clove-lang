@@ -1,0 +1,50 @@
+log('Assignment:')
+
+log()
+
+log('let num = 1')
+let num = 4
+log('num := ', num)
+
+log()
+
+log('num += 2')
+num += 2
+log('num := ', num)
+
+log()
+
+log('num -= 3')
+num -= 3
+log('num := ', num)
+
+log()
+
+log('num *= 3')
+num *= 3
+log('num := ', num)
+
+log()
+
+log('num /= 2')
+num /= 2
+log('num := ', num)
+
+log()
+
+log('num %= 1.25')
+num %= 1.25
+log('num := ', num)
+
+log()
+
+log('Appending to string:')
+log("let str = 'str'")
+let str = 'str'
+log('str := ', str)
+log('str += num')
+str += num
+log('str := ', str)
+log("str += 'foo'")
+str += 'foo'
+log('str := ', str)

@@ -1,0 +1,35 @@
+log('List:')
+
+log()
+
+const list1 = ['first element', 1, { num: 2 }, () => { return 3 }, [4]]
+log('list1[0] := ', list1[0])
+log('list1[1] := ', list1[1])
+log('list1[2] := ', list1[2])
+log('list1[2].num := ', list1[2].num)
+log("list1[2]['num'] := ", list1[2]['num'])
+log('list1[3]() := ', list1[3]())
+log('list1[4][0] := ', list1[4][0])
+
+log()
+
+const zero = 0
+log('zero := ', zero)
+log('list1[zero] := ', list1[zero])
+log('list1[(1 - 1)] := ', list1[zero])
+log('list1[1 - 1] := ', list1[zero])
+
+log()
+
+log('List->append():')
+const list2 = []
+log("list2->append('zero')")
+list2->append('zero')
+log('list2[0] := ', list2[0])
+
+log()
+
+log('Overwrite value:')
+log("list2[0] = 'one'")
+list2[0] = 'one'
+log('list2[0] := ', list2[0])

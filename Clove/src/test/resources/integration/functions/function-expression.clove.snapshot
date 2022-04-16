@@ -1,0 +1,9 @@
+Function expression:
+inside funExpr1(parameter1)
+parameter1 := example1
+
+inside funExpr2(callback)
+callback() := example2
+
+inside funExpr3(callback)
+callback() := example3

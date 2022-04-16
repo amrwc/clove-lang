@@ -1,0 +1,24 @@
+Constant reassignment:
+
+It's allowed to reassign nested values of 'constant' objects...
+
+const list = [10, 20, 30]
+list := [10, 20, 30]
+list[1] = -17
+list := [10, -17, 30]
+
+const obj = { foo: 'abc', bar: 123 }
+obj := {bar: 123, foo: abc}
+obj.foo = -20
+obj := {bar: 123, foo: -20}
+obj['bar'] += 7
+obj := {bar: 130, foo: -20}
+
+...because they're not really 'constant', only the reference to them is.
+
+Therefore, it's not allowed to reassign a 'primitive' constant:
+
+const primitive = 789
+primitive := 789
+primitive = 'something else'
+"primitive" is a constant and cannot be reassigned.

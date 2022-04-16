@@ -1,0 +1,36 @@
+log('Binary operator:')
+
+log()
+
+const one = 1
+const two = 2
+log('one := ', one, ', two := ', two)
+
+log()
+
+log('one + two := ', one + two)
+log('one + 2 := ', one + 2)
+
+log()
+
+log("'foo' + 'bar' := ", 'foo' + 'bar')
+
+log()
+
+log('one - two := ', one - two)
+log('1 - two := ', 1 - two)
+
+log()
+
+log('one * two := ', one * two)
+log('1 * two := ', 1 * two)
+
+log()
+
+log('one / two := ', one / two)
+log('one / 2 := ', one / 2)
+
+log()
+
+log('one % two := ', one % two)
+log('1 % two := ', 1 % two)

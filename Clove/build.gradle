@@ -8,7 +8,9 @@ repositories {
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    testImplementation 'org.assertj:assertj-core:3.21.0'
+    testImplementation 'com.google.guava:guava:31.0.1-jre'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
     compileOnly 'net.java.dev.javacc:javacc:7.0.10'
 }
@@ -39,6 +41,39 @@ javacc {
     }
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+test {
+    useJUnitPlatform {
+        excludeTags 'integration-test'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    exclude 'dev/amrw/clovelang/integration/**'
+}
+
+task integrationTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'integration-test'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    include 'dev/amrw/clovelang/integration/**'
+}
+
+task onlineTest(type: Test) {
+    useJUnitPlatform {
+        includeTags 'online-test'
+    }
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    include 'dev/amrw/clovelang/integration/**'
+}
+
+gradle.projectsEvaluated {
+    tasks.withType(JavaCompile) {
+        // Display `unchecked` warnings
+        options.compilerArgs << '-Xlint:unchecked'
+    }
 }

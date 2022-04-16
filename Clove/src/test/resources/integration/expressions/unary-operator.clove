@@ -1,0 +1,55 @@
+log('Unary operators:')
+
+log()
+
+const num = 2
+log('num := ', num)
+log('+num := ', +num)
+log('-num := ', -num)
+log('+(-num) := ', +(-num))
+log('-(-num) := ', -(-num))
+log('num + (-num) := ', num + (-num))
+
+log()
+
+let num2 = 4
+log('num2 := ', num2)
+log('num2++ := ', num2++)
+log('num2 := ', num2)
+log('++num2 := ', ++num2)
+log('num2 := ', num2)
+
+log()
+
+let num3 = 10
+log('num3 := ', num3)
+log('num3-- := ', num3--)
+log('num3 := ', num3)
+log('--num3 := ', --num3)
+log('num3 := ', num3)
+
+log()
+
+log('num2 := ', num2, ', num3 := ', num3)
+log('num2++ + num3-- := ', num2++ + num3--)
+log('num2 := ', num2, ', num3 := ', num3)
+log('--num2 + ++num3 := ', --num2 + ++num3)
+log('num2 := ', num2, ', num3 := ', num3)
+
+log()
+
+// This is an undesired behaviour, should be removed.
+const str = 'str'
+log('str := ', str)
+log('str++ := ', str++)
+log('str := ', str)
+log('++str := ', ++str)
+log('str := ', str)
+
+log()
+
+const bool = true
+log('bool := ', bool)
+log('!bool := ', !bool)
+log('!!bool := ', !!bool)
+log('!(!bool) := ', !(!bool))

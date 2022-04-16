@@ -1,0 +1,27 @@
+log('Level 0:')
+function level0() {
+  return 'level0'
+}
+
+{
+  log()
+  log('Level 1:')
+  log('level0() := ', level0())
+
+  function level1() {
+    return 'level1'
+  }
+  log('level1() := ', level1())
+
+  {
+    log()
+    log('Level 2:')
+    log('level0() := ', level0())
+    log('level1() := ', level1())
+  }
+}
+
+log()
+log('Level 0:')
+log('level0() := ', level0())
+log('level1() := ', level1())

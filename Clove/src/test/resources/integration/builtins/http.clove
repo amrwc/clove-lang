@@ -1,0 +1,39 @@
+log('HTTP requests:')
+
+log()
+
+log("const res1 = http('GET', 'https://jsonplaceholder.typicode.com/posts/1')")
+const res1 = http('GET', 'https://jsonplaceholder.typicode.com/posts/1')
+log('res1 := ', res1)
+
+log()
+
+log("const res2 = http('POST', 'https://reqres.in/api/users', 'name=John Doe&job=director')")
+const res2 = http('POST', 'https://reqres.in/api/users', 'name=John Doe&job=director')
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
+log('res2.code := ', res2.code)
+
+log()
+
+const requestBody = {
+  name: 'Jane Smith',
+  job: 'chair'
+}
+log('requestBody := ', requestBody)
+log("const res3 = http('POST', 'https://reqres.in/api/users', requestBody)")
+const res3 = http('POST', 'https://reqres.in/api/users', requestBody)
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
+log('res3.code := ', res3.code)
+
+log()
+
+log("const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')")
+const res4 = http('PUT', 'https://reqres.in/api/users/1', 'name=John Doe&job=janitor')
+// This API returns `createdAt` field in the response, therefore it can't be part of the snapshot
+log('res4.code := ', res4.code)
+
+log()
+
+log("const res5 = http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')")
+const res5 = http('DELETE', 'https://jsonplaceholder.typicode.com/posts/1')
+log('res5 := ', res5)

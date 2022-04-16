@@ -1,0 +1,34 @@
+log('File writes:')
+
+log()
+
+const obj = {
+	key1: 10,
+	key2: {
+		subkey1: "word",
+		subkey2: "number"
+	},
+	key3: ["listItem1", 23, ["nestedListItem"]]
+}
+log('obj := ', obj)
+
+log()
+
+const testFilePath = './src/test/resources/integration/builtins/file-test-output.txt'
+log('testFilePath := ', testFilePath)
+log("const path = file('create', testFilePath, obj)")
+const path1 = file('create', testFilePath, obj)
+log('path1 := ', path1)
+
+log()
+
+const nestedTestFilePath = './src/test/resources/integration/builtins/file-test/file-test-output-nested.txt'
+log('nestedTestFilePath := ', nestedTestFilePath)
+log("const path2 = file('create', nestedTestFilePath, obj)")
+const path2 = file('overwrite', nestedTestFilePath, obj)
+log('path2 := ', path2)
+
+log()
+
+log("file('append', nestedTestFilePath, 'appended text')")
+file('append', nestedTestFilePath, 'appended text')

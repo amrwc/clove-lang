@@ -1,0 +1,27 @@
+log('If statement:')
+if (true) {
+	log(1)
+}
+
+log('If-else statement:')
+if (2 == 3) {
+	log("Something's wrong 1!")
+} else {
+  log(2)
+}
+
+log('If-else-if statement:')
+if (2 == 3) {
+  log("Something's wrong 2!")
+} else if (2 == 2) {
+  log(3)
+}
+
+log('If-else-if-else statement:')
+if (2 == 3) {
+  log("Something's wrong 3!")
+} else if (2 == 4) {
+  log("Something's wrong 4!")
+} else {
+  log(4)
+}

@@ -1,0 +1,21 @@
+const OUTER = 'outer'
+const INNER = 'inner'
+const INNER_INNER = 'inner_inner'
+
+function outer() {
+  log(OUTER)
+
+  function inner() {
+    log(INNER)
+
+    function inner_inner() {
+      log(INNER_INNER)
+    }
+
+    inner_inner()
+  }
+
+  inner()
+}
+
+outer()
